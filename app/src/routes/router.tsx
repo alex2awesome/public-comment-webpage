@@ -6,16 +6,23 @@ import { DashboardPage } from '../features/recommendations/pages/DashboardPage'
 import { RuleDetailPage } from '../features/rule-detail/pages/RuleDetailPage'
 import { NotFoundPage } from './NotFoundPage'
 
-export const router = createBrowserRouter([
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
+
+export const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <AppShell />,
+      children: [
+        { index: true, element: <HomePage /> },
+        { path: 'search', element: <SearchPage /> },
+        { path: 'rules/:ruleId', element: <RuleDetailPage /> },
+        { path: 'dashboard', element: <DashboardPage /> },
+        { path: '*', element: <NotFoundPage /> },
+      ],
+    },
+  ],
   {
-    path: '/',
-    element: <AppShell />,
-    children: [
-      { index: true, element: <HomePage /> },
-      { path: 'search', element: <SearchPage /> },
-      { path: 'rules/:ruleId', element: <RuleDetailPage /> },
-      { path: 'dashboard', element: <DashboardPage /> },
-      { path: '*', element: <NotFoundPage /> },
-    ],
+    basename,
   },
-])
+)
