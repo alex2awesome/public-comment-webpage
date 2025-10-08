@@ -1,0 +1,37 @@
+# Development Plan
+
+## Architecture Overview
+- Ingestion pipeline driven by `scraping/get_regulations.py`, scheduled daily via managed workflow (GitHub Actions) or orchestration platform (Airflow) to fetch and normalize regulatory data.
+- Persistence layer stores raw snapshots (CSV/JSON) separately from structured tables; use change-detection to surface new or updated rules for downstream systems.
+- Lightweight Python API surfaces rule metadata to the front-end, initially focusing on read-only search and recommendation endpoints.
+- Recommendation logic starts rule-based (match rule topics to user interests) with space to evolve toward vector search or collaborative filtering once interaction data exists.
+
+## Technology Choices
+- Front end: React + Vite inside `app/` for componentized UI, fast dev workflow, and flexibility to introduce SSR later if needed.
+- Backend API: FastAPI (or Flask as an alternative) inside `backend/` for async-friendly request handling, OpenAPI docs, and easy integration with Postgres.
+- Database: PostgreSQL as the system of record for rule metadata, agencies, topics, comment windows, and user interests; CSV exports remain auxiliary artifacts.
+
+## Repository Structure
+- `app/`: Front-end web client (React + Vite), including routes, components, hooks, fixtures, and UI tests.
+- `backend/`: Python service (FastAPI/Flask) with API endpoints, business logic, schema definitions, and service tests.
+- `scraping/`: Data acquisition scripts, including `get_regulations.py` and supporting utilities.
+- `scraping/pipelines/`: Workflow helpers, job configs, and scheduling adapters for ingestion.
+- `data/`: Local storage for raw snapshots, fixtures, and temporary datasets used during development.
+- `infra/`: Infrastructure-as-code, environment templates, deployment manifests, and scheduler definitions (GitHub Actions, Airflow DAGs).
+- `scripts/`: Developer utilities, manual data loaders, seeding scripts, and maintenance helpers.
+- `tests/`: Cross-cutting integration or end-to-end tests as the stack matures.
+- Root files: `README.md`, environment samples, package manifests, and configurations shared across services.
+
+## Front-End Feature Plan
+- Implement search flow: create a search route with query input, filters (agency, topic, deadline), paginated results, and reusable `RuleCard` component driven by debounced API calls.
+- Build recommendations dashboard: `/dashboard` route requesting personalized recommendations, highlighting top matches with rationale (“because you follow…”), and quick actions to view or bookmark rules.
+- Shared primitives: component library (buttons, chips, skeletons), data-fetch hooks (`useSearchRules`, `useRecommendations`), and local fixtures or MSW mocks until backend endpoints are complete.
+
+## Incremental Roadmap
+1. Scaffold React + Vite app in `app/`, set up routing, global layout, and UI theme.
+2. Define TypeScript interfaces (or JSDoc types) for regulation and recommendation payloads to lock initial API contracts.
+3. Stub FastAPI service in `backend/` with mock responses for search and recommendations.
+4. Configure daily ingestion schedule and storage plan (GitHub Actions workflow to run `scraping/get_regulations.py`, persist outputs, and log runs).
+5. Integrate database migrations and Postgres schema to support rule metadata, agencies, topics, comment periods, and user profiles.
+6. Replace mocks with live API calls once ingestion populates the database; add recommendation scoring logic tied to user interests.
+7. Expand observability (run logs, API metrics) and deployment automations under `infra/`.

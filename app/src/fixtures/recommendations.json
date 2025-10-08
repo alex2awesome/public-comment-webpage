@@ -1,0 +1,1622 @@
+[
+  {
+    "user_id": "alex-spangher",
+    "recommendations": [
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17361",
+        "score": 0.5305,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18737",
+        "score": 0.5271,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17744",
+        "score": 0.519,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17321",
+        "score": 0.5187,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17791",
+        "score": 0.5186,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18320",
+        "score": 0.5153,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18108",
+        "score": 0.5086,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18107",
+        "score": 0.507,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18712",
+        "score": 0.5051,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18724",
+        "score": 0.5013,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17229",
+        "score": 0.5001,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17277",
+        "score": 0.4983,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18639",
+        "score": 0.4968,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18052",
+        "score": 0.4966,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17119",
+        "score": 0.4966,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17565",
+        "score": 0.4965,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-19257",
+        "score": 0.4953,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17992",
+        "score": 0.4949,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18748",
+        "score": 0.4948,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18640",
+        "score": 0.4943,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17380",
+        "score": 0.4931,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-19254",
+        "score": 0.493,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17651",
+        "score": 0.4929,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17240",
+        "score": 0.4928,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-19283",
+        "score": 0.4925,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18906",
+        "score": 0.492,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17853",
+        "score": 0.4919,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18173",
+        "score": 0.4906,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17991",
+        "score": 0.4899,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18722",
+        "score": 0.4898,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18527",
+        "score": 0.4897,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18175",
+        "score": 0.4897,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18725",
+        "score": 0.4895,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-19430",
+        "score": 0.4891,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18331",
+        "score": 0.4888,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-19256",
+        "score": 0.4886,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18050",
+        "score": 0.4883,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17256",
+        "score": 0.4876,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18822",
+        "score": 0.487,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18009",
+        "score": 0.4868,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17257",
+        "score": 0.486,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17279",
+        "score": 0.4852,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17762",
+        "score": 0.4849,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17393",
+        "score": 0.4846,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18441",
+        "score": 0.5127,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18319",
+        "score": 0.5013,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18443",
+        "score": 0.5,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-18732",
+        "score": 0.4858,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-19423",
+        "score": 0.4856,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2025-17098",
+        "score": 0.4856,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      }
+    ]
+  },
+  {
+    "user_id": "dan-ho",
+    "recommendations": [
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-17380",
+        "score": 0.5665,
+        "priority": "High",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18737",
+        "score": 0.5542,
+        "priority": "High",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18712",
+        "score": 0.5509,
+        "priority": "High",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18527",
+        "score": 0.5483,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18722",
+        "score": 0.5437,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-19298",
+        "score": 0.5415,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-17277",
+        "score": 0.5414,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-17651",
+        "score": 0.5405,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-17240",
+        "score": 0.5387,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-17791",
+        "score": 0.5385,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-17999",
+        "score": 0.5372,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-19430",
+        "score": 0.5355,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-17361",
+        "score": 0.5354,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-19308",
+        "score": 0.5349,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-19277",
+        "score": 0.5326,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18174",
+        "score": 0.5317,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18331",
+        "score": 0.5315,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18197",
+        "score": 0.5303,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-19311",
+        "score": 0.5302,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18320",
+        "score": 0.5286,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18908",
+        "score": 0.5284,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18822",
+        "score": 0.5277,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18052",
+        "score": 0.5274,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-19312",
+        "score": 0.5253,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18639",
+        "score": 0.5253,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18748",
+        "score": 0.5233,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-17434",
+        "score": 0.523,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-17960",
+        "score": 0.5229,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-17288",
+        "score": 0.5228,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-17280",
+        "score": 0.5225,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-17992",
+        "score": 0.5222,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18229",
+        "score": 0.5207,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-17278",
+        "score": 0.5199,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18224",
+        "score": 0.5198,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18640",
+        "score": 0.5197,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-17393",
+        "score": 0.5191,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-19285",
+        "score": 0.519,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18098",
+        "score": 0.5185,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-19423",
+        "score": 0.5443,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-19189",
+        "score": 0.5406,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18986",
+        "score": 0.5367,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-19433",
+        "score": 0.5361,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18441",
+        "score": 0.531,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18336",
+        "score": 0.5298,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18329",
+        "score": 0.5281,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18333",
+        "score": 0.5275,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-17098",
+        "score": 0.5251,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-19232",
+        "score": 0.5194,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18680",
+        "score": 0.5189,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2025-18316",
+        "score": 0.5188,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      }
+    ]
+  },
+  {
+    "user_id": "diyi-yang",
+    "recommendations": [
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17361",
+        "score": 0.5521,
+        "priority": "High",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18737",
+        "score": 0.5359,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17240",
+        "score": 0.5294,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18098",
+        "score": 0.5267,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18107",
+        "score": 0.5157,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17532",
+        "score": 0.515,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18203",
+        "score": 0.5037,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17231",
+        "score": 0.5006,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17825",
+        "score": 0.4984,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17288",
+        "score": 0.4983,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17380",
+        "score": 0.4939,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17670",
+        "score": 0.4935,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18608",
+        "score": 0.4914,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18640",
+        "score": 0.4909,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17999",
+        "score": 0.4904,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18639",
+        "score": 0.4889,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17229",
+        "score": 0.4881,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17651",
+        "score": 0.4854,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17671",
+        "score": 0.4821,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17643",
+        "score": 0.4819,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17998",
+        "score": 0.4816,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18720",
+        "score": 0.4814,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18500",
+        "score": 0.4807,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-19110",
+        "score": 0.4805,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18517",
+        "score": 0.4797,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17321",
+        "score": 0.479,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18050",
+        "score": 0.4789,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17762",
+        "score": 0.4766,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18160",
+        "score": 0.4759,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18058",
+        "score": 0.4758,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17657",
+        "score": 0.4745,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-19091",
+        "score": 0.4744,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18003",
+        "score": 0.4734,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-19199",
+        "score": 0.4722,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18520",
+        "score": 0.5141,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-17098",
+        "score": 0.514,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-19433",
+        "score": 0.5136,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-19189",
+        "score": 0.5121,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18858",
+        "score": 0.5079,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18522",
+        "score": 0.5078,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-19432",
+        "score": 0.5033,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18234",
+        "score": 0.5027,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18513",
+        "score": 0.5024,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-19434",
+        "score": 0.4953,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18986",
+        "score": 0.4947,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18695",
+        "score": 0.4923,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18609",
+        "score": 0.4832,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18472",
+        "score": 0.4811,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-19169",
+        "score": 0.4776,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2025-18732",
+        "score": 0.4742,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      }
+    ]
+  },
+  {
+    "user_id": "sanmi-koyejo",
+    "recommendations": [
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-17240",
+        "score": 0.5882,
+        "priority": "High",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18737",
+        "score": 0.5856,
+        "priority": "High",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-17288",
+        "score": 0.5798,
+        "priority": "High",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-17651",
+        "score": 0.579,
+        "priority": "High",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18098",
+        "score": 0.5719,
+        "priority": "High",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18203",
+        "score": 0.5716,
+        "priority": "High",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-17380",
+        "score": 0.5702,
+        "priority": "High",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18229",
+        "score": 0.5685,
+        "priority": "High",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-17999",
+        "score": 0.562,
+        "priority": "High",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-17532",
+        "score": 0.5614,
+        "priority": "High",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-17280",
+        "score": 0.5561,
+        "priority": "High",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18003",
+        "score": 0.5517,
+        "priority": "High",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-17998",
+        "score": 0.5501,
+        "priority": "High",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-17825",
+        "score": 0.5486,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-19298",
+        "score": 0.5486,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-19024",
+        "score": 0.5469,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18625",
+        "score": 0.5459,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18887",
+        "score": 0.5449,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-19202",
+        "score": 0.5446,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18519",
+        "score": 0.5441,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-19431",
+        "score": 0.543,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-17231",
+        "score": 0.5391,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-17361",
+        "score": 0.5388,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-19110",
+        "score": 0.5383,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18346",
+        "score": 0.5383,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18107",
+        "score": 0.5381,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18197",
+        "score": 0.536,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18202",
+        "score": 0.5352,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18930",
+        "score": 0.5341,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18274",
+        "score": 0.5339,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18720",
+        "score": 0.5329,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18290",
+        "score": 0.5326,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18347",
+        "score": 0.5314,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-19026",
+        "score": 0.5314,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-19277",
+        "score": 0.5313,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18352",
+        "score": 0.5297,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-17324",
+        "score": 0.5294,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-19189",
+        "score": 0.5783,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-19433",
+        "score": 0.5698,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-19432",
+        "score": 0.568,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-17098",
+        "score": 0.5646,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18520",
+        "score": 0.5564,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18858",
+        "score": 0.5554,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18513",
+        "score": 0.5497,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18522",
+        "score": 0.5491,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18695",
+        "score": 0.5466,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18234",
+        "score": 0.5436,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18441",
+        "score": 0.5398,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-19434",
+        "score": 0.5373,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2025-18986",
+        "score": 0.5338,
+        "priority": "Medium",
+        "match_topics": [],
+        "reasons": []
+      }
+    ]
+  }
+]

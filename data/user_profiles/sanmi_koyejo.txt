@@ -1,0 +1,37 @@
+Research
+I lead Stanford Trustworthy AI Research (STAIR). STAIR develops measurement-theoretic foundations for trustworthy AI systems, spanning AI evaluation science, algorithmic accountability, and privacy-preserving machine learning. Our applied research includes applications to healthcare, neuroimaging, and scientific discovery. For more details, see publications.
+
+Sanmi Koyejo — extended research summary
+
+Positions & lab. Sanmi (Oluwasanmi) Koyejo is an Assistant Professor of Computer Science at Stanford University, where he leads the Stanford Trustworthy AI Research (STAIR) Lab. He is also an adjunct faculty member at the University of Illinois Urbana–Champaign. His group develops measurement-theoretic foundations for trustworthy AI, spanning AI evaluation science, algorithmic accountability, and privacy-preserving learning, with applications in healthcare, neuroimaging, and scientific discovery.
+
+Major strands of research
+
+Evaluation science & “measurement for AI.”
+Koyejo’s recent agenda argues for moving beyond leaderboards toward a science of AI measurement—making claims about AI systems precise, testable, and valid for the intended use. This includes a validity-centered evaluation framework and guidance for validating AI claims.
+
+Reliability under distribution shift: fairness & robustness in the wild.
+A long-running thread studies when models fail to transfer fairness across settings (e.g., hospitals, devices, demographics) and how to diagnose the structure of shift to choose the right mitigations. Representative work: “Diagnosing failures of fairness transfer across distribution shift in real-world medical settings” (NeurIPS 2022).
+
+Federated, privacy-preserving, and adversary-robust learning.
+His group develops methods and reviews for trustworthy distributed/federated AI: personalization with gradient privacy, vertical federated learning, and defenses against byzantine or majority-adversarial clients. Examples include robust vertical FL, byzantine-robust aggregation via clustering, and survey/tutorial papers on trustworthy distributed AI.
+
+Foundations & empirical scrutiny of LLM phenomena.
+Koyejo is co-author of “Are Emergent Abilities of Large Language Models a Mirage?” (NeurIPS 2023 oral), which shows many reported “emergent” jumps are artifacts of metric choice/statistics rather than sudden capability phase transitions—reframing how progress should be measured.
+
+Neuroimaging & healthcare applications.
+Earlier and ongoing applied work includes fMRI decoding and structured probabilistic models, synthetic data augmentation for neuroimaging, and broader healthcare-AI collaborations—mirroring the lab’s emphasis on safety, equity, and robustness in clinical settings.
+
+Community leadership, service, and translation
+
+Conference leadership. General Chair of NeurIPS 2022.
+
+Inclusion & field-building. Co-founder and leader within Black in AI.
+
+Entrepreneurship & tech transfer. Founder/executive at Virtue AI, a startup focused on AI safety and security.
+
+Teaching & campus roles. At Stanford, he teaches courses such as CS329H (Machine Learning from Human Preferences) and CS221, and participates in initiatives on AI safety and responsible health AI.
+
+How the strands fit together
+
+Across these lines, the through-line is trustworthiness by design and by evidence: (i) formalizing what we claim an AI system does (evaluation science), (ii) designing learning algorithms that remain fair, private, and robust under realistic shifts (federated/robust ML), and (iii) stress-testing high-profile claims in modern AI (e.g., LLM “emergence”) with careful measurement. The applied work in healthcare and neuroimaging serves as a proving ground, where distribution shifts and equity stakes are concrete.

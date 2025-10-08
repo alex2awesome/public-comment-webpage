@@ -1,0 +1,41 @@
+Biography
+Daniel E. Ho is the William Benjamin Scott and Luna M. Scott Professor of Law, Professor of Political Science, Professor of Computer Science (by courtesy), Senior Fellow at the Stanford Institute for Human-Centered Artificial Intelligence (HAI), Senior Fellow at the Stanford Institute for Economic Policy Research, and Director of the Regulation, Evaluation, and Governance Lab (RegLab).
+
+Ho served on the National Artificial Intelligence Advisory Committee (NAIAC), advising the White House on AI policy, as Senior Advisor on Responsible AI at the U.S. Department of Labor, on the Committee on National Statistics (CNSTAT) of the National Academies of Science, Engineering, and Medicine, as a Public Member of the Administrative Conference of the United States (ACUS), and as Special Advisor to the ABA Task Force on Law and Artificial Intelligence. He is an elected member of the American Academy of Arts and Sciences.
+
+His scholarship focuses on administrative law, regulatory policy, and antidiscrimination law. With the RegLab, his work has developed high-impact demonstration projects of data science and machine learning in public policy, through partnerships with a range of government agencies, including the Internal Revenue Service, the Treasury Department, the Environmental Protection Agency, the San Francisco City Attorney’s Office, the Department of Labor, Santa Clara County, and Seattle and King County Public Health.
+
+He received his J.D. from Yale Law School and Ph.D. from Harvard University and clerked for Judge Stephen F. Williams on the U.S. Court of Appeals, District of Columbia Circuit. He is the recipient of numerous awards, including the John Bingham Hurlbut Award for Excellence in Teaching at Stanford Law School, the Carole Hafner Award for the best paper at the International Conference on Artificial Intelligence and Law, the Best Empirical Paper Prize from the American Law and Economics Review, Best Paper Awards at the annual meeting of the Association for Computational Linguistics (ACL), the ACM Conference on Fairness, Accountability, and Transparency (FAccT), the AAAI/ACM Conference on AI, Ethics, and Society (AIES), the SafeBench First Prize in AI Safety, and the Warren Miller prize for the best paper published in Political Analysis.
+
+Daniel E. Ho (Stanford) — extended research summary
+
+Overview & roles. Daniel E. Ho is the William Benjamin Scott & Luna M. Scott Professor of Law at Stanford, also in Political Science and (by courtesy) Computer Science; he directs the Regulation, Evaluation, and Governance Lab (RegLab), is a Senior Fellow at HAI and SIEPR, serves on the National AI Advisory Committee, and is Senior Advisor on Responsible AI at the U.S. Department of Labor. His group partners with agencies to modernize governance using data science and machine learning.
+
+Major strands of research
+
+1) AI, law, and public-sector modernization.
+Ho studies how to evaluate and govern AI in high-stakes settings and how to make government more evidence-driven. Recent work includes frameworks for governing open foundation models (Science, 2024), audits/benchmarking of legal AI tools and “legal hallucinations” (J. Legal Analysis, 2024; JELS, 2025), and practitioner-focused assessments of federal AI implementation and leadership mandates. He also helped blueprint the National AI Research Resource and develops domain benchmarks (e.g., LegalBench).
+
+2) Algorithmic fairness, disparity estimation, and administrative data.
+A large line of work tackles fairness when sensitive attributes (e.g., race) aren’t directly observed, the privacy–bias trade-off in government settings, pipeline-aware fairness, and equity for tax-audit selection. Examples include forthcoming JASA work on “Estimating Racial Disparities When Race is Not Observed,” studies of data minimization and fairness at FAccT, and income-aware fairness for IRS models.
+
+3) Environmental enforcement and remote sensing.
+With agencies, RegLab has built computer-vision and satellite-imagery systems to detect environmental violations (e.g., intensive livestock operations/CAFOs; Clean Water Act compliance), plus randomized “nudge” trials that improved pollution-reporting timeliness. This combines near-real-time monitoring with policy evaluation to raise compliance.
+
+4) Public health & social service delivery.
+During COVID-19, Ho’s team co-ran stepped-wedge and RCTs on contact-tracing operations (including language-matching to improve equity), integrated social services with disease investigation, and evaluated door-to-door testing allocations. More broadly, the lab uses administrative data to study operational limits and design improvements with county health departments.
+
+5) Administrative law, adjudication, and bureaucracy.
+Ho also publishes in core public-law topics: executive control and structure of agency adjudication, congressional intervention in veterans’ appeals, and the internal allocation of government work (“Governing by Assignment”). These studies connect institutional design to observable performance and equity.
+
+6) Evidence-based governance methods.
+A methodological through-line is making causal inference feasible inside government. Notable contributions include “Feasible Policy Evaluation by Design” (randomized synthetic stepped-wedge trials), randomized peer-review experiments in food-safety inspection, and earlier work on causal-inference tooling such as MatchIt and guidance for credible inference in empirical legal studies.
+
+7) Earlier work in politics, law & information.
+Earlier strands include natural-experiment studies of ballot order and voting, measures of media positions, and analyses of the “marketplace of ideas.” These projects blend statistical innovation with questions in democratic governance.
+
+The RegLab model
+
+RegLab operates as an “impact lab” inside government—standing up demonstration projects with partners (federal, state, local) to co-design ML systems, audits, datasets, and RCTs on real workflows (e.g., food safety, environmental compliance, tax audits, UI eligibility, legal modernization such as mapping racial covenants). The lab also issues public reports and policy briefs that inform rulemaking and AI oversight.
+
+If you want, I can tailor this to the specific sub-areas you care about (e.g., fairness methods, environmental monitoring, or legal-AI evaluation) and pull representative papers with 2–3 sentence takeaways for each.

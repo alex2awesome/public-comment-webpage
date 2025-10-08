@@ -1,0 +1,36 @@
+# General
+*.log
+*.tmp
+*.swp
+.DS_Store
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+venv/
+.venv/
+.env
+.env.*
+
+# Node / Vite (app)
+app/node_modules/
+app/dist/
+app/.vite/
+app/.eslintcache
+
+# Coverage / Reports
+coverage/
+*.cover
+*.coverage
+*.lcov
+
+# Misc build artifacts
+*.sqlite*
+*.db
+
