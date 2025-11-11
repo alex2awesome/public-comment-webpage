@@ -1,0 +1,8 @@
+{
+  "errors": [
+    {
+      "status": "400",
+      "title": "Invalid date format or range, expected 'yyyy-MM-dd HH:mm:ss' with correct values.  Please revise and try again for: 2023-01-01"
+    }
+  ]
+}

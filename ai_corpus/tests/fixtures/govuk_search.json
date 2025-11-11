@@ -1,0 +1,27 @@
+{
+  "results": [
+    {
+      "title": "AI governance consultation",
+      "link": "/government/consultations/ai-governance-consultation",
+      "public_timestamp": "2024-04-01T10:00:00Z",
+      "content_store_document_type": "consultation",
+      "organisations": [
+        {
+          "title": "Department for Science, Innovation and Technology"
+        }
+      ]
+    },
+    {
+      "title": "Digital regulation update",
+      "link": "/government/consultations/digital-regulation-update",
+      "public_timestamp": "2023-12-15T09:30:00Z",
+      "content_store_document_type": "consultation",
+      "organisations": [
+        {
+          "title": "Cabinet Office"
+        }
+      ]
+    }
+  ],
+  "total": 2
+}

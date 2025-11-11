@@ -1,0 +1,1072 @@
+{
+  "data": [
+    {
+      "id": "HUD-2006-0262",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-03T08:50:07Z",
+        "highlightedContent": null,
+        "agencyId": "HUD",
+        "title": "FR\u20137050\u2013N\u201369\n30-Day Notice of Proposed Information Collection: Public Housing Reform Act: Changes to Admission and Occupancy Requirements; OMB Control No.: 2577\u20130230",
+        "objectId": "0b000064801bc42c"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/HUD-2006-0262"
+      }
+    },
+    {
+      "id": "HUD-2008-0121",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-03T08:55:05Z",
+        "highlightedContent": null,
+        "agencyId": "HUD",
+        "title": "FR\u20137050\u2013N\u201366 \n30-Day Notice of Proposed Information Collection: Inspector Candidate Assessment Questionnaire; OMB Control No.: 2577\u20130243",
+        "objectId": "0b0000648075ccad"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/HUD-2008-0121"
+      }
+    },
+    {
+      "id": "HUD-2023-0001",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-03T08:45:31Z",
+        "highlightedContent": null,
+        "agencyId": "HUD",
+        "title": "FR\u20137050\u2013N\u201368 \n30-Day Notice of Proposed Information Collection: Housing Opportunity Through Modernization Act of 2016 (HOTMA): Public Housing Waiting List Data Collection Tool OMB Control No: 2577\u2013NEW",
+        "objectId": "0b0000648557e6e0"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/HUD-2023-0001"
+      }
+    },
+    {
+      "id": "FAA-2022-1756",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-03T10:07:27Z",
+        "highlightedContent": null,
+        "agencyId": "FAA",
+        "title": "Fiona Werner - Exemption/Rulemaking",
+        "objectId": "0b00006485545f44"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/FAA-2022-1756"
+      }
+    },
+    {
+      "id": "FDA-2022-H-3235",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-03T14:08:01Z",
+        "highlightedContent": null,
+        "agencyId": "FDA",
+        "title": "DAB Civil Money Penalty; VJ Market LLC d/b/a VJ Market; CLOSED 01/03/2023",
+        "objectId": "0b0000648553cd40"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/FDA-2022-H-3235"
+      }
+    },
+    {
+      "id": "FDA-2022-H-3253",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-03T14:05:08Z",
+        "highlightedContent": null,
+        "agencyId": "FDA",
+        "title": "DAB Civil Money Penalty; Duong Nguyen d/b/a P.D. Smoke Shop; CLOSED 01/03/2023",
+        "objectId": "0b0000648554034a"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/FDA-2022-H-3253"
+      }
+    },
+    {
+      "id": "FMCSA-2022-0078",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-03T11:27:09Z",
+        "highlightedContent": null,
+        "agencyId": "FMCSA",
+        "title": "Electronic Device Logging Revisions",
+        "objectId": "0b00006484fbf000"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/FMCSA-2022-0078"
+      }
+    },
+    {
+      "id": "VA-2023-NCA-0001",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Rulemaking",
+        "lastModifiedDate": "2023-01-03T07:55:47Z",
+        "highlightedContent": null,
+        "agencyId": "VA",
+        "title": "AR71-Final Rule-Statutory Increase in Operations and Maintenance Grant Funding",
+        "objectId": "0b0000648557e69a"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/VA-2023-NCA-0001"
+      }
+    },
+    {
+      "id": "VA-2022-VACO-0002",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-03T07:34:04Z",
+        "highlightedContent": null,
+        "agencyId": "VA",
+        "title": "Notices Without Comments",
+        "objectId": "0b00006484f03eba"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/VA-2022-VACO-0002"
+      }
+    },
+    {
+      "id": "FDA-2022-H-2932",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-03T07:37:19Z",
+        "highlightedContent": null,
+        "agencyId": "FDA",
+        "title": "DAB Civil Money Penalty; River Country Store and Deli LLC d/b/a River Country Store; CLOSED 12/30/2022",
+        "objectId": "0b000064854c2e81"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/FDA-2022-H-2932"
+      }
+    },
+    {
+      "id": "NOAA-NMFS-2021-0064",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Rulemaking",
+        "lastModifiedDate": "2023-01-05T11:22:12Z",
+        "highlightedContent": null,
+        "agencyId": "NOAA",
+        "title": "Taking and Importing Marine Mammals; Taking Marine Mammals Incidental to the U.S. Navy Training and Testing Activities in the Point Mugu Sea Range Study Area",
+        "objectId": "0b00006484bc563a"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/NOAA-NMFS-2021-0064"
+      }
+    },
+    {
+      "id": "SBA-2022-0004",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Rulemaking",
+        "lastModifiedDate": "2023-01-05T11:17:39Z",
+        "highlightedContent": null,
+        "agencyId": "SBA",
+        "title": "Small Business Size Standards: Manufacturing and Industries With Employee-Based Size Standards in Other Sectors Except Wholesale Trade and Retail Trade",
+        "objectId": "0b0000648503b843"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/SBA-2022-0004"
+      }
+    },
+    {
+      "id": "CPPBSD-2023-0002",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Rulemaking",
+        "lastModifiedDate": "2023-01-03T16:23:13Z",
+        "highlightedContent": null,
+        "agencyId": "CPPBSD",
+        "title": "FY2023 October AbilityOne Addition and Deletion Notices",
+        "objectId": "0b000064855800cb"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/CPPBSD-2023-0002"
+      }
+    },
+    {
+      "id": "DEA-2022-0126",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-03T10:30:25Z",
+        "highlightedContent": null,
+        "agencyId": "DEA",
+        "title": "Bulk Manufacturer of Controlled  Substances Application: Bulk  Manufacturer of Marihuana: Morrison  Newfound Valley Manufacturing (DEA1038)",
+        "objectId": "0b0000648544d1d8"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/DEA-2022-0126"
+      }
+    },
+    {
+      "id": "DEA-2022-0128",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-03T10:25:17Z",
+        "highlightedContent": null,
+        "agencyId": "DEA",
+        "title": "Bulk Manufacturer of Controlled  Substances Application: Noramco (DEA1109)",
+        "objectId": "0b0000648546cf1d"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/DEA-2022-0128"
+      }
+    },
+    {
+      "id": "DEA-2022-0129",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-03T10:24:40Z",
+        "highlightedContent": null,
+        "agencyId": "DEA",
+        "title": "Bulk Manufacturer of Controlled  Substances Application: Nanosyn Inc (DEA1107)",
+        "objectId": "0b000064854710d9"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/DEA-2022-0129"
+      }
+    },
+    {
+      "id": "APHIS-2021-0021",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-04T07:16:37Z",
+        "highlightedContent": null,
+        "agencyId": "APHIS",
+        "title": "Availability of an Environmental Assessment for release of Ganaspis brasiliensis for biological control of spotted-wing drosophila",
+        "objectId": "0b00006484aa75df"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/APHIS-2021-0021"
+      }
+    },
+    {
+      "id": "FDA-2013-D-0446",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-04T13:19:47Z",
+        "highlightedContent": null,
+        "agencyId": "FDA",
+        "title": "Draft Guidance for Industry on Expanded Access to Investigational Drugs for Treatment Use Qs & As",
+        "objectId": "0b00006481294e4b"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/FDA-2013-D-0446"
+      }
+    },
+    {
+      "id": "FDA-2022-H-2844",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-04T14:00:30Z",
+        "highlightedContent": null,
+        "agencyId": "FDA",
+        "title": "DAB Civil Money Penalty; Moni Morad Corporation. d/b/a AL Prime Energy; CLOSED 01/04/2023",
+        "objectId": "0b000064854ab4f7"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/FDA-2022-H-2844"
+      }
+    },
+    {
+      "id": "FTA-2022-0001",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-04T07:48:56Z",
+        "highlightedContent": null,
+        "agencyId": "FTA",
+        "title": "2022 Emergency Relief Docket",
+        "objectId": "0b00006484f070a6"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/FTA-2022-0001"
+      }
+    },
+    {
+      "id": "DOT-OST-2021-0043",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-04T13:54:18Z",
+        "highlightedContent": null,
+        "agencyId": "DOT",
+        "title": "JetBlue Airways Corporation - Exemption - New York-Buenos Aires Codesharing",
+        "objectId": "0b00006484aa76f5"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/DOT-OST-2021-0043"
+      }
+    },
+    {
+      "id": "ED-2022-SCC-0138",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-04T08:01:33Z",
+        "highlightedContent": null,
+        "agencyId": "ED",
+        "title": "Early Childhood Longitudinal Study, Kindergarten Class of 2023-24 (ECLS-K:2024) Kindergarten and First-Grade National Data Collection and Transfer School Recruitment",
+        "objectId": "0b00006485473d55"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/ED-2022-SCC-0138"
+      }
+    },
+    {
+      "id": "FDA-2022-H-2743",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-04T13:23:42Z",
+        "highlightedContent": null,
+        "agencyId": "FDA",
+        "title": "DAB Civil Money Penalty; Chapel Creek, Inc. d/b/a Chapel Creek Trading Post; CLOSED 1/4/2023",
+        "objectId": "0b0000648547f669"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/FDA-2022-H-2743"
+      }
+    },
+    {
+      "id": "FDA-2022-V-3068",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-04T10:40:53Z",
+        "highlightedContent": null,
+        "agencyId": "FDA",
+        "title": "Variance request from iQuarters, LLC",
+        "objectId": "0b00006485512426"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/FDA-2022-V-3068"
+      }
+    },
+    {
+      "id": "FDA-2022-H-3063",
+      "type": "dockets",
+      "attributes": {
+        "docketType": "Nonrulemaking",
+        "lastModifiedDate": "2023-01-04T16:09:49Z",
+        "highlightedContent": null,
+        "agencyId": "FDA",
+        "title": "DAB Civil Money Penalty; Sharanar Liquor LLC d/b/a Mazoo Liquor; CLOSED 01/04/2023",
+        "objectId": "0b00006485511239"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/dockets/FDA-2022-H-3063"
+      }
+    }
+  ],
+  "meta": {
+    "aggregations": {
+      "priorityCategory": [
+        {
+          "docCount": 339,
+          "label": "Substantive/Nonsignificant"
+        },
+        {
+          "docCount": 157,
+          "label": "Other Significant"
+        },
+        {
+          "docCount": 56,
+          "label": "Economically Significant"
+        },
+        {
+          "docCount": 14,
+          "label": "Info/Admin/Other"
+        },
+        {
+          "docCount": 8,
+          "label": "Routine and Frequent"
+        }
+      ],
+      "docketType": [
+        {
+          "docCount": 12218,
+          "label": "Nonrulemaking"
+        },
+        {
+          "docCount": 1717,
+          "label": "Rulemaking"
+        }
+      ],
+      "major": [
+        {
+          "docCount": 489,
+          "label": "No"
+        },
+        {
+          "docCount": 61,
+          "label": "Yes"
+        },
+        {
+          "docCount": 24,
+          "label": "Undetermined"
+        }
+      ],
+      "ruleStage": [
+        {
+          "docCount": 289,
+          "label": "Completed Actions"
+        },
+        {
+          "docCount": 231,
+          "label": "Final Rule Stage"
+        },
+        {
+          "docCount": 34,
+          "label": "Proposed Rule Stage"
+        },
+        {
+          "docCount": 19,
+          "label": "Long-Term Actions"
+        },
+        {
+          "docCount": 1,
+          "label": "Prerule Stage"
+        }
+      ],
+      "smallEntities": [
+        {
+          "docCount": 214,
+          "label": "No"
+        },
+        {
+          "docCount": 164,
+          "label": "Businesses"
+        },
+        {
+          "docCount": 26,
+          "label": "Organizations"
+        },
+        {
+          "docCount": 25,
+          "label": "Governmental Jurisdictions"
+        },
+        {
+          "docCount": 1,
+          "label": "Undetermined"
+        }
+      ],
+      "energyAffected": [
+        {
+          "docCount": 393,
+          "label": "No"
+        },
+        {
+          "docCount": 18,
+          "label": "Undetermined"
+        },
+        {
+          "docCount": 2,
+          "label": "Yes"
+        }
+      ],
+      "eo13771Designation": [
+        {
+          "docCount": 48,
+          "label": "Not subject to/Not significant"
+        },
+        {
+          "docCount": 43,
+          "label": "Other"
+        },
+        {
+          "docCount": 36,
+          "label": "Deregulatory"
+        },
+        {
+          "docCount": 22,
+          "label": "Regulatory"
+        },
+        {
+          "docCount": 14,
+          "label": "Fully or Partially Exempt"
+        },
+        {
+          "docCount": 4,
+          "label": "Independent agency"
+        }
+      ],
+      "agencyId": [
+        {
+          "docCount": 5567,
+          "value": "FDA"
+        },
+        {
+          "docCount": 2067,
+          "value": "FAA"
+        },
+        {
+          "docCount": 948,
+          "value": "EPA"
+        },
+        {
+          "docCount": 383,
+          "value": "USCG"
+        },
+        {
+          "docCount": 333,
+          "value": "ED"
+        },
+        {
+          "docCount": 287,
+          "value": "DOT"
+        },
+        {
+          "docCount": 245,
+          "value": "FMCSA"
+        },
+        {
+          "docCount": 218,
+          "value": "MARAD"
+        },
+        {
+          "docCount": 204,
+          "value": "CMS"
+        },
+        {
+          "docCount": 195,
+          "value": "FWS"
+        },
+        {
+          "docCount": 186,
+          "value": "NOAA"
+        },
+        {
+          "docCount": 180,
+          "value": "NRC"
+        },
+        {
+          "docCount": 164,
+          "value": "DEA"
+        },
+        {
+          "docCount": 160,
+          "value": "HUD"
+        },
+        {
+          "docCount": 148,
+          "value": "SSA"
+        },
+        {
+          "docCount": 141,
+          "value": "FRA"
+        },
+        {
+          "docCount": 139,
+          "value": "NCUA"
+        },
+        {
+          "docCount": 129,
+          "value": "PHMSA"
+        },
+        {
+          "docCount": 107,
+          "value": "CDC"
+        },
+        {
+          "docCount": 100,
+          "value": "APHIS"
+        },
+        {
+          "docCount": 89,
+          "value": "NHTSA"
+        },
+        {
+          "docCount": 84,
+          "value": "IRS"
+        },
+        {
+          "docCount": 68,
+          "value": "DHS"
+        },
+        {
+          "docCount": 67,
+          "value": "AMS"
+        },
+        {
+          "docCount": 64,
+          "value": "FS"
+        },
+        {
+          "docCount": 63,
+          "value": "FTC"
+        },
+        {
+          "docCount": 60,
+          "value": "DOE"
+        },
+        {
+          "docCount": 59,
+          "value": "MSHA"
+        },
+        {
+          "docCount": 58,
+          "value": "CPSC"
+        },
+        {
+          "docCount": 58,
+          "value": "USCIS"
+        },
+        {
+          "docCount": 55,
+          "value": "PTO"
+        },
+        {
+          "docCount": 54,
+          "value": "USCBP"
+        },
+        {
+          "docCount": 49,
+          "value": "CFPB"
+        },
+        {
+          "docCount": 48,
+          "value": "BOEM"
+        },
+        {
+          "docCount": 48,
+          "value": "FHWA"
+        },
+        {
+          "docCount": 47,
+          "value": "FEMA"
+        },
+        {
+          "docCount": 46,
+          "value": "DARS"
+        },
+        {
+          "docCount": 46,
+          "value": "EERE"
+        },
+        {
+          "docCount": 40,
+          "value": "FNS"
+        },
+        {
+          "docCount": 40,
+          "value": "RBS"
+        },
+        {
+          "docCount": 36,
+          "value": "OSHA"
+        },
+        {
+          "docCount": 35,
+          "value": "CNCS"
+        },
+        {
+          "docCount": 34,
+          "value": "BIS"
+        },
+        {
+          "docCount": 34,
+          "value": "OFCCP"
+        },
+        {
+          "docCount": 32,
+          "value": "RUS"
+        },
+        {
+          "docCount": 30,
+          "value": "FSIS"
+        },
+        {
+          "docCount": 28,
+          "value": "USN"
+        },
+        {
+          "docCount": 27,
+          "value": "EBSA"
+        },
+        {
+          "docCount": 26,
+          "value": "CISA"
+        },
+        {
+          "docCount": 24,
+          "value": "FTA"
+        },
+        {
+          "docCount": 21,
+          "value": "EIB"
+        },
+        {
+          "docCount": 21,
+          "value": "VA"
+        },
+        {
+          "docCount": 19,
+          "value": "GSA"
+        },
+        {
+          "docCount": 19,
+          "value": "NRCS"
+        },
+        {
+          "docCount": 18,
+          "value": "FAR"
+        },
+        {
+          "docCount": 18,
+          "value": "FMC"
+        },
+        {
+          "docCount": 18,
+          "value": "NARA"
+        },
+        {
+          "docCount": 17,
+          "value": "FSA"
+        },
+        {
+          "docCount": 16,
+          "value": "CPPBSD"
+        },
+        {
+          "docCount": 16,
+          "value": "DOS"
+        },
+        {
+          "docCount": 16,
+          "value": "ICEB"
+        },
+        {
+          "docCount": 16,
+          "value": "OPM"
+        },
+        {
+          "docCount": 16,
+          "value": "USBC"
+        },
+        {
+          "docCount": 16,
+          "value": "WCPO"
+        },
+        {
+          "docCount": 15,
+          "value": "SBA"
+        },
+        {
+          "docCount": 15,
+          "value": "TREAS"
+        },
+        {
+          "docCount": 15,
+          "value": "USTR"
+        },
+        {
+          "docCount": 14,
+          "value": "USA"
+        },
+        {
+          "docCount": 13,
+          "value": "NASS"
+        },
+        {
+          "docCount": 12,
+          "value": "BSEE"
+        },
+        {
+          "docCount": 12,
+          "value": "FINCEN"
+        },
+        {
+          "docCount": 12,
+          "value": "RHS"
+        },
+        {
+          "docCount": 11,
+          "value": "OMB"
+        },
+        {
+          "docCount": 11,
+          "value": "TTB"
+        },
+        {
+          "docCount": 10,
+          "value": "COLC"
+        },
+        {
+          "docCount": 10,
+          "value": "OCC"
+        },
+        {
+          "docCount": 10,
+          "value": "OSM"
+        },
+        {
+          "docCount": 9,
+          "value": "NTIA"
+        },
+        {
+          "docCount": 9,
+          "value": "NTSB"
+        },
+        {
+          "docCount": 9,
+          "value": "USAF"
+        },
+        {
+          "docCount": 8,
+          "value": "COE"
+        },
+        {
+          "docCount": 8,
+          "value": "EEOC"
+        },
+        {
+          "docCount": 7,
+          "value": "ACF"
+        },
+        {
+          "docCount": 7,
+          "value": "PBGC"
+        },
+        {
+          "docCount": 6,
+          "value": "ATSDR"
+        },
+        {
+          "docCount": 6,
+          "value": "BSC"
+        },
+        {
+          "docCount": 6,
+          "value": "DOI"
+        },
+        {
+          "docCount": 6,
+          "value": "FCIC"
+        },
+        {
+          "docCount": 6,
+          "value": "USDA"
+        },
+        {
+          "docCount": 5,
+          "value": "CEQ"
+        },
+        {
+          "docCount": 5,
+          "value": "DOL"
+        },
+        {
+          "docCount": 4,
+          "value": "FAS"
+        },
+        {
+          "docCount": 4,
+          "value": "IHS"
+        },
+        {
+          "docCount": 4,
+          "value": "ITA"
+        },
+        {
+          "docCount": 4,
+          "value": "NIST"
+        },
+        {
+          "docCount": 4,
+          "value": "USC"
+        },
+        {
+          "docCount": 3,
+          "value": "ACL"
+        },
+        {
+          "docCount": 3,
+          "value": "ASC"
+        },
+        {
+          "docCount": 3,
+          "value": "DOD"
+        },
+        {
+          "docCount": 3,
+          "value": "DOJ"
+        },
+        {
+          "docCount": 3,
+          "value": "FSOC"
+        },
+        {
+          "docCount": 3,
+          "value": "ONCD"
+        },
+        {
+          "docCount": 2,
+          "value": "AHRQ"
+        },
+        {
+          "docCount": 2,
+          "value": "ATBCB"
+        },
+        {
+          "docCount": 2,
+          "value": "BOR"
+        },
+        {
+          "docCount": 2,
+          "value": "CDFI"
+        },
+        {
+          "docCount": 2,
+          "value": "EAC"
+        },
+        {
+          "docCount": 2,
+          "value": "EOIR"
+        },
+        {
+          "docCount": 2,
+          "value": "ETA"
+        },
+        {
+          "docCount": 2,
+          "value": "HHSIG"
+        },
+        {
+          "docCount": 2,
+          "value": "IPEC"
+        },
+        {
+          "docCount": 2,
+          "value": "NPS"
+        },
+        {
+          "docCount": 2,
+          "value": "OSTP"
+        },
+        {
+          "docCount": 2,
+          "value": "RITA"
+        },
+        {
+          "docCount": 2,
+          "value": "TSA"
+        },
+        {
+          "docCount": 1,
+          "value": "AID"
+        },
+        {
+          "docCount": 1,
+          "value": "AOA"
+        },
+        {
+          "docCount": 1,
+          "value": "BLS"
+        },
+        {
+          "docCount": 1,
+          "value": "BOP"
+        },
+        {
+          "docCount": 1,
+          "value": "DOC"
+        },
+        {
+          "docCount": 1,
+          "value": "FBI"
+        },
+        {
+          "docCount": 1,
+          "value": "GAPFAC"
+        },
+        {
+          "docCount": 1,
+          "value": "HHS"
+        },
+        {
+          "docCount": 1,
+          "value": "NAL"
+        },
+        {
+          "docCount": 1,
+          "value": "NLRB"
+        },
+        {
+          "docCount": 1,
+          "value": "NSPC"
+        },
+        {
+          "docCount": 1,
+          "value": "OFR"
+        },
+        {
+          "docCount": 1,
+          "value": "OJP"
+        },
+        {
+          "docCount": 1,
+          "value": "ONRR"
+        },
+        {
+          "docCount": 1,
+          "value": "RMA"
+        },
+        {
+          "docCount": 1,
+          "value": "SLSDC"
+        },
+        {
+          "docCount": 1,
+          "value": "WHD"
+        }
+      ],
+      "internationalInterest": [
+        {
+          "docCount": 523,
+          "label": "No"
+        },
+        {
+          "docCount": 37,
+          "label": "Yes"
+        },
+        {
+          "docCount": 14,
+          "label": "Not Collected"
+        }
+      ]
+    },
+    "filters": {
+      "lastModifiedDate": {
+        "fromDate": "2023-01-01 00:00:00",
+        "toDate": "2023-12-31 23:59:59"
+      }
+    },
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "numberOfElements": 25,
+    "pageNumber": 1,
+    "pageSize": 25,
+    "totalElements": 13935,
+    "totalPages": 40,
+    "firstPage": true,
+    "lastPage": false
+  }
+}

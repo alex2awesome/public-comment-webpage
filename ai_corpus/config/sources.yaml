@@ -1,0 +1,96 @@
+# Source configuration for AI regulatory comment harvesting.
+# Keep entries declarative so connectors can remain thin wrappers.
+
+global:
+  user_agent: "ai-policy-corpus/1.0 (+contact: you@example.org)"
+  retries:
+    total: 5
+    backoff_factor: 1.5
+    status_forcelist: [429, 500, 502, 503, 504]
+
+regulations_gov:
+  type: api
+  base_url: "https://api.regulations.gov"
+  version: v4
+  auth:
+    header: X-Api-Key
+    env_key: REGS_GOV_API_KEY
+    value: "QeHJqzCTU5j8leqEarXoaXtEBmhYWqWdSoU4EVXe"
+  rate_limits:
+    policy: "api.data.gov default; respect Retry-After and backoff"
+  endpoints:
+    dockets:
+      method: GET
+      path: /v4/dockets
+      pagination:
+        cursor_param: page[token]
+        size_param: page[size]
+    documents:
+      method: GET
+      path: /v4/documents
+      pagination:
+        cursor_param: page[token]
+        size_param: page[size]
+    comments:
+      method: GET
+      path: /v4/comments
+      pagination:
+        cursor_param: page[token]
+        size_param: page[size]
+  downloads:
+    base_url: "https://downloads.regulations.gov"
+  corpora_seeds:
+    - label: NTIA 2023 Accountability RFC
+      docket_id: NTIA-2023-0005
+    - label: NTIA Open Model Weights RFC
+      docket_id: NTIA-2023-0009
+    - label: OMB 2023 Draft AI Memo
+      docket_id: OMB-2023-0020
+ntia_open_models:
+  type: alias
+  base: regulations_gov
+  docket_id: NTIA-2023-0009
+  title: NTIA Open-Weight Model RFC
+
+omb_ai_memo:
+  type: alias
+  base: regulations_gov
+  docket_id: OMB-2023-0020
+  title: OMB Draft Memo on Government Use of AI
+
+
+federal_register:
+  type: api
+  base_url: "https://www.federalregister.gov/api/v1"
+
+nist_airmf:
+  type: html-scrape
+  base_url: "https://www.nist.gov"
+  index_url: "https://www.nist.gov/itl/ai-risk-management-framework/comments-2nd-draft-ai-risk-management-framework"
+
+nitrd_ai_rfi:
+  type: directory-scrape
+  base_url: "https://files.nitrd.gov/90-fr-9088/"
+  seed_files:
+    - "CAIDP-AI-RFI-2025.pdf"
+    - "MITRE-AI-RFI-2025.pdf"
+
+cppa_admt:
+  type: html-scrape
+  base_url: "https://cppa.ca.gov"
+  index_url: "https://cppa.ca.gov/regulations/ccpa_updates.html"
+
+eu_have_your_say_keyword:
+  type: playwright
+  base_url: "https://ec.europa.eu"
+  keywords:
+    - "Artificial intelligence ethical and legal requirements"
+    - "Artificial intelligence act adoption of the commission proposal"
+  wait_timeout: 60000
+  headless: true
+  debug: false
+  pause_on_complete: false
+
+uk_gov_dsit_consultations:
+  type: api
+  base_url: "https://www.gov.uk/api"

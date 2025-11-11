@@ -34,3 +34,20 @@ coverage/
 *.sqlite*
 *.db
 
+# Data artifacts
+data/
+downloads/
+ai_corpus/downloads/
+notebooks/processed_dataset.csv
+comments.csv
+federal_rulemaking_*.csv
+scratch/*.meta.jsonl
+
+# Browser automation assets
+.playwright/
+
+# Demo recordings (large GIF/MOV exports)
+demos/
+
+# Notebook caches
+.ipynb_checkpoints/

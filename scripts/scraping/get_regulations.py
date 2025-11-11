@@ -19,16 +19,30 @@ Usage examples:
     --regs-key $REGS_API_KEY -o rfi_rfc.csv
 """
 
-import argparse, csv, os, time, logging, re, json
+import argparse, csv, os, logging, re, json, sys
 import concurrent.futures
 import threading
 from functools import partial
 from datetime import datetime, date, timedelta, timezone
+from pathlib import Path
 from typing import Optional, Dict, Any, List, Tuple
-import requests
 import xml.etree.ElementTree as ET
 from dateutil import parser as dtparse
-import xmltodict
+try:
+    import xmltodict
+except ImportError:  # pragma: no cover - optional dependency
+    xmltodict = None
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.append(str(SCRIPT_DIR))
+
+ROOT_DIR = SCRIPT_DIR.parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.append(str(ROOT_DIR))
+
+from api_utils import RateLimiter, backoff_get, parse_doc_id_from_url, regs_backoff_get
+from ai_corpus.rules import RULE_VERSION_COLUMNS, normalize_rule_row, detect_comment_citations
 
 try:
     from tqdm.auto import tqdm
@@ -37,51 +51,13 @@ except Exception:
         return iterable if iterable is not None else []
 
 FR_BASE = "https://www.federalregister.gov/api/v1"
-REGS_BASE = "https://api.regulations.gov/v4"
 UA = "regulations-merge/1.4 (contact: you@example.org)"
+JSON_HEADERS = {"Accept": "application/json", "User-Agent": UA}
 
-_thread_local = threading.local()
 logger = logging.getLogger(__name__)
 
-# --------------------- HTTP helpers ---------------------
 
-def get_http_session() -> requests.Session:
-    sess = getattr(_thread_local, "session", None)
-    if sess is None:
-        sess = requests.Session()
-        sess.headers.update({"Accept": "application/json", "User-Agent": UA})
-        _thread_local.session = sess
-    return sess
-
-def backoff_get(url: str, params: Any = None, timeout: int = 30, max_attempts: int = 5, headers: Optional[Dict[str, str]] = None) -> Optional[requests.Response]:
-    if params is None:
-        params = {}
-    for attempt in range(1, max_attempts + 1):
-        try:
-            sess = get_http_session()
-            if headers:
-                r = sess.get(url, params=params, timeout=timeout, headers=headers)
-            else:
-                r = sess.get(url, params=params, timeout=timeout)
-            if r.status_code >= 500 or r.status_code in (429, 408):
-                raise requests.HTTPError(f"{r.status_code} {r.reason}")
-            r.raise_for_status()
-            return r
-        except (requests.ConnectionError, requests.Timeout, requests.HTTPError) as e:
-            if attempt == max_attempts:
-                logger.warning("GET failed %s after %d attempts: %s", url, attempt, e)
-                return None
-            sleep_s = min(60, 2 ** (attempt - 1) + 0.1 * attempt)
-            logger.debug("GET error on %s (attempt %d/%d): %s; retrying in %.1fs", url, attempt, max_attempts, e, sleep_s)
-            time.sleep(sleep_s)
-
-# Regulations.gov v4 retrying GET
-def regs_backoff_get(path: str, api_key: Optional[str], params: Any = None, timeout: int = 30, max_attempts: int = 5) -> Optional[requests.Response]:
-    if not api_key:
-        return None
-    url = f"{REGS_BASE.rstrip('/')}/{path.lstrip('/')}"
-    headers = {"X-Api-Key": api_key, "Accept": "application/vnd.api+json", "User-Agent": UA}
-    return backoff_get(url, params=params, timeout=timeout, max_attempts=max_attempts, headers=headers)
+REGS_RATE_LIMITER = RateLimiter(min_interval=1.0)
 
 # --------------------- parsing helpers ---------------------
 
@@ -125,15 +101,21 @@ def extract_info_from_fr_xml(xml_url: Optional[str]) -> Tuple[Optional[Dict[str,
     """
     if not xml_url:
         return None, None
-    r = backoff_get(xml_url, timeout=30, headers={"Accept": "application/xml", "User-Agent": UA})
+    r = backoff_get(
+        xml_url,
+        timeout=30,
+        headers={"Accept": "application/xml", "User-Agent": UA},
+        default_headers=JSON_HEADERS,
+    )
     if not r or r.status_code != 200:
         logger.debug("XML fetch failed: %s", xml_url)
         return None, None
     xml_dict = None
-    try:
-        xml_dict = xmltodict.parse(r.content)
-    except Exception:
-        pass
+    if xmltodict is not None:
+        try:
+            xml_dict = xmltodict.parse(r.content)
+        except Exception:
+            xml_dict = None
     try:
         root = ET.fromstring(r.content)
         sup_nodes = root.findall(".//SUPLINF")
@@ -196,37 +178,16 @@ FR_DOC_FIELDS = [
     "full_text_xml_url",
 ]
 
-def fr_get_published(
-    start: date,
-    end: date,
-    include_types: List[str],
-    terms: Optional[List[str]] = None,
+def fr_query_documents(
+    params: List[Tuple[str, Any]],
     executor: Optional[concurrent.futures.Executor] = None,
+    log_label: str = "FR documents",
 ) -> List[Dict[str, Any]]:
     url = f"{FR_BASE}/documents.json"
-    params = [
-        ("per_page", 1000),
-        ("order", "newest"),
-        ("conditions[publication_date][gte]", start.isoformat()),
-        ("conditions[publication_date][lte]", end.isoformat()),
-    ]
-    for t in include_types:
-        params.append(("conditions[type][]", t))
-    if terms:
-        for t in terms:
-            if t and t.strip():
-                params.append(("conditions[term]", t.strip()))
-    for f in FR_DOC_FIELDS:
-        params.append(("fields[]", f))
-
     results: List[Dict[str, Any]] = []
-    logger.info(
-        "Fetching published documents %s → %s (types=%s, terms=%s)",
-        start.isoformat(), end.isoformat(), ",".join(include_types), json.dumps(terms) if terms else "None",
-    )
     first_params = list(params)
     first_params.append(("page", 1))
-    first_response = backoff_get(url, first_params)
+    first_response = backoff_get(url, first_params, default_headers=JSON_HEADERS)
     if not first_response:
         return results
     first_json = first_response.json() or {}
@@ -235,7 +196,7 @@ def fr_get_published(
         return results
     results.extend(first_batch)
     total_pages = first_json.get("total_pages") or 1
-    logger.info("Published query has %d page(s)", total_pages)
+    logger.info("%s query has %d page(s)", log_label, total_pages)
     logger.debug("Fetched published page 1/%d with %d item(s)", total_pages, len(first_batch))
 
     if total_pages <= 1:
@@ -246,7 +207,7 @@ def fr_get_published(
         for page in remaining_pages:
             page_params = list(params)
             page_params.append(("page", page))
-            resp = backoff_get(url, page_params)
+            resp = backoff_get(url, page_params, default_headers=JSON_HEADERS)
             if not resp:
                 continue
             js = resp.json() or {}
@@ -261,7 +222,7 @@ def fr_get_published(
     for page in remaining_pages:
         page_params = list(params)
         page_params.append(("page", page))
-        future = executor.submit(backoff_get, url, page_params)
+        future = executor.submit(backoff_get, url, page_params, default_headers=JSON_HEADERS)
         future_to_page[future] = page
 
     for future in concurrent.futures.as_completed(future_to_page):
@@ -281,6 +242,60 @@ def fr_get_published(
         logger.debug("Fetched published page %d/%d with %d item(s)", page, total_pages, len(batch))
     return results
 
+
+def fr_get_published(
+    start: date,
+    end: date,
+    include_types: List[str],
+    terms: Optional[List[str]] = None,
+    executor: Optional[concurrent.futures.Executor] = None,
+) -> List[Dict[str, Any]]:
+    params: List[Tuple[str, Any]] = [
+        ("per_page", 1000),
+        ("order", "newest"),
+        ("conditions[publication_date][gte]", start.isoformat()),
+        ("conditions[publication_date][lte]", end.isoformat()),
+    ]
+    for t in include_types:
+        params.append(("conditions[type][]", t))
+    if terms:
+        for t in terms:
+            if t and t.strip():
+                params.append(("conditions[term]", t.strip()))
+    for f in FR_DOC_FIELDS:
+        params.append(("fields[]", f))
+    logger.info(
+        "Fetching published documents %s → %s (types=%s, terms=%s)",
+        start.isoformat(), end.isoformat(), ",".join(include_types), json.dumps(terms) if terms else "None",
+    )
+    return fr_query_documents(
+        params,
+        executor=executor,
+        log_label=f"Published {start.isoformat()}→{end.isoformat()}",
+    )
+
+
+def fr_get_docket_documents(
+    docket_id: str,
+    include_types: List[str],
+    executor: Optional[concurrent.futures.Executor] = None,
+) -> List[Dict[str, Any]]:
+    params: List[Tuple[str, Any]] = [
+        ("per_page", 1000),
+        ("order", "oldest"),
+        ("conditions[term]", docket_id),
+    ]
+    for t in include_types:
+        if t:
+            params.append(("conditions[type][]", t))
+    for f in FR_DOC_FIELDS:
+        params.append(("fields[]", f))
+    return fr_query_documents(
+        params,
+        executor=executor,
+        log_label=f"Docket {docket_id}",
+    )
+
 # --------------------- FR: Public Inspection ---------------------
 
 PI_TYPE_CANON = {
@@ -293,7 +308,7 @@ PI_TYPE_CANON = {
 def fr_get_pi_current() -> List[Dict[str, Any]]:
     url = f"{FR_BASE}/public-inspection-documents/current.json"
     logger.info("Fetching Public Inspection current items")
-    r = backoff_get(url, {"per_page": 1000})
+    r = backoff_get(url, {"per_page": 1000}, default_headers=JSON_HEADERS)
     if not r:
         return []
     data = r.json()
@@ -312,17 +327,13 @@ def pi_filter_by_pubdate(items: List[Dict[str, Any]], start: date, end: date, in
     return out
 
 # --------------------- Regulations.gov helpers ---------------------
-
-DOC_ID_RE = re.compile(r"/document/([A-Z0-9\-]+)")
-
-def parse_doc_id_from_url(regs_url: Optional[str]) -> Optional[str]:
-    if not regs_url:
-        return None
-    m = DOC_ID_RE.search(regs_url)
-    return m.group(1) if m else None
-
 def regs_get_doc_detail_by_id(doc_id: str, api_key: Optional[str]) -> Optional[Dict[str, Any]]:
-    r = regs_backoff_get(f"documents/{doc_id}", api_key=api_key)
+    r = regs_backoff_get(
+        f"documents/{doc_id}",
+        api_key=api_key,
+        user_agent=UA,
+        rate_limiter=REGS_RATE_LIMITER,
+    )
     if not r or r.status_code != 200:
         return None
     try:
@@ -332,7 +343,13 @@ def regs_get_doc_detail_by_id(doc_id: str, api_key: Optional[str]) -> Optional[D
 
 def regs_search_by_docket(docket_id: str, api_key: Optional[str]) -> Optional[Dict[str, Any]]:
     # List docs in docket; pick a sensible one (prefer Proposed Rule; else first).
-    r = regs_backoff_get("documents", api_key=api_key, params={"filter[docketId]": docket_id, "page[size]": 250})
+    r = regs_backoff_get(
+        "documents",
+        api_key=api_key,
+        params={"filter[docketId]": docket_id, "page[size]": 250},
+        user_agent=UA,
+        rate_limiter=REGS_RATE_LIMITER,
+    )
     if not r or r.status_code != 200:
         return None
     js = r.json() or {}
@@ -427,6 +444,41 @@ def detect_and_attach_rfi_rfc(row: Dict[str, Any]) -> None:
     row["rfi_rfc_label"] = label
     row["rfi_rfc_matched_in"] = matched
 
+
+HISTORY_REL_MAP = {
+    "PRORULE": "proposal",
+    "RULE": "final",
+    "NOTICE": "notice",
+}
+
+
+def annotate_comment_citations(row: Dict[str, Any]) -> None:
+    mentions, snippet = detect_comment_citations(
+        row.get("supplementary_information"),
+        row.get("abstract"),
+        row.get("action"),
+        row.get("dates"),
+    )
+    row["mentions_comment_response"] = mentions
+    row["comment_citation_snippet"] = snippet or ""
+
+
+def attach_history_metadata(
+    row: Dict[str, Any],
+    docket_id: Optional[str],
+    parent_docnum: Optional[str],
+    rank: int,
+) -> None:
+    doc_type = (row.get("type") or "").strip().upper()
+    relationship = HISTORY_REL_MAP.get(doc_type, "related")
+    if rank == 1:
+        relationship = "seed"
+    row["history_parent_docket"] = docket_id or row.get("docket_id") or ""
+    row["history_parent_fr_doc"] = parent_docnum or (row.get("fr_document_number") or "")
+    row["history_stage"] = row.get("type") or ""
+    row["history_relationship"] = relationship
+    row["history_rank"] = str(rank)
+
 def ensure_regs_detail_and_ids(
     regs_key: Optional[str],
     regs_url: Optional[str],
@@ -505,7 +557,8 @@ def normalize_published(
     fr_pub = parse_iso_date(item.get("publication_date"))
     fr_close = parse_iso_date(item.get("comments_close_on"))
 
-    docket = item.get("docket_id") or (item.get("docket_ids") or [None])[0]
+    docket = item.get("docket_id") 
+    docket_ids = item.get("docket_ids") or [None]
     regs_url = item.get("regulations_dot_gov_url") or ""
 
     # Pull Regulations.gov detail + IDs
@@ -540,6 +593,7 @@ def normalize_published(
         "agency": join_list(agencies),
         "fr_url": fr_url or "",
         "docket_id": docket or "",
+        "docket_ids": docket_ids or [],
         "regs_url": regs_url or "",
         "regs_document_id": regs_doc_id or "",
         "regs_object_id": regs_obj_id or "",
@@ -555,6 +609,7 @@ def normalize_published(
         "details": "",  # publish rows don't have PI 'details'
     }
     detect_and_attach_rfi_rfc(row)
+    annotate_comment_citations(row)
     return row
 
 def normalize_pi(
@@ -604,6 +659,7 @@ def normalize_pi(
         "agency": join_list(agencies),
         "fr_url": fr_url or "",
         "docket_id": guessed or "",
+        "docket_ids": [],
         "regs_url": regs_url or "",
         "regs_document_id": regs_doc_id or "",
         "regs_object_id": regs_obj_id or "",
@@ -619,6 +675,7 @@ def normalize_pi(
         "xml_dict": {},
     }
     detect_and_attach_rfi_rfc(row)
+    annotate_comment_citations(row)
     return row
 
 # --------------------- concurrency ---------------------
@@ -638,35 +695,74 @@ def parallel_map(
         results[futures[fut]] = fut.result()
     return results
 
+
+def augment_with_docket_history(
+    rows: List[Dict[str, Any]],
+    *,
+    regs_key: Optional[str],
+    cache: Dict[str, Dict[str, Any]],
+    cache_lock: threading.Lock,
+    include_types: List[str],
+    history_types: Optional[List[str]] = None,
+    history_limit: Optional[int] = None,
+) -> None:
+    docket_ids = sorted({r.get("docket_id") for r in rows if r.get("docket_id")})
+    if not docket_ids:
+        logger.info("No docket IDs available for history enrichment.")
+        return
+    history_type_list = [t.strip().upper() for t in (history_types or include_types) if t and t.strip()]
+    if not history_type_list:
+        history_type_list = ["PRORULE", "RULE", "NOTICE"]
+    logger.info(
+        "Fetching docket histories for %d docket(s) (types=%s limit=%s)",
+        len(docket_ids),
+        ",".join(history_type_list),
+        history_limit if history_limit is not None else "None",
+    )
+    doc_lookup: Dict[str, Dict[str, Any]] = {}
+    for row in rows:
+        docnum = row.get("fr_document_number")
+        if docnum:
+            doc_lookup[docnum] = row
+
+    for docket_id in docket_ids:
+        history_items = fr_get_docket_documents(docket_id, history_type_list)
+        if not history_items:
+            continue
+        history_items.sort(
+            key=lambda item: (
+                parse_iso_date(item.get("publication_date")) or date.min,
+                item.get("document_number") or "",
+            )
+        )
+        parent_docnum = next(
+            (item.get("document_number") for item in history_items if item.get("document_number")),
+            None,
+        )
+        for idx, item in enumerate(history_items, start=1):
+            if history_limit and idx > history_limit:
+                break
+            row = normalize_published(
+                item,
+                regs_key=regs_key,
+                cache=cache,
+                cache_lock=cache_lock,
+            )
+            attach_history_metadata(row, docket_id, parent_docnum, idx)
+            docnum = row.get("fr_document_number")
+            if docnum and docnum in doc_lookup:
+                attach_history_metadata(doc_lookup[docnum], docket_id, parent_docnum, idx)
+                doc_lookup[docnum]["mentions_comment_response"] = row.get("mentions_comment_response")
+                doc_lookup[docnum]["comment_citation_snippet"] = row.get("comment_citation_snippet")
+                continue
+            row["source"] = row.get("source") or "history"
+            rows.append(row)
+            if docnum:
+                doc_lookup[docnum] = row
+
 # --------------------- CSV layout ---------------------
 
-CSV_COLUMNS = [
-    "scrape_mode",
-    "source",
-    "fr_document_number",
-    "title",
-    "type",
-    "publication_date",
-    "agency",
-    "fr_url",
-    "docket_id",
-    "regs_url",
-    "regs_document_id",  # new
-    "regs_object_id",    # new
-    "comment_start_date",
-    "comment_due_date",
-    "comment_status",
-    "comment_active",
-    "is_rfi_rfc",
-    "rfi_rfc_label",
-    "rfi_rfc_matched_in",
-    "details",
-    "abstract",
-    "action",
-    "dates",
-    "supplementary_information",
-    "xml_dict",
-]
+CSV_COLUMNS = list(RULE_VERSION_COLUMNS)
 
 # --------------------- orchestrate ---------------------
 
@@ -680,6 +776,9 @@ def run(
     rfi_rfc_only: bool = False,
     fr_terms: Optional[List[str]] = None,
     num_workers: int = 4,
+    include_docket_history: bool = False,
+    history_types: Optional[List[str]] = None,
+    history_limit: Optional[int] = None,
 ) -> None:
     rows: List[Dict[str, Any]] = []
     cache: Dict[str, Dict[str, Any]] = {}
@@ -734,18 +833,31 @@ def run(
     rows = list(by_doc.values())
     logger.info("Unique rows after deduplication: %d", len(rows))
 
-    # 4) Optional filter: only keep RFIs/RFCs
+    # 4) Augment with docket history if requested
+    if include_docket_history:
+        augment_with_docket_history(
+            rows,
+            regs_key=regs_key,
+            cache=cache,
+            cache_lock=cache_lock,
+            include_types=include_types,
+            history_types=history_types,
+            history_limit=history_limit,
+        )
+        logger.info("Rows after history enrichment: %d", len(rows))
+
+    # 5) Optional filter: only keep RFIs/RFCs
     if rfi_rfc_only:
         before = len(rows)
         rows = [r for r in rows if r.get("is_rfi_rfc") == "TRUE"]
         logger.info("Filtered to RFIs/RFCs: %d → %d", before, len(rows))
 
-    # 5) Annotate scrape mode on all rows
+    # 6) Annotate scrape mode on all rows
     scrape_mode = "rfi_rfc_only" if rfi_rfc_only else "all_documents"
     for r in rows:
         r["scrape_mode"] = scrape_mode
 
-    # 6) Write CSV
+    # 7) Write CSV
     with open(outfile, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=CSV_COLUMNS)
         w.writeheader()
@@ -756,7 +868,8 @@ def run(
                     rr["xml_dict"] = json.dumps(rr["xml_dict"])[:500000]
                 except Exception:
                     rr["xml_dict"] = str(rr["xml_dict"])
-            w.writerow({k: rr.get(k, "") for k in CSV_COLUMNS})
+            prepared = normalize_rule_row(rr)
+            w.writerow(prepared)
 
     logger.info("Wrote %d rows to %s", len(rows), outfile)
 
@@ -780,6 +893,12 @@ def parse_args():
     ap.add_argument("-o", "--outfile", type=str, default=None, help="Output CSV path.")
     ap.add_argument("--num-workers", type=int, default=4,
                     help="Number of concurrent worker threads for API calls. Default: 4")
+    ap.add_argument("--include-docket-history", action="store_true",
+                    help="Fetch all available Federal Register documents for each docket and annotate history metadata.")
+    ap.add_argument("--history-types", action="append",
+                    help="Override the Federal Register document types to include when gathering history (default: --include-types).")
+    ap.add_argument("--history-limit", type=int, default=None,
+                    help="Maximum number of historical documents to keep per docket (default: unlimited).")
     return ap.parse_args()
 
 def main():
@@ -803,9 +922,12 @@ def main():
     outfile = args.outfile or f"federal_rulemaking_{start.isoformat()}_{end.isoformat()}.csv"
 
     logger.info(
-        "Start: %s End: %s Types: %s Include PI: %s Output: %s RFI/RFC only: %s Terms: %s",
+        "Start: %s End: %s Types: %s Include PI: %s Output: %s RFI/RFC only: %s Terms: %s History: %s History types: %s History limit: %s",
         start.isoformat(), end.isoformat(), ",".join(include_types), not args.no_pi, outfile,
-        args.rfi_rfc_only, json.dumps(args.fr_term) if args.fr_term else "None"
+        args.rfi_rfc_only, json.dumps(args.fr_term) if args.fr_term else "None",
+        args.include_docket_history,
+        ",".join(args.history_types) if args.history_types else "default",
+        args.history_limit if args.history_limit is not None else "None",
     )
     run(
         start=start,
@@ -817,6 +939,9 @@ def main():
         rfi_rfc_only=args.rfi_rfc_only,
         fr_terms=args.fr_term,
         num_workers=args.num_workers,
+        include_docket_history=args.include_docket_history,
+        history_types=args.history_types,
+        history_limit=args.history_limit,
     )
 
 if __name__ == "__main__":

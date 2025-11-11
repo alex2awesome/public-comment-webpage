@@ -1,0 +1,186 @@
+AI Regulatory Comment Collection – Implementation Snapshot
+===========================================================
+
+Overview
+--------
+
+This repository now ships with a full “ai_corpus” package that harvests, caches, processes, and normalizes public comments spanning multiple AI‑relevant consultations. The system is organized into four key layers:
+
+1. **Connectors (`ai_corpus/connectors/`)** – one per upstream source (Regulations.gov, NIST, NITRD, CPPA, EU Have Your Say). Each connector implements the `discover → list_documents → fetch` interface, supports rate limiting, rotates realistic user agents, and respects cached files to avoid redundant requests.
+2. **Pipelines (`ai_corpus/pipelines/`)** – orchestrates discovery, harvesting, downloading, extraction, and normalization. Downloads are parallelized with `ThreadPoolExecutor`, display progress via `tqdm`, and persist their outputs to SQLite for fault‑tolerant resumability.
+3. **Storage (`ai_corpus/storage/`)** – the `Database` wrapper layers on SQLAlchemy. In addition to `documents`, a new `downloads` table tracks raw fetches, extraction status, and blob paths. The filesystem blob store (`storage/fs.py`) retains text/PDF content by SHA-256.
+4. **CLI (`ai_corpus/cli/main.py`)** – the entry point for all operations (`discover`, `crawl`, `download`, `extract`, `export`). CLI commands now accept verbosity flags, concurrency tuning, and the path to the shared downloads SQLite database.
+
+Connectors at a glance
+----------------------
+
+* `regulations_gov.py` – handles NTIA/OMB dockets and any other Regs.gov collections. Supports cursor-based discovery with date filters and rotates user agents for every request. Max concurrent downloads default to 2 to respect API limits.
+* `nist_airmf.py` – scrapes the AI RMF comment index and fetches PDFs (RPS capped at 4).
+* `nitrd_ai_rfi.py` – hydrates RFI responses from the static directory and downloads in parallel (default workers: 4) using seeded filenames when autoindexing is unavailable.
+* `cppa_admt.py` – crawls CPPA comment bundles and optionally splits them into per-letter text files. Default worker count: 2.
+* `eu_haveyoursay.py` – scrapes EU feedback cards, stores the original HTML, and streams attachments with cache-friendly behavior.
+
+Pipeline and storage upgrades
+-----------------------------
+
+* **Parallel downloads** (`ai_corpus/pipelines/download.py`): Every connector fetch now runs through a thread pool with caching. If a cached download exists (tracked in SQLite and/or on disk), the worker skips re-fetch. Failures are logged, and download results stream back to the DB incrementally.
+* **SQLite caching** (`ai_corpus/storage/db.py`): New `downloads` table records payloads, timestamps, and extraction status. Helpers such as `record_download`, `get_download`, `iter_downloads`, and `mark_extracted` enable resumable workflows (e.g., rerun `download` and it picks up where it left off).
+* **Extraction pipeline**: The CLI’s `extract` command now pulls pending records from the downloads DB, extracts text into the blob store, updates each record, and displays a progress bar.
+* **Export pipeline**: `export` reads the metadata JSONL from `crawl`, looks up corresponding download records (with extracted text), and batches normalized documents into the destination database.
+
+CLI usage
+---------
+
+All commands accept `--verbose` to surface progress bars and richer logs.
+
+1. **Discover collections**
+   ```bash
+   python -m ai_corpus.cli.main --verbose discover \
+       --start-date 2023-01-01 --end-date 2023-12-31
+   ```
+   Optional `--connector` arguments limit discovery to specific sources.
+
+2. **Crawl metadata**
+   ```bash
+   python -m ai_corpus.cli.main crawl \
+       --connector regulations_gov \
+       --collection-id NTIA-2023-0005 \
+       --output data/NTIA-2023-0005.meta.jsonl
+   ```
+
+3. **Download documents (parallel + cached)**
+   ```bash
+   python -m ai_corpus.cli.main download --verbose \
+       --connector regulations_gov \
+       --collection-id NTIA-2023-0005 \
+       --meta-file data/NTIA-2023-0005.meta.jsonl \
+       --out-dir data/NTIA-2023-0005/raw \
+      --database data/comments/ai_pipeline.sqlite \
+       --max-workers 3
+   ```
+   Add `--no-cache` to force re-downloads.
+
+4. **Extract text**
+   ```bash
+   python -m ai_corpus.cli.main extract --verbose \
+      --database data/comments/ai_pipeline.sqlite \
+       --blob-dir data/comments/blobs \
+       --max-workers 2
+   ```
+
+5. **Export normalized records**
+   ```bash
+   python -m ai_corpus.cli.main export --verbose \
+       --meta-file data/NTIA-2023-0005.meta.jsonl \
+      --database data/comments/ai_pipeline.sqlite \
+      --database-url sqlite:///data/app_data/ai_corpus.db
+   ```
+
+Automation: `run_ai.sh`
+-----------------------
+
+The script `./run_ai.sh` orchestrates the entire pipeline. Key flags:
+
+* `--start-date` / `--end-date`: filter discovery by docket last-modified range.
+* `--database`: path to the shared SQLite downloads cache (default: `data/comments/ai_pipeline.sqlite`).
+* `--max-workers`: parallel worker count per connector (default 4).
+* `--verbose`: enable CLI progress bars/logging.
+
+Example full run:
+```bash
+./run_ai.sh --start-date 2023-01-01 --end-date 2023-12-31 \
+            --database data/comments/ai_pipeline.sqlite \
+            --max-workers 3 \
+            --verbose
+```
+
+If discovery fails (e.g., network outage), the script falls back to a canonical set of AI dockets: NTIA-2023-0005, NTIA-2023-0009, OMB-2023-0020, NIST AI RMF, NITRD RFI, CPPA ADMT, and the two EU feedback initiatives.
+
+Caching & resilience
+--------------------
+
+* **SQLite download cache** retains payloads and extraction state, so re-running `download` or `extract` resumes where it left off.
+* Connectors skip re-fetching any file already on disk with a non-zero size (unless `--no-cache`).
+* HTTP retry behavior is tuned to reduce wait times on 429 responses (retry-after divided by 10, with a sensible floor) while respecting upstream rate limits.
+* User agents are rotated automatically for each HTTP request to minimize throttling.
+
+Tests & validation
+------------------
+
+All unit and integration tests can be run with:
+```bash
+python -m pytest ai_corpus/tests
+```
+Highlights:
+* Connector-specific tests ensure discovery, pagination, and fetch logic handle cached files and parallelism correctly (`ai_corpus/tests/connectors/*.py`).
+* CLI tests verify the crawl → download (with SQLite) → extract → export workflow (`ai_corpus/tests/test_cli.py`).
+* Integration suite exercises live endpoints for Regulations.gov, NIST, and NITRD (tagged with `@pytest.mark.live`).
+
+Expected outputs
+----------------
+
+
+SQLite schema (data/comments/ai_pipeline.sqlite / data/app_data/ai_corpus.db)
+------------------------------------------------
+
+Table: documents
+  id (INTEGER PK AUTOINCREMENT)
+  uid (VARCHAR(64), unique) – sha256(source|collection_id|doc_id)
+  source (VARCHAR(64)) – connector identifier (e.g., regulations_gov)
+  collection_id (VARCHAR(128)) – docket/collection identifier
+  doc_id (VARCHAR(128)) – upstream document/comment id
+  title (VARCHAR(512))
+  submitter_name (VARCHAR(256))
+  submitter_type (VARCHAR(64))
+  org (VARCHAR(256))
+  submitted_at (VARCHAR(64)) – ISO8601 string
+  language (VARCHAR(16))
+  url_html (VARCHAR(1024))
+  url_pdf (VARCHAR(1024))
+  url_json (VARCHAR(1024))
+  sha256_pdf (VARCHAR(64))
+  sha256_text (VARCHAR(64))
+  bytes_pdf (INTEGER)
+  bytes_text (INTEGER)
+  text_path (VARCHAR(1024)) – blob location for extracted text
+  pdf_path (VARCHAR(1024)) – blob location for downloaded PDF
+  raw_meta (JSON) – source-specific metadata payload
+
+Table: downloads
+  doc_id (VARCHAR(128) PK)
+  connector (VARCHAR(64)) – connector name
+  collection_id (VARCHAR(128))
+  payload (JSON) – raw fetch result ({html/pdf/attachments})
+  downloaded_at (VARCHAR(32)) – UTC timestamp (ISO string)
+  extracted (BOOLEAN) – whether text has been processed
+  text_path (VARCHAR(1024)) – blob path to extracted text
+  sha256_text (VARCHAR(64)) – checksum of text blob
+
+Helpers & guarantees:
+  • document UID ensures idempotent upserts per source/collection/doc.
+  • download payload mirrors the JSON lines emitted during fetch (html/pdf paths).
+  • extraction updates set extracted=true, populate text_path/sha256_text.
+  • export uses the cached records to populate normalized documents and can be rerun safely.
+
+
+* `data/comments/<connector>/<collection_id>/raw/…` – cached HTML/PDF artifacts per collection.
+* `data/comments/ai_pipeline.sqlite` – downloads cache (per-document JSON payload, extraction status, blob pointers).
+* `data/comments/blobs/…` – SHA-256 addressed text assets generated during extraction.
+* `data/app_data/ai_corpus.db` (or custom DB via `--database-url`) – normalized `documents` table ready for analysis.
+
+Recent bug fixes & enhancements
+-------------------------------
+
+* Added retry-after scaling, rotating user agents, and connector-specific worker limits to mitigate throttling.
+* Converted `run_ai.sh` to a SQLite-driven pipeline so partial runs are resumable, even after failures.
+* Removed thin connector wrappers in favor of direct Regulations.gov coverage, simplifying maintenance while keeping targeted tests.
+* Replaced synthetic fixtures with real captures (EU feedback detail, NIST, CPPA, Regs.gov docket pages) to ensure unit tests reflect production HTML/JSON.
+
+Future considerations
+---------------------
+
+* Layer in per-connector rate-limit configuration in `config/sources.yaml` (currently defaults are hard-coded).
+* Extend `discover` to support keyword filters for additional agencies beyond AI.
+* Build reporting scripts that query `data/app_data/ai_corpus.db` for quick summaries (comment counts, organizations, timelines).
+
+This roadmap now serves as the authoritative reference for the repository’s current architecture, the `ai_corpus` layout, and the operational procedures for harvesting and processing AI-related regulatory comments.

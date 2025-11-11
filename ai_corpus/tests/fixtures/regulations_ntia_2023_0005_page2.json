@@ -1,0 +1,4280 @@
+{
+  "data": [
+    {
+      "id": "NTIA-2023-0005-0321",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:29:30Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a0c05a",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0321"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0323",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:29:35Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a0cb8e",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0323"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0327",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:29:47Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a0d63e",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0327"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0334",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:30:01Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a10786",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0334"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0104",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:21:07Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859cf1a0",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0104"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0130",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:22:06Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859f664e",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0130"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0179",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:23:59Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a0008e",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0179"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0122",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:21:46Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859f6d1f",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0122"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0136",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:22:20Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859f7948",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0136"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0140",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:22:28Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859f8375",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0140"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0149",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:22:51Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859f9504",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0149"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0135",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:22:18Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859f6802",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0135"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0212",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:25:22Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a06b9c",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0212"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0170",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:23:40Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859fe182",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0170"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0243",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:26:31Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a08252",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0243"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0181",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:24:03Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a00a17",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0181"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0280",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:27:55Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a092e0",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0280"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0186",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:24:17Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a00fec",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0186"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0285",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:28:08Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a09418",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0285"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0236",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:26:16Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a07ea4",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0236"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0196",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:24:38Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a04563",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0196"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0296",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:28:32Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a0978f",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0296"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0297",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:28:34Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a09806",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0297"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0073",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:19:47Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "090000648594fe6b",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0073"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0103",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:20:58Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859c8653",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0103"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0082",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:20:11Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485971bec",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0082"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0209",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:25:16Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a05fe7",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0209"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0150",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:22:53Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859f9505",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0150"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0165",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:23:28Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859fd152",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0165"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0270",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:27:34Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a0887e",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0270"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0272",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:27:38Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a088fe",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0272"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0169",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:23:37Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859fdfac",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0169"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0178",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:23:57Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a00050",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0178"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0197",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:24:41Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a045fb",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0197"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0268",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:27:30Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a08d9f",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0268"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0225",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:25:53Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a07568",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0225"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0189",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:24:24Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a01c0c",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0189"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0242",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:26:29Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a08218",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0242"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0287",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:28:13Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a08f79",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0287"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0120",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:21:41Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859f6c41",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0120"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0127",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:22:00Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859f7006",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0127"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0185",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:24:15Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a00fc8",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0185"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0190",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:24:26Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a01f5d",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0190"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0281",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:27:57Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a092e8",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0281"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0213",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:25:24Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a06bde",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0213"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0198",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:24:43Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a04629",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0198"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0132",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:22:11Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859f6698",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0132"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0089",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:20:28Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "090000648598cf1b",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0089"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0288",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:28:15Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a09033",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0288"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0278",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:27:51Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a092af",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0278"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0092",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:20:35Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485993f03",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0092"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0283",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:28:01Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a093c6",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0283"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0141",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:22:30Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859f8453",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0141"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0100",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:20:52Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859c32e0",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0100"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0161",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:23:16Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "09000064859fc221",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0161"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0337",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:30:09Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a10382",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0337"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0373",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:31:32Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a140ad",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0373"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0402",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:32:37Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a1677a",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0402"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0364",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:31:13Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a13028",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0364"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0453",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:34:39Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a1ad96",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0453"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0548",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:38:24Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a41152",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0548"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0351",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:30:42Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a12c1c",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0351"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0355",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:30:50Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a12e4c",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0355"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0420",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:33:22Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a178b0",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0420"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0572",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:39:18Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a5190f",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0572"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0432",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:33:50Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a1873e",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0432"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0410",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:33:01Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a16a5a",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0410"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0356",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:30:52Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a12e62",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0356"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0461",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:34:56Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a1afdf",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0461"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0368",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:31:22Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a13208",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0368"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0529",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:37:41Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a2dfe7",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0529"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0507",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:36:50Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a269f0",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0507"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0531",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:37:45Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a33a82",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0531"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0525",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:37:32Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a28bf8",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0525"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0407",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:32:55Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a16860",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0407"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0424",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:33:34Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a17d64",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0424"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0441",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:34:10Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a1a046",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0441"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0459",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:34:52Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a1afd8",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0459"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0462",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:34:58Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a1afec",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0462"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0467",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:35:13Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a1b0aa",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0467"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0465",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:35:08Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a1b1f8",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0465"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0470",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:35:19Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a1bd0a",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0470"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0483",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:35:46Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a1c981",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0483"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0586",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:39:52Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a6be32",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0586"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0589",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:39:59Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a6cf1f",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0589"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0594",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:40:10Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a83515",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0594"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0602",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:40:28Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a86dbc",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0602"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0603",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:40:30Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a89bc5",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0603"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0604",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:40:39Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a8d19a",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0604"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0607",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:40:46Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a9283d",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0607"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0634",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:41:49Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ace3fe",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0634"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0635",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:41:52Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ad2707",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0635"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0637",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:41:56Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ad6130",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0637"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0664",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:43:03Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae3044",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0664"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0706",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:44:49Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae7bc7",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0706"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0707",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:44:51Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae7d51",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0707"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0652",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:42:33Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae25d6",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0652"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0712",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:45:02Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae80c5",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0712"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0786",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:47:56Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485aec7b9",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0786"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0842",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:50:12Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485af43a2",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0842"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0739",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:46:03Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae9d7c",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0739"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0844",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:50:16Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485af46a2",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0844"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0746",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:46:22Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485aeaa98",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0746"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0772",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:47:23Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485aebd08",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0772"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0857",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:50:44Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485af85e9",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0857"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0811",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:48:56Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485aeeffd",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0811"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0815",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:49:05Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485aefb62",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0815"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0868",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:51:12Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485afb27b",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0868"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0869",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:51:14Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485afb43f",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0869"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0870",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:51:16Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485afb684",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0870"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0872",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:51:21Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485afc292",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0872"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0878",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:51:34Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485afd809",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0878"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0881",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:51:41Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485afdb84",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0881"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0886",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:51:55Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485afe09c",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0886"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0887",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:51:57Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485afe0db",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0887"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0882",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:51:46Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485afe1ab",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0882"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0929",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:53:40Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01277",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0929"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0931",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:53:44Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b012c5",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0931"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0899",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:52:22Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b00098",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0899"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1039",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:57:59Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b00462",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1039"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0942",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:54:12Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b013ed",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0942"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0945",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:54:18Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b0144d",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0945"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0906",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:52:47Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b00a88",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0906"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0952",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:54:33Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b0153d",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0952"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0913",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:53:03Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b010a7",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0913"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0954",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:54:37Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b0157d",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0954"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0957",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:54:44Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01600",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0957"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0975",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:55:26Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b018d4",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0975"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1030",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:57:39Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01fd4",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1030"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1040",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:58:02Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b0210c",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1040"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1043",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:58:12Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b0217d",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1043"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1044",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:58:14Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b021a3",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1044"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1006",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:56:43Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01cc1",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1006"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1050",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:58:27Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b022c6",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1050"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1015",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:57:03Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01e5b",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1015"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1053",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:58:33Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b0242e",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1053"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1076",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:59:27Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b032dd",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1076"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1066",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:59:05Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b026dd",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1066"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1026",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:57:30Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01fb5",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1026"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1067",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:59:07Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b026e7",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1067"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1082",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:59:43Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b02e1a",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1082"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1073",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:59:20Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b03220",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1073"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0831",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:49:44Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485af309a",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0831"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0833",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:49:48Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485af3111",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0833"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0723",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:45:28Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae8f23",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0723"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0827",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:49:35Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485af22d7",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0827"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0731",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:45:45Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae997e",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0731"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0843",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:50:14Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485af4488",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0843"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0717",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:45:12Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae82ed",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0717"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0848",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:50:25Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485af67fe",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0848"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0732",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:45:47Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae99b9",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0732"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0771",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:47:21Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485aebc1e",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0771"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0785",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:47:54Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485aec678",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0785"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0790",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:48:05Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485aec977",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0790"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0801",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:48:28Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485aed664",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0801"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0807",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:48:48Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485aedfe1",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0807"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0788",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:48:01Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485aec85e",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0788"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0927",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:53:36Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b011ed",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0927"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0883",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:51:48Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485afe1b0",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0883"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0936",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:53:54Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01333",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0936"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0937",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:53:56Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b0133c",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0937"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0904",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:52:42Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b009ae",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0904"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0905",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:52:44Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b009d7",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0905"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0911",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:52:58Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01019",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0911"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0916",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:53:09Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b010ba",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0916"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0918",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:53:13Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b010ec",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0918"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0920",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:53:18Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01159",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0920"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0974",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:55:24Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b018d1",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0974"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0921",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:53:20Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01182",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0921"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0977",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:55:31Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b018f9",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0977"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0981",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:55:39Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b0193e",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0981"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0982",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:55:45Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01989",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0982"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0983",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:55:47Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b019c1",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0983"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0986",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:55:53Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01a01",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0986"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0991",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:56:04Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01ab1",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0991"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0993",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:56:08Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01b04",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0993"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0999",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:56:22Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01b85",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0999"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1003",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:56:37Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01c42",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1003"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1004",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:56:39Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01c7c",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1004"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1005",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:56:41Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01ca0",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1005"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1048",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:58:23Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b02229",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1048"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1052",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:58:31Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b02391",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1052"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1017",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:57:07Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01ed6",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1017"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0340",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:30:15Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a11ed1",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0340"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0549",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:38:26Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a4115e",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0549"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0345",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:30:29Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a1237a",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0345"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0511",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:36:58Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a27a20",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0511"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0518",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:37:13Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a28911",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0518"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0574",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:39:22Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a5286e",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0574"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0444",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:34:20Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a1a08b",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0444"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0491",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:36:08Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a1f1b9",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0491"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0503",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:36:34Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a24b78",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0503"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0472",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:35:23Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a1bd8c",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0472"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0510",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:36:56Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a2711a",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0510"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0533",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:37:49Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a346b9",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0533"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0509",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:36:54Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a26ce1",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0509"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0608",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:40:48Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a95583",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0608"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0621",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:41:17Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ab178a",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0621"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0624",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:41:27Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ab5dd1",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0624"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0668",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:43:11Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae37e8",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0668"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0650",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:42:29Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae1f61",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0650"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0677",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:43:30Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae49d6",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0677"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0654",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:42:37Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae284a",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0654"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0679",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:43:34Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae53f0",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0679"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0685",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:43:51Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae574a",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0685"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0681",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:43:39Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae617b",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0681"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0703",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:44:43Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae6310",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0703"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0687",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:43:55Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae677c",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0687"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0689",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:43:59Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae6c73",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0689"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0690",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:44:01Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae6ccd",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0690"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0695",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:44:11Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae71a2",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0695"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0696",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:44:13Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae7365",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0696"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0832",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:49:46Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485af30df",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0832"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0839",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:50:01Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485af3edd",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0839"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0809",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:48:52Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485aee36c",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0809"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0713",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:45:04Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae80d8",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0713"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0743",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:46:15Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485aea5c0",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0743"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0724",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:45:30Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae916b",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0724"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0849",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:50:28Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485af6d6b",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0849"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0736",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:45:56Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae9d20",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0736"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0764",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:47:05Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485aeba25",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0764"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0740",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:46:05Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae9d99",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0740"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0858",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:50:47Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485af89dd",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0858"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0797",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:48:20Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485aec06a",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0797"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1075",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:59:24Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b032a2",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1075"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1019",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:57:12Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01efc",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1019"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1062",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:58:56Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b02646",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1062"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1023",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:57:24Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b01f94",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1023"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-1089",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:59:58Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485b036e6",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1089"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0493",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:36:12Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a205d9",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0493"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0384",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:31:59Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a151eb",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0384"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0550",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:38:28Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a41225",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0550"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0505",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:36:45Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a26640",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0505"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0526",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:37:34Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a297ac",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0526"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0458",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:34:50Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a1afd7",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0458"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0578",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:39:31Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a548c5",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0578"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0528",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:37:38Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a2af8e",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0528"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0379",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:31:45Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a13715",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0379"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0520",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:37:17Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a28b48",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0520"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0403",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:32:39Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485a1680f",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0403"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0656",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:42:42Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae2afb",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0656"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0662",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:42:55Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae2fcc",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0662"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0665",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:43:05Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485adfcd9",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0665"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0643",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:42:09Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae17aa",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0643"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0672",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:43:19Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae3c12",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0672"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0710",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:44:57Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae7e69",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0710"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0752",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:46:35Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae8812",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0752"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0761",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:46:54Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485aeb7b5",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0761"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0765",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:47:07Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485aebaa1",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0765"
+      }
+    },
+    {
+      "id": "NTIA-2023-0005-0730",
+      "type": "comments",
+      "attributes": {
+        "documentType": "Public Submission",
+        "lastModifiedDate": "2023-06-16T00:45:43Z",
+        "highlightedContent": "",
+        "withdrawn": false,
+        "agencyId": "NTIA",
+        "title": "Comment on FR Doc # 2023-07776",
+        "objectId": "0900006485ae97c6",
+        "postedDate": "2023-06-15T04:00:00Z"
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-0730"
+      }
+    }
+  ],
+  "meta": {
+    "aggregations": {
+      "agencyId": [
+        {
+          "docCount": 1451,
+          "value": "NTIA"
+        }
+      ],
+      "postedDate": []
+    },
+    "filters": {
+      "docketId": {
+        "label": "NTIA-2023-0005",
+        "value": "NTIA-2023-0005"
+      }
+    },
+    "hasNextPage": true,
+    "hasPreviousPage": true,
+    "numberOfElements": 250,
+    "pageNumber": 2,
+    "pageSize": 250,
+    "totalElements": 1451,
+    "totalPages": 6,
+    "firstPage": false,
+    "lastPage": false
+  }
+}

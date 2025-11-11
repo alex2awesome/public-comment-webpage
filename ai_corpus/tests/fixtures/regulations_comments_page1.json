@@ -1,0 +1,45 @@
+{
+  "data": [
+    {
+      "id": "NTIA-2023-0005-1000",
+      "type": "comments",
+      "attributes": {
+        "commentId": "NTIA-2023-0005-1000",
+        "comment": "<p>Support responsible AI accountability.</p>",
+        "submitterName": "OpenAI",
+        "submitterType": "company",
+        "organization": "OpenAI",
+        "postedDate": "2023-05-01T00:00:00Z",
+        "title": "OpenAI comment",
+        "fileFormats": [
+          {
+            "format": "pdf",
+            "fileUrl": "https://downloads.regulations.gov/NTIA-2023-0005-1000/content.pdf"
+          }
+        ]
+      },
+      "relationships": {
+        "attachments": {
+          "data": [
+            {"type": "attachments", "id": "ATT-1"}
+          ]
+        }
+      },
+      "links": {
+        "self": "https://api.regulations.gov/v4/comments/NTIA-2023-0005-1000"
+      }
+    }
+  ],
+  "included": [
+    {
+      "type": "attachments",
+      "id": "ATT-1",
+      "links": {
+        "download": "https://downloads.regulations.gov/NTIA-2023-0005-1000/attachment_1.pdf"
+      }
+    }
+  ],
+  "links": {
+    "next": null
+  }
+}

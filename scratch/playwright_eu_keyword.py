@@ -11,6 +11,7 @@ driven manually.
 from __future__ import annotations
 
 import argparse
+import json
 import os
 from pathlib import Path
 import time
@@ -81,7 +82,17 @@ def sanitize_filename(name: str) -> str:
     return sanitized or "file"
 
 
-def launch_and_search(keyword: str, slow_mo: int, wait_timeout: int) -> None:
+def launch_and_search(
+    keyword: str,
+    slow_mo: int,
+    wait_timeout: int,
+    *,
+    downloads_dir: Path,
+    max_pages: int | None,
+    perform_downloads: bool,
+    pause_on_complete: bool,
+    dump_json: Path | None,
+) -> None:
     ensure_browser_cache()
 
     with sync_playwright() as playwright:
@@ -108,6 +119,7 @@ def launch_and_search(keyword: str, slow_mo: int, wait_timeout: int) -> None:
         print(f"Found {len(result_links)} result links")
         
         matched_link = None
+        all_feedback_entries: list[dict[str, object]] = []
         # Try exact match first
         for link in result_links:
             link_text = link.text_content()
@@ -161,7 +173,6 @@ def launch_and_search(keyword: str, slow_mo: int, wait_timeout: int) -> None:
 
             # Now find all "All feedback" links (there may be multiple for different consultations)
             print("Looking for 'All feedback' links...")
-            all_feedback_entries: list[dict[str, object]] = []
             try:
                 # Use Playwright's text locator to find ALL links containing "All feedback"
                 feedback_links = page.get_by_role("link", name=re.compile(r"All feedback", re.IGNORECASE)).all()
@@ -193,6 +204,12 @@ def launch_and_search(keyword: str, slow_mo: int, wait_timeout: int) -> None:
 
                         page_number = 1
                         while True:
+                            if max_pages is not None and page_number > max_pages:
+                                print(
+                                    f"  Reached max-pages limit ({max_pages}); "
+                                    "stopping pagination."
+                                )
+                                break
                             print(f"\nCollecting feedback entry links (page {page_number})...")
                             entry_links = page.locator("feedback-item").all()
                             for entry in entry_links:
@@ -265,7 +282,7 @@ def launch_and_search(keyword: str, slow_mo: int, wait_timeout: int) -> None:
         
         # Hand control back to the user for manual inspection
         data = []
-        for entry in all_feedback_entries:
+        for idx, entry in enumerate(all_feedback_entries, start=1):
             page.goto(entry['href'])
             page.wait_for_load_state("networkidle")
             time.sleep(5)
@@ -274,29 +291,27 @@ def launch_and_search(keyword: str, slow_mo: int, wait_timeout: int) -> None:
 
             download_path = None
             download_locator = page.locator("a.ecl-file__download")
-            if download_locator.count():
+            if perform_downloads and download_locator.count():
                 reference = metadata_dict.get("Feedback reference")
-                if reference:
-                    downloads_dir = Path(__file__).resolve().parents[1] / "downloads"
-                    downloads_dir.mkdir(parents=True, exist_ok=True)
-                    safe_name = sanitize_filename(reference)
-                    target_path = downloads_dir / f"{safe_name}.pdf"
+                safe_name = sanitize_filename(reference or entry["href"])
+                target_path = downloads_dir / f"{safe_name}.pdf"
+                downloads_dir.mkdir(parents=True, exist_ok=True)
 
-                    if target_path.exists():
-                        print(f"Attachment already exists at {target_path}")
-                        download_path = str(target_path)
-                    else:
-                        try:
-                            with page.expect_download(timeout=wait_timeout) as download_info:
-                                download_locator.first.click()
-                            download = download_info.value
-                            download.save_as(str(target_path))
-                            download_path = str(target_path)
-                            print(f"Downloaded attachment to {target_path}")
-                        except Exception as download_error:
-                            print(f"Failed to download attachment: {download_error}")
+                if target_path.exists():
+                    print(f"[entry {idx}] Attachment already exists at {target_path}")
+                    download_path = str(target_path)
                 else:
-                    print("Feedback reference missing; skipping attachment download.")
+                    try:
+                        with page.expect_download(timeout=wait_timeout) as download_info:
+                            download_locator.first.click()
+                        download = download_info.value
+                        download.save_as(str(target_path))
+                        download_path = str(target_path)
+                        print(f"[entry {idx}] Downloaded attachment to {target_path}")
+                    except Exception as download_error:
+                        print(f"[entry {idx}] Failed to download attachment: {download_error}")
+            elif perform_downloads:
+                print(f"[entry {idx}] No downloadable attachment link detected.")
 
             output_dict = {
                 "text": entry['text'],
@@ -309,7 +324,17 @@ def launch_and_search(keyword: str, slow_mo: int, wait_timeout: int) -> None:
             output_dict.update(metadata_dict)
             data.append(output_dict)
 
-        page.pause()
+        print(f"\nProcessed {len(data)} feedback entries.")
+        if dump_json:
+            dump_json.parent.mkdir(parents=True, exist_ok=True)
+            dump_json.write_text(
+                json.dumps(data, indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
+            print(f"Metadata written to {dump_json}")
+
+        if pause_on_complete:
+            page.pause()
 
         browser.close()
 
@@ -336,12 +361,48 @@ def parse_args() -> argparse.Namespace:
         default=60000,
         help="Maximum time (ms) to wait for elements to appear.",
     )
+    parser.add_argument(
+        "--downloads-dir",
+        type=Path,
+        default=Path(__file__).resolve().parents[1] / "downloads",
+        help="Directory to store downloaded attachments (default: <repo>/downloads).",
+    )
+    parser.add_argument(
+        "--max-pages",
+        type=int,
+        default=None,
+        help="Optional maximum number of feedback listing pages to traverse.",
+    )
+    parser.add_argument(
+        "--no-download",
+        action="store_true",
+        help="Only collect metadata; skip attachment downloads.",
+    )
+    parser.add_argument(
+        "--no-pause",
+        action="store_true",
+        help="Finish without entering Playwright inspector pause mode.",
+    )
+    parser.add_argument(
+        "--dump-json",
+        type=Path,
+        help="Optional path to write collected metadata as JSON.",
+    )
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    launch_and_search(args.keyword, args.slow_mo, args.wait_timeout)
+    launch_and_search(
+        args.keyword,
+        args.slow_mo,
+        args.wait_timeout,
+        downloads_dir=args.downloads_dir.expanduser().resolve(),
+        max_pages=args.max_pages,
+        perform_downloads=not args.no_download,
+        pause_on_complete=not args.no_pause,
+        dump_json=args.dump_json.expanduser().resolve() if args.dump_json else None,
+    )
 
 
 if __name__ == "__main__":

@@ -1,0 +1,31 @@
+{
+  "title": "AI governance consultation",
+  "locale": "en",
+  "public_updated_at": "2024-04-02T08:15:00Z",
+  "document_type": "consultation",
+  "links": {
+    "organisations": [
+      {
+        "title": "Department for Science, Innovation and Technology"
+      }
+    ]
+  },
+  "details": {
+    "attachments": [
+      {
+        "title": "Consultation document",
+        "url": "https://assets.publishing.service.gov.uk/media/consultation-document.pdf",
+        "content_type": "application/pdf"
+      }
+    ],
+    "documents": [
+      {
+        "title": "Impact assessment",
+        "attachment": {
+          "url": "https://assets.publishing.service.gov.uk/media/impact-assessment.pdf",
+          "content_type": "application/pdf"
+        }
+      }
+    ]
+  }
+}
