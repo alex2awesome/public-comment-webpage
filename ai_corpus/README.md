@@ -87,6 +87,30 @@ Internally it runs every stage with sane defaults (SQLite paths under `data/comm
 | `extract` *(optional)* | `... extract` | SQLite DB, blob dir | Fallback text files (`data/comments/blobs/<sha>.txt`) with `sha256_text` pointers |
 | `export` | `... export` | Meta file, SQLite DB, blob dir, normalized DB URL | Upserts into `data/app_data/ai_corpus.db` and copies blob references |
 
+### Running against date ranges
+
+Both the helper script and the raw CLI forward `--start-date/--end-date` to the discovery stage so only connectors with activity in that window are enqueued.
+
+- Batch script:
+
+  ```bash
+  ./run_ai.sh --start-date 2023-01-01 --end-date 2023-06-30
+  ```
+
+  If discovery finds nothing in the range, it falls back to the default AI docket list so you never end up with an empty run.
+
+- Direct CLI discovery (useful for ad-hoc manifests or dry-runs):
+
+  ```bash
+  python -m ai_corpus.cli.main discover \
+    --connector regulations_gov \
+    --start-date 2023-11-01 \
+    --end-date 2023-12-31 \
+    --output discovered.json
+  ```
+
+  You can feed the resulting collection ids into subsequent `crawl`/`download-*` invocations. Passing only `--start-date` (or only `--end-date`) creates open-ended ranges.
+
 ### Manual invocation
 
 Run each stage yourself when you need overrides (custom output paths, selective reruns, etc.):
