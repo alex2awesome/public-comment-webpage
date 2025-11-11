@@ -1,0 +1,344 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+<head>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-E5G7880415"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-E5G7880415');
+        </script>
+  <meta http-equiv="Content-Type" content="text/html; CHARSET=windows-1251">
+  <meta name="description" content="Virginia Regulatory Town Hall View Comments">
+  <link rel="stylesheet" type="text/css" href="../styles.css"><link rel="stylesheet" type="text/css" href="../print.css" media="print"><link rel="shortcut icon" href="../townhall.ico"><link rel="P3Pv1" href=../"w3c/p3p.xml">
+  <style type="text/css">
+    .Cbox {
+    background-color: #FFFAEA;
+    border: 1px solid #dddddd;
+    padding: 8px;
+    width: 700px;
+    }
+    .divComment {
+    width: 700px;
+    word-wrap: break-word; 
+    }
+    #contentwide a.linklight {
+    Color: #777777;
+    Text-Decoration: none;
+    }
+    #contentwide a.linklight:visited {
+    Color: #777777;
+    }
+    #contentwide a.linklight:hover {
+    Color: dodgerblue;
+    }
+    #contentwide a.linkbrown {
+    Color: #432432;
+    }
+    #contentwide a.linkbrown:visited {
+    Color: #432432;
+    }
+    #contentwide a.linkbrown:hover {
+    Color: dodgerblue;
+    }
+    
+    pre {
+      white-space: pre-wrap;
+    }
+
+  </style>
+
+  <title>Virginia Regulatory Town Hall View Comments</title>
+
+  
+<link rel="stylesheet" href="https://townhall.virginia.gov/jquery/jquery-ui-1.13.2/jquery-ui.css">
+<script src="/jquery/jquery-3.7.1.min.js"></script>
+<script src="/jquery/jquery-ui-1.13.2/jquery-ui.min.js"></script>
+
+
+  <script type="text/javascript">
+    function flagcomment(jcommentid) 
+    {
+     $.ajax({
+           type:"POST",
+           url:"ViewComments.cfc?method=FlagC",
+           data: { jcommentid: jcommentid},
+           cache:false,
+           success: function(ReturnValue) 
+           {
+             var parser = new DOMParser();
+             var xmlDoc = parser.parseFromString(ReturnValue, "text/xml");
+             var dataElement = xmlDoc.getElementsByTagName("data")[0];
+             var ReturnContent = dataElement.getElementsByTagName("string")[0].textContent;
+             var ReturnArray = ReturnContent.split(",");
+             var flagstatus = ReturnArray[0];
+             var jcommentid = ReturnArray[1];
+             if (flagstatus == 'Y')
+               {
+               document.getElementById('cbox'+jcommentid).style.backgroundColor = 'pink';
+               document.getElementById('cflag'+jcommentid).innerHTML = 'Unflag';
+               }
+             else
+               {
+               document.getElementById('cbox'+jcommentid).style.backgroundColor = '#FFFAEA';
+                  document.getElementById('cflag'+jcommentid).innerHTML = 'Flag as Inappropriate';
+                  }
+           }
+       });    
+    }
+
+    
+    function mySubmit(whataction, urlString)
+      {
+      var str = 'ViewComments.cfm?'+urlString;
+
+      switch (whataction)
+        {
+        case "xportPDF":
+          //alert(str);
+          document.forms['menuselection'].xport.value='PDF';
+          document.forms['menuselection'].action=str;
+          document.forms['menuselection'].submit();
+          document.forms['menuselection'].xport.value='No';
+          break;
+
+        case "xportXLS":
+          //alert(str);
+          document.forms['menuselection'].xport.value='XLS';
+          document.forms['menuselection'].action=str;
+          document.forms['menuselection'].submit();
+          document.forms['menuselection'].xport.value='No';
+          break;
+
+        default:
+          alert("Invalid Action");
+        }
+      }
+
+  </script>
+
+  
+<script>
+  $(window).on("load", function() {
+    if ($(".divComment").children("table").length > 0) {
+      $(".divComment").children("table").css("width", "700px");
+    } else {
+      $(".divComment").css("width", "700px");
+    }
+  });
+</script>
+</head>
+
+<body>
+
+
+
+<script src="https://www.developer.virginia.gov/media/developer/resources/branding-bar/brandingbar.php" data-item="va_aabrandingbar" aaname="Department of Planning and Budget" aatheme="aatheme-black" defer="" ></script>
+
+<div id="agencybanner" title="Virginia Regulatory Town Hall">
+
+
+
+
+  <div><img src="../graphics/townhalllogo.gif" alt="Virginia Regulatory Town Hall"></div>
+
+</div>
+
+
+<div id="breadcrumb">
+  
+<div id="sitesearch">
+  
+   	 <form action="../L/search.cfm" method="post">
+        <input type="text" name="keyword" 
+               style="vertical-align: middle; height: 18px; font-size: .85em; width: 140px; background-color: #feffff; padding: 0px; border: 0px; border-top: 1px solid #D5D5D5; border-bottom: 1px solid #D5D5D5;"
+               onclick="javaScript: if (this.value=='Search the TownHall')this.value=''" onkeypress="javaScript: if (this.value=='Search the TownHall')this.value=''" value="Search the TownHall"               
+        ><input type="image" src="../Graphics/MagnifyGlassSearch.gif" style="vertical-align: middle; height: 20px;">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="../L/search.cfm" alt="search page" style="font-size: .9em;">Search Options</a>
+   	  </form>
+   		 
+</div>
+
+
+  <div id="breadcrumblinks"><a href="../index.cfm">Home</a> &gt; </div>
+</div>
+
+
+
+  <div id="sidebar">
+    
+    
+
+    
+
+    
+    <div id="menu8"><a>&nbsp;</a></div>
+
+    <ul class="menu">
+      <li><a href="../L/ListBoards.cfm" title="Browse Regulations">Find a Regulation</a></li>
+      <li><a href="../L/NowInProgress.cfm" title="Regulatory Activity">Regulatory Activity</a>
+        <ul>
+          <li><a href="../L/NowInProgress.cfm" title="Actions Underway">Actions Underway</a></li>
+          <li><a href="../L/petitions.cfm" title="Petitions for Rulemaking">Petitions</a></li>
+          <li><a href="../L/mandates.cfm" title="Legislative Mandates">Legislative Mandates</a></li>
+          <li><a href="../L/previews.cfm" title="Periodic Reviews">Periodic Reviews</a></li>
+          <li><a href="../L/generalnotice.cfm" title="General Notices">General Notices</a></li>
+        </ul>
+      </li>
+
+      <li><a href="../L/meetings.cfm?time=today" title="Meetings">Meetings</a></li>
+      <li><a href="../L/GDocs.cfm" title="Guidance Documents">Guidance Documents</a></li>
+      <li><a href="../L/Forums.cfm" title="Comment Forums">Comment Forums</a></li>
+    </ul>
+
+    
+      <div class="navTR">Sign in</div>
+      <div id="menu6"><a href="../L/statelogin.cfm" title="State agency login">State User</a></div>
+      <div id="menu7"><a href="../L/publiclogin.cfm" title="Public user Login">Registered Public</a></div>
+      <div id="menu13"><a href="../L/Register.cfm" title="Register as a public user">Public Sign up</a></div>
+    
+
+    
+    <div id="menu12"><a>&nbsp;</a></div>
+
+    
+
+    
+    
+  </div>
+
+
+
+
+<div id="contentwide">
+
+
+
+    <div class="headerA">
+    <div style="float: left; margin-right: 8px"><A href="ViewAgency.cfm?AgencyNumber=223">
+      <img src="../graphics/a_agency.gif" border=0 style="vertical-align: middle" alt="Agency"></a>
+    </div>
+    <div style="float: left; Width: 630px;">Department of Health Professions</div>
+    <div style="clear: left; font-size: 9px;">&nbsp;</div>
+
+    
+      <div style="float: left; margin-right: 8px">
+        <A href="ViewBoard.cfm?BoardID=25">
+        <img src="../graphics/a_board.gif" border=0 style="vertical-align: middle" alt="Board"></a>
+      </div>
+      <div style="float: left; Width: 630px;">Board of Counseling</div>
+      <div style="clear: left; font-size: 9px;">&nbsp;</div>
+    
+      <div style="clear: left; height: 9px;"></div>
+      <div style="float: left; margin-right: 8px">
+        <A href="ViewChapter.cfm?ChapterID=1150">
+        <img src="../graphics/a_chapter.gif" border=0 style="vertical-align: middle" alt="chapter"></a>
+      </div>
+      <div style="float: left; font-weight: bold; font-size: .8em">
+        Regulations Governing the Practice of Professional Counseling
+        <span style="color: #222288"><a title="Open a new window to view the current regulation on the legislature's LIS system." href="http://law.lis.virginia.gov/admincode/title18/agency115/chapter20" target="_Blank">[18&nbsp;VAC&nbsp;115&nbsp;&#8209;&nbsp;20]</a></span>
+      </div>
+    
+
+    </div>
+    <div style="color:#111111;">
+      
+    </div>
+
+
+    <div style="clear: left; height: 9px;"></div>
+
+    
+      
+      <table style="background-color: #FFFAEA; width: 700px;">
+        <tr>
+          <td><strong>Action</strong></td>
+          <td><a href="viewaction.cfm?actionid=6660" class="linkblack">Reduction of residency requirements</a></td>
+        </tr>
+        <tr>
+          <td><strong>Stage</strong></td>
+          <td><a href="viewstage.cfm?stageid=10600">Fast-Track</a></td>
+        </tr>
+        <tr>
+          <td><strong>Comment&nbsp;Period</strong></td>
+          <td>
+            
+              Ends 12/3/2025 
+          </td>
+        </tr>
+        
+        
+        
+        
+        
+        <tr>
+          <td style="border-bottom: 0px; border-right: 0px; border-left: 0px; background-color: white"></td>
+          <td style="border: 0px; background-color: white"><img src="../graphics/invisible.gif" border=0 width="460px" height="2px" alt="spacer"></td>
+        </tr>
+      </table>
+    
+   <div style="padding-bottom: 5px;">
+	  
+          <a href="ViewComments.cfm?CommentID=237572" class="linkbrown">Previous Comment</a>
+        &nbsp;    &nbsp;
+        
+          <a href="Comments.cfm?StageID=10600" class="linkbrown">Back to List of Comments</a>
+        
+    </div>
+    
+      <div id="cbox237585" class="Cbox" >
+        <div style="float: right; text-align: right;">
+          <div style="background-color: white; border: 1px solid #cccccc; padding: 4px">11/8/25&nbsp;&nbsp;2:22 pm</div>
+        </div>
+        <div>
+          <strong>Commenter:</strong>
+          Allison 
+          <br><br>
+          <strong>No Increase in hours required for licensure</strong>
+        </div>
+        <div style="clear: right">&nbsp;</div>
+
+        
+        <div class="divComment">
+          <!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<p>The requirements for licensure for counseling is already high in comparison to required hours for social work licensure. The hours required are already an obstacle for individuals looking to obtain licensure in the field. Individuals seeking counseling licensure who may be already facing financial obstacles when paying for their education in the field are required to work many hours without pay in order to obtain their licensure. The increase in hours required will only further increase the strain, deterring them from trying to obtain their counseling licensure. Mental Health services are such a huge need nationwide. Continuing to increase access to mental health services should be top priority.&nbsp; Creating additional obstacles, such as increasing hours for licensure, will only decrease the individuals who will pursue a career path in counseling. In turn, this decreases available services to residents in the state of VA seeking mental health assistance. In order to continue to encourage LPC&#39;s, I suggest continuing to allow the 20 supervision hours to count towards licensure. Reducing obstacles for licensure will increase access to mental health services.&nbsp;</p>
+</body>
+</html>
+        </div>
+        <div style="float: left; font-size: 90%; color: #777777">
+             CommentID: <a href="ViewComments.cfm?commentid=237585" class="linklight">237585</a>
+         </div>
+        
+
+        <div style="clear: both; font-size: 0pt;">&nbsp;</div>
+       </div>
+      <br>
+
+      
+
+
+
+<br><br><br>
+<div>
+</div>
+<br>
+
+
+</div>
+
+</body>
+</html> 

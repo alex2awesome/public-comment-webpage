@@ -3,8 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 
 from ai_corpus.connectors.base import Collection, DocMeta
-from ai_corpus.connectors.eu_haveyoursay_keyword import (
-    EuHaveYourSayKeywordConnector,
+from ai_corpus.connectors.eu_haveyoursay_playwright import (
+    EuHaveYourSayPlaywrightConnector,
     InitiativeContext,
 )
 
@@ -74,7 +74,7 @@ class _FakeManager:
 
 
 def test_eu_keyword_connector_io(monkeypatch, tmp_path: Path) -> None:
-    connector = EuHaveYourSayKeywordConnector(
+    connector = EuHaveYourSayPlaywrightConnector(
         config={"keywords": ["Artificial intelligence act adoption"]},
         global_config={"user_agent": "pytest"},
     )
@@ -130,7 +130,7 @@ def test_eu_keyword_connector_io(monkeypatch, tmp_path: Path) -> None:
         return [doc]
 
     monkeypatch.setattr(
-        EuHaveYourSayKeywordConnector,
+        EuHaveYourSayPlaywrightConnector,
         "_harvest_documents_for_context",
         fake_harvest,
     )

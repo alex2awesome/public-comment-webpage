@@ -262,13 +262,50 @@ class RegulationsGovConnector(BaseConnector):
     def list_documents(
         self,
         collection_id: str,
-        document_type: str = "comments",
+        document_type: Optional[str] = None,
         page_size: int = 250,
         max_pages: Optional[int] = None,
         **_,
     ) -> Iterable[DocMeta]:
-        endpoint = "comments" if document_type == "comments" else "documents"
-        fields_param = "fields[comments]" if endpoint == "comments" else "fields[documents]"
+        """
+        Yield both public comments and agency-authored documents for the given
+        docket. By default (`document_type=None`), the connector pulls every
+        government-issued document (notices, supporting material, agency
+        comment summaries, etc.) *and* all submitted comments so a pipeline run
+        automatically mirrors the full Regulations.gov docket.
+        """
+
+        mode = (document_type or "all").lower()
+        if mode not in {"comments", "documents", "all"}:
+            mode = "comments"
+
+        if mode in {"documents", "all"}:
+            yield from self._iter_docket_items(
+                collection_id=collection_id,
+                endpoint="documents",
+                is_comment=False,
+                page_size=page_size,
+                max_pages=max_pages,
+            )
+        if mode in {"comments", "all"}:
+            yield from self._iter_docket_items(
+                collection_id=collection_id,
+                endpoint="comments",
+                is_comment=True,
+                page_size=page_size,
+                max_pages=max_pages,
+            )
+
+    def _iter_docket_items(
+        self,
+        *,
+        collection_id: str,
+        endpoint: str,
+        is_comment: bool,
+        page_size: int,
+        max_pages: Optional[int],
+    ) -> Iterable[DocMeta]:
+        fields_param = "fields[comments]" if is_comment else "fields[documents]"
         field_values = (
             [
                 "commentId",
@@ -282,7 +319,7 @@ class RegulationsGovConnector(BaseConnector):
                 "agencyId",
                 "language",
             ]
-            if endpoint == "comments"
+            if is_comment
             else [
                 "documentId",
                 "postedDate",
@@ -330,10 +367,23 @@ class RegulationsGovConnector(BaseConnector):
                     collection_id,
                     item,
                     attachments,
-                    is_comment=endpoint == "comments",
+                    is_comment=is_comment,
                 )
-                if meta:
-                    yield meta
+                if not meta:
+                    continue
+                if is_comment:
+                    meta.kind = "response"
+                else:
+                    meta.kind = "call"
+                    attrs = meta.extra.get("raw_attributes", {})
+                    agency = attrs.get("agencyId")
+                    if agency:
+                        meta.submitter = meta.submitter or agency
+                        meta.org = meta.org or agency
+                    meta.submitter_type = meta.submitter_type or "agency"
+                    meta.extra.setdefault("document_role", "call")
+                    meta.extra.setdefault("government_document", True)
+                yield meta
             pages += 1
             if max_pages and pages >= max_pages:
                 break
@@ -412,7 +462,8 @@ class RegulationsGovConnector(BaseConnector):
         skip_existing = kwargs.get("skip_existing", True)
         comment_html = doc.extra.get("comment_text")
         attachments: List[Dict] = doc.extra.get("attachments", [])
-        if (not comment_html or not attachments) and self.api_key:
+        is_comment_doc = (doc.kind or "response") != "call"
+        if is_comment_doc and (not comment_html or not attachments) and self.api_key:
             detail = regs_backoff_get(
                 f"comments/{doc.doc_id}",
                 api_key=self.api_key,

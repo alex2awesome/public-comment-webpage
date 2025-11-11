@@ -332,6 +332,15 @@ def _run_crawl_stage(
         docs.extend(harvest_documents(connector, collection_id=collection_id))
     if target in {"call", "all"}:
         docs.extend(harvest_call_document(connector, collection_id=collection_id))
+    unique_docs: List[DocMeta] = []
+    seen: set[tuple[str, str]] = set()
+    for doc in docs:
+        key = (doc.kind or "response", doc.doc_id)
+        if key in seen:
+            continue
+        seen.add(key)
+        unique_docs.append(doc)
+    docs = unique_docs
     if not docs:
         tqdm.write(
             f"[crawl] No documents harvested for {connector_name}:{collection_id} "

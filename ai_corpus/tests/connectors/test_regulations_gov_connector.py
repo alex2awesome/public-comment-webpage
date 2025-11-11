@@ -55,6 +55,31 @@ def test_list_and_fetch(monkeypatch, tmp_path, regs_payload):
 
     def fake_regs_call(path, **kwargs):  # noqa: ANN001
         calls.append(path)
+        if path == "documents":
+            return FakeResponse(
+                json_data={
+                    "data": [
+                        {
+                            "id": "DOC-0001",
+                            "attributes": {
+                                "title": "Notice of Request for Information",
+                                "postedDate": "2024-01-01T00:00:00Z",
+                                "documentType": "Notice",
+                                "documentSubtype": "Request for Information",
+                                "fileFormats": [
+                                    {
+                                        "format": "PDF",
+                                        "fileUrl": "https://downloads.regulations.gov/DOC-0001/content.pdf",
+                                    }
+                                ],
+                                "agencyId": "NTIA",
+                            },
+                            "relationships": {},
+                        }
+                    ],
+                    "meta": {"page": {"hasNextPage": False, "totalPages": 1}},
+                }
+            )
         return FakeResponse(json_data=regs_payload)
 
     def fake_download(url, **kwargs):  # noqa: ANN001
@@ -77,16 +102,20 @@ def test_list_and_fetch(monkeypatch, tmp_path, regs_payload):
     assert collections and collections[0].collection_id == "NTIA-2023-0005"
 
     docs = list(connector.list_documents(collection_id="NTIA-2023-0005"))
-    assert len(docs) == 1
-    doc = docs[0]
-    assert doc.doc_id == "NTIA-2023-0005-1000"
-    assert doc.submitter == "OpenAI"
-    result = connector.fetch(doc, tmp_path)
+    assert len(docs) == 2
+    comment = next(doc for doc in docs if doc.kind == "response")
+    assert comment.doc_id == "NTIA-2023-0005-1000"
+    assert comment.submitter == "OpenAI"
+    government_docs = [doc for doc in docs if doc.kind == "call"]
+    assert government_docs and government_docs[0].doc_id == "DOC-0001"
+    assert government_docs[0].extra.get("government_document") is True
+    result = connector.fetch(comment, tmp_path)
     assert "html" in result
     assert Path(result["html"]).exists()
     assert "attachments" in result and len(result["attachments"]) == 1
     assert Path(result["attachments"][0]).suffix == ".pdf"
     assert calls.count("comments") == 1
+    assert calls.count("documents") == 1
 
 
 def test_list_documents_paginates_all_pages(monkeypatch, regs_multi_pages):
@@ -116,7 +145,7 @@ def test_list_documents_paginates_all_pages(monkeypatch, regs_multi_pages):
     collections = list(connector.discover())
     assert collections and collections[0].collection_id == "NTIA-2023-0005"
 
-    docs = list(connector.list_documents(collection_id="NTIA-2023-0005"))
+    docs = list(connector.list_documents(collection_id="NTIA-2023-0005", document_type="comments"))
     expected = len(page1.get("data", [])) + len(page2.get("data", []))
     assert len(docs) == expected
     assert len({doc.doc_id for doc in docs}) == expected

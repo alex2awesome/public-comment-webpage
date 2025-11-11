@@ -78,9 +78,42 @@ nitrd_ai_rfi:
 cppa_admt:
   type: html-scrape
   base_url: "https://cppa.ca.gov"
-  index_url: "https://cppa.ca.gov/regulations/ccpa_updates.html"
+  listing_url: "https://cppa.ca.gov/regulations/"
 
-eu_have_your_say_keyword:
+virginia_townhall:
+  type: html-scrape
+  base_url: "https://townhall.virginia.gov"
+  listing_url: "https://townhall.virginia.gov/L/Forums.cfm"
+  rate_limit_seconds: 0.5
+
+connecticut_eregulations:
+  type: api
+  base_url: "https://eregulations.ct.gov"
+  open_comment_endpoint: "/eRegsPortal/Browse/getOpenCommentPeriods"
+  history_endpoint: "/eRegsPortal/Search/getRMRHistory"
+
+oregon_admin_orders:
+  type: api
+  base_url: "https://data.oregon.gov/resource/gir4-yym3.json"
+  dataset_id: "gir4-yym3"
+
+utah_bulletin:
+  type: api
+  api_url: "https://rules.utah.gov/wp-json/wp/v2/posts"
+  category_id: 76
+  per_page: 10
+
+pa_dep_ecomment:
+  type: html-scrape
+  base_url: "https://www.ahs.dep.pa.gov/eComment"
+  rate_limit_seconds: 0.5
+
+washington_register:
+  type: html-scrape
+  index_url: "https://lawfilesext.leg.wa.gov/law/wsr/WsrByIssue.htm"
+  max_issues: 5
+
+eu_have_your_say_playwright:
   type: playwright
   base_url: "https://ec.europa.eu"
   keywords:

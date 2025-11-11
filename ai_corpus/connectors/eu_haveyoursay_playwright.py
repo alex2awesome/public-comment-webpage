@@ -99,8 +99,8 @@ class InitiativeContext:
     collection: Collection
 
 
-class EuHaveYourSayKeywordConnector:
-    name = "eu_have_your_say_keyword"
+class EuHaveYourSayPlaywrightConnector:
+    name = "eu_have_your_say_playwright"
 
     def __init__(
         self,
@@ -128,7 +128,7 @@ class EuHaveYourSayKeywordConnector:
             raise ValueError("At least one keyword must be provided for EU Have Your Say scraping.")
 
         self.topic = self.config.get("topic") or "AI"
-        cache_root_default = Path(__file__).resolve().parents[1] / "downloads" / "eu_have_your_say_cache"
+        cache_root_default = Path(__file__).resolve().parents[1] / "downloads" / "eu_have_your_say_playwright_cache"
         self.cache_root = Path(self.config.get("cache_dir", cache_root_default)).expanduser().resolve()
 
         self._keyword_cache: Dict[str, InitiativeContext] = {}
@@ -618,4 +618,4 @@ class EuHaveYourSayKeywordConnector:
         return [docmeta_to_rule_row(self.name, call_doc, history_rank=1)]
 
 
-__all__ = ["EuHaveYourSayKeywordConnector", "InitiativeContext"]
+__all__ = ["EuHaveYourSayPlaywrightConnector", "InitiativeContext"]

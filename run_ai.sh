@@ -3,7 +3,8 @@ set -euo pipefail
 
 # Usage: ./run_ai.sh [--start-date YYYY-MM-DD] [--end-date YYYY-MM-DD] [--debug-connector NAME] [--debug-gov-uk]
 # Discovers AI-related dockets across configured connectors, then runs the
-# crawl -> download -> extract -> export pipeline for each collection.
+# unified pipeline (discover → crawl → download → extract → export) for each
+# collection via the CLI's pipeline command.
 
 if ! command -v jq >/dev/null 2>&1; then
   echo "[run_ai] jq is required (e.g., brew install jq)" >&2
@@ -31,8 +32,8 @@ DEFAULT_COLLECTIONS=(
   "nist_airmf:AI-RMF-2ND-DRAFT-2022"    # NIST AI RMF 2nd draft comments
   "nitrd_ai_rfi:90-FR-9088"             # OSTP/NITRD AI Action Plan RFI
   "cppa_admt:PR-02-2023"                # California CPPA preliminary comments
-  "eu_have_your_say:12270"              # EU 2020 White Paper consultation
-  "eu_have_your_say:12527"              # EU 2021 AI Act proposal feedback
+  "eu_have_your_say_playwright:WHITEPAPER-AI-2020"   # EU 2020 White Paper consultation
+  "eu_have_your_say_playwright:AI-ACT-2021-ADOPTION-FEEDBACK"  # EU 2021 AI Act proposal feedback
   "gov_uk:ai-white-paper-2023"          # UK White Paper consultation (discover via GOV.UK API)
 )
 
@@ -132,74 +133,50 @@ discover_collections() {
   echo "$count"
 }
 
-run_collection() {
-  local connector="$1"
-  local collection_id="$2"
-
-  local connector_dir="${COMMENTS_ROOT}/${connector}"
-  local collection_dir="${connector_dir}/${collection_id}"
-  local raw_dir="${collection_dir}/raw"
-  local meta_path="${collection_dir}/${collection_id}.meta.jsonl"
-
-  mkdir -p "$raw_dir"
-
-  log "[${connector}] Crawling $collection_id"
-  run_cli crawl \
-    --connector "$connector" \
-    --collection-id "$collection_id" \
-    --output "$meta_path" \
-    --target all
-
-  log "[${connector}] Downloading call for $collection_id"
-  run_cli download-call \
-    --connector "$connector" \
-    --collection-id "$collection_id" \
-    --meta-file "$meta_path" \
-    --out-dir "$raw_dir" \
+run_pipeline_for_collections() {
+  local collections=("$@")
+  if (( ${#collections[@]} == 0 )); then
+    log "No collections queued for pipeline run."
+    return 1
+  fi
+  local args=(
+    pipeline
+    --workspace-root "$COMMENTS_ROOT"
     --database "$DATABASE_PATH"
-
-  log "[${connector}] Downloading responses for $collection_id"
-  run_cli download-responses \
-    --connector "$connector" \
-    --collection-id "$collection_id" \
-    --meta-file "$meta_path" \
-    --out-dir "$raw_dir" \
-    --database "$DATABASE_PATH" \
+    --blob-dir "$BLOB_DIR"
+    --export-db "${APP_DATA_ROOT}/ai_corpus.db"
     --max-workers "$MAX_WORKERS"
-
-  log "[${connector}] Extracting $collection_id"
-  run_cli extract \
-    --database "$DATABASE_PATH" \
-    --blob-dir "$BLOB_DIR" \
-    --max-workers "$MAX_WORKERS"
-
-  log "[${connector}] Exporting $collection_id"
-  run_cli export \
-    --meta-file "$meta_path" \
-    --database "$DATABASE_PATH" \
-    --database-url "sqlite:///${APP_DATA_ROOT}/ai_corpus.db"
+  )
+  [[ -n "$START_DATE" ]] && args+=(--start-date "$START_DATE")
+  [[ -n "$END_DATE" ]] && args+=(--end-date "$END_DATE")
+  for pair in "${collections[@]}"; do
+    args+=(--collection-id "$pair")
+  done
+  log "Running pipeline for ${#collections[@]} collection(s)"
+  run_cli "${args[@]}"
 }
 
 count=$(discover_collections || echo 0)
+declare -a SELECTED_COLLECTIONS=()
+
+mkdir -p "$(dirname "$MANIFEST_TSV")"
 
 if [[ "${count}" -eq 0 ]]; then
-  mkdir -p "$(dirname "$MANIFEST_TSV")"
   if (( ${#DEBUG_CONNECTORS[@]} )); then
     log "No collections discovered for debug connector(s); attempting fallback defaults"
     : > "$MANIFEST_TSV"
-    fallback_found=0
     for entry in "${DEFAULT_COLLECTIONS[@]}"; do
       connector_name="${entry%%:*}"
       collection_id="${entry#*:}"
       for dbg in "${DEBUG_CONNECTORS[@]}"; do
         if [[ "$connector_name" == "$dbg" ]]; then
           printf '%s\t%s\n' "$connector_name" "$collection_id" >> "$MANIFEST_TSV"
-          fallback_found=1
+          SELECTED_COLLECTIONS+=("${connector_name}:${collection_id}")
           break
         fi
       done
     done
-    if [[ "$fallback_found" -eq 0 ]]; then
+    if (( ${#SELECTED_COLLECTIONS[@]} == 0 )); then
       log "No fallback defaults available for debug connector(s); nothing to process."
     fi
   else
@@ -207,18 +184,18 @@ if [[ "${count}" -eq 0 ]]; then
     : > "$MANIFEST_TSV"
     for entry in "${DEFAULT_COLLECTIONS[@]}"; do
       printf '%s\t%s\n' "${entry%%:*}" "${entry#*:}" >> "$MANIFEST_TSV"
+      SELECTED_COLLECTIONS+=("$entry")
     done
   fi
 else
   jq -r '.[] | [.connector, .collection_id] | @tsv' "$MANIFEST_JSON" > "$MANIFEST_TSV"
+  mapfile -t SELECTED_COLLECTIONS < <(jq -r '.[] | "\(.connector):\(.collection_id)"' "$MANIFEST_JSON")
 fi
 
-processed=0
-while IFS=$'\t' read -r connector collection_id; do
-  [[ -z "$connector" || -z "$collection_id" ]] && continue
-  run_collection "$connector" "$collection_id"
-  processed=$((processed + 1))
-done < "$MANIFEST_TSV"
+if (( ${#SELECTED_COLLECTIONS[@]} )); then
+  run_pipeline_for_collections "${SELECTED_COLLECTIONS[@]}"
+fi
+processed=${#SELECTED_COLLECTIONS[@]}
 
 # Hand-curated UK AI consultation responses
 HAND_CURATED_CONNECTOR_DIR="${COMMENTS_ROOT}/gov_uk/hand_curated_responses"

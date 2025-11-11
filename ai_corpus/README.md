@@ -46,13 +46,14 @@ This package orchestrates connectors and shared pipeline stages to harvest AI po
 
 ### Connector Specifics & Architectural Notes
 
-- **CPPA ADMT (`cppa_admt`)** – The agency publishes massive combined PDFs. The connector’s `fetch` downloads each bundle, invokes an OpenAI-assisted page pairing routine to split the bundle into individual letters, and stores per-letter metadata in the download payload (`payload["letters"]`). No special changes were needed downstream; `export` now detects these letters and fans them out into individual normalized rows.
+- **CPPA ADMT (`cppa_admt`)** – The agency publishes massive combined PDFs. The connector’s `fetch` downloads each bundle, invokes an OpenAI-assisted page pairing routine to split the bundle into individual letters, and stores per-letter metadata in the download payload (`payload["letters"]`). No special changes were needed downstream; `export` now detects these letters and fans them out into individual normalized rows. The connector also enumerates every government-issued PDF (notices, modified text, comment summaries, transcripts, appendices, etc.), marking them as call documents so the default pipeline run (`python -m ai_corpus.cli.main --connector cppa_admt ...`) automatically downloads the complete regulatory history alongside the aggregated public comments.
 
-- **EU “Have Your Say” (`eu_have_your_say`, `eu_have_your_say_keyword`)** – There is no public API for consultation feedback, so the connectors drive Playwright sessions (or HTML scraping) in `list_documents`/`fetch` to collect HTML pages and attachments. The rest of the pipeline treats the saved HTML exactly like other raw artifacts.
+- **EU “Have Your Say” (`eu_have_your_say_playwright`)** – There is no public API for consultation feedback, so the connector drives Playwright sessions to collect HTML pages and attachments. The rest of the pipeline treats the saved HTML exactly like other raw artifacts.
 
 - **UK GOV (`gov_uk`)** – The public API exposes consultation metadata but not individual submissions. The connector therefore discovers the consultation list via the API and scraped publication pages to retrieve any posted PDFs/HTML responses, feeding them through the standard download pipeline.
 
-- **Regulations.gov (`regulations_gov`), NIST AI RMF (`nist_airmf`), NITRD AI RFI (`nitrd_ai_rfi`)** – These connectors leverage official APIs or static file listings, so their `fetch` implementations primarily perform authenticated API calls or deterministic file downloads.
+- **Regulations.gov (`regulations_gov`)** – The connector now enumerates both public comments and every agency-authored document (notices, supporting material, updates that cite comments, etc.) for a docket. Government PDFs are tagged as call documents so the default pipeline invocation downloads the entire regulatory record without extra flags, while comments continue to flow through the response path.
+- **NIST AI RMF (`nist_airmf`)** and **NITRD AI RFI (`nitrd_ai_rfi`)** – These connectors leverage official APIs or static file listings, so their `fetch` implementations primarily perform authenticated API calls or deterministic file downloads.
 
 ## Typical End-to-End Run
 
@@ -240,6 +241,20 @@ The cache entries can be inspected programmatically via `Database.list_harvests(
 
 ## Source Catalog & References
 
+- Available connectors:
+  - `connecticut_eregulations`
+  - `cppa_admt`
+  - `eu_have_your_say_playwright`
+  - `gov_uk`
+  - `nist_airmf`
+  - `nitrd_ai_rfi`
+  - `oregon_admin_orders`
+  - `pa_dep_ecomment`
+  - `regulations_gov`
+  - `utah_bulletin`
+  - `virginia_townhall`
+  - `washington_register`
+
 - **API-driven connectors**
   - `regulations_gov` – U.S. Regulations.gov API & downloads (`https://api.regulations.gov`, `https://downloads.regulations.gov`).
   - `nist_airmf` – NIST AI Risk Management Framework docket (`https://www.nist.gov/itl/ai-risk-management-framework/comments-2nd-draft-ai-risk-management-framework`).
@@ -247,7 +262,7 @@ The cache entries can be inspected programmatically via `Database.list_harvests(
 
 - **HTML / Playwright connectors**
   - `cppa_admt` – California Privacy Protection Agency rulemaking portal (`https://cppa.ca.gov/regulations/ccpa_updates.html`).
-  - `eu_have_your_say`, `eu_have_your_say_keyword` – European Commission “Have Your Say” feedback portal (`https://ec.europa.eu/info/law/better-regulation/have-your-say/initiatives_en`).
+  - `eu_have_your_say_playwright` – European Commission “Have Your Say” feedback portal (`https://ec.europa.eu/info/law/better-regulation/have-your-say/initiatives_en`).
   - `gov_uk` – UK Government Digital Service consultation API & publication pages (`https://www.gov.uk/api`).
 
 ## Connector Responsibilities

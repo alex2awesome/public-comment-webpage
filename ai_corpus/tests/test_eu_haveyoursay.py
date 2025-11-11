@@ -1,5 +1,5 @@
 
-from ai_corpus.connectors.eu_haveyoursay_keyword import EuHaveYourSayKeywordConnector
+from ai_corpus.connectors.eu_haveyoursay_playwright import EuHaveYourSayPlaywrightConnector
 from ai_corpus.config.loader import load_config
 import pytest
 
@@ -8,7 +8,7 @@ def config():
     return load_config()
 
 def test_eu_haveyoursay_list_documents(config):
-    connector = EuHaveYourSayKeywordConnector(config['eu_have_your_say_keyword'], config['global'])
+    connector = EuHaveYourSayPlaywrightConnector(config['eu_have_your_say_playwright'], config['global'])
     connector.headless = True
     collections = list(connector.discover())
     assert len(collections) > 0

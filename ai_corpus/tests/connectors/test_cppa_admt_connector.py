@@ -58,10 +58,16 @@ def test_cppa_list_all_links(monkeypatch, cppa_fixture):
     assert collections[0].collection_id == "PR-02-2023"
     docs = list(connector.list_documents(collection_id="PR-02-2023"))
 
-    assert docs, "Expected at least one aggregated comments PDF"
-    for doc in docs:
-        assert doc.extra.get("kind") == "aggregated_comments"
+    assert docs, "Expected at least one PDF in the docket listing"
+    bundles = [doc for doc in docs if doc.extra.get("is_bundle")]
+    government_docs = [doc for doc in docs if doc.kind == "call"]
+    assert bundles, "Should expose aggregated comment bundles"
+    assert government_docs, "Should expose government-authored PDFs"
+    for doc in bundles + government_docs:
         assert doc.urls["pdf"].endswith(".pdf")
+    for doc in government_docs:
+        assert doc.submitter == "CPPA"
+        assert doc.extra.get("document_role") == "call"
 
 
 def test_cppa_bundle(monkeypatch, tmp_path, index_html, bundle_text):
@@ -88,14 +94,24 @@ def test_cppa_bundle(monkeypatch, tmp_path, index_html, bundle_text):
             label="0", a_is_error=False, b_is_error=False
         ),
     )
+    class _DummyClient:
+        def __init__(self) -> None:
+            self.sync = object()
+
+    monkeypatch.setattr(
+        "ai_corpus.connectors.cppa_admt.init_backend",
+        lambda backend_name: _DummyClient(),
+    )
 
     connector = CppaAdmtConnector(
         config={"index_url": "https://cppa.ca.gov/regulations/ccpa_updates.html"},
         global_config={"user_agent": "pytest"},
     )
-    docs = list(connector.list_documents(collection_id="PR-02-2023"))
-    assert len(docs) == 2
-    bundle = next(d for d in docs if d.extra.get("is_bundle"))
+    collection_id = list(connector.discover())[0].collection_id
+    docs = list(connector.list_documents(collection_id=collection_id))
+    bundles = [d for d in docs if d.extra.get("is_bundle")]
+    assert len(bundles) == 2
+    bundle = bundles[0]
     result = connector.fetch(bundle, tmp_path)
     assert "letters" in result
     assert len(result["letters"]) == 2
