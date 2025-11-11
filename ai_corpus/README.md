@@ -77,6 +77,29 @@ The helper script batches collections:
 
 Internally it runs every stage with sane defaults (SQLite paths under `data/comments`, blob dir at `data/comments/blobs`, export DB at `data/app_data/ai_corpus.db`) and logs per-collection progress.
 
+### One-shot CLI pipeline
+
+Prefer a pure-Python entrypoint? The CLI now exposes the entire pipeline as the default command:
+
+```bash
+# Equivalent to specifying the `pipeline` subcommand explicitly.
+python -m ai_corpus.cli.main \
+  --connector cppa_admt \
+  --collection-id cppa_admt:PR-02-2023
+
+# or, with an explicit subcommand plus date filtering:
+python -m ai_corpus.cli.main pipeline \
+  --start-date 2023-11-01 \
+  --end-date 2023-12-31 \
+  --workspace-root data/comments \
+  --database data/comments/ai_pipeline.sqlite \
+  --export-db data/app_data/ai_corpus.db
+```
+
+If you omit the subcommand entirely, the parser defaults to `pipeline`, so a bare `python -m ai_corpus.cli.main --start-date … --end-date …` runs discovery → crawl → download → extract → export for every collection found in that date window. Override connectors with `--connector`, or skip discovery by passing explicit `--collection-id connector:collection`.
+
+Why keep the individual stages? They still power advanced workflows: resume a partially completed collection (`download-responses` only), inspect raw artifacts before extraction, or parallelize heavy stages across machines. The pipeline wrapper simply orchestrates the same subcommands with sensible defaults.
+
 ### Stage reference
 
 | Stage | Command | Key inputs | Primary outputs |
@@ -236,6 +259,24 @@ Each connector implements:
 - `fetch`: download raw assets and attach any additional artifacts needed downstream.
 
 Connector-specific behavior (e.g., CPPA OpenAI splitting, EU Playwright scraping) belongs in `fetch`. Downstream stages expect the download record to carry everything necessary (text path, attachments, derived segments, etc.).
+
+```
+┌──────────────┐        ┌────────────────────┐        ┌──────────────────────────────┐
+│  discover    │  per   │   list_documents   │  per   │            fetch             │
+│ (per source) │──────► │ (per collection)   │──────► │ (per document / attachment)  │
+└──────┬───────┘        └───────┬────────────┘        └──────────────┬───────────────┘
+       │ collections             │ DocMeta rows                           │ raw files + payload
+       │ (ids, titles, urls)     │ (doc_id, urls, metadata)               │ (text_path, pdf, extras)
+       ▼                         ▼                                       ▼
+  fed into crawl          fed into crawl                        stored in ai_pipeline.sqlite
+                                                                + blob store (if text provided)
+```
+
+Key expectations:
+
+- `discover` should return stable `collection_id`s so downstream caching works.
+- `list_documents` must mark each record as either `kind="call"` or `kind="response"` (or fallback to `response`) so the pipeline can route to call/response downloads.
+- `fetch` is free to perform additional enrichment (splitting bundles, rewriting payloads) as long as the final SQLite row contains the artifacts that `extract`/`export` expect.
 
 ## Shared Components
 

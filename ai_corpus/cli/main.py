@@ -12,7 +12,7 @@ import json
 import logging
 import sys
 from pathlib import Path
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, Iterator, List, Tuple, Union
 
 from ai_corpus.config.loader import load_config
 from ai_corpus.connectors.base import Collection, DocMeta
@@ -51,7 +51,81 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Enable debug mode for specified connector(s); repeat flag to target multiple connectors.",
     )
-    subparsers = parser.add_subparsers(dest="command", required=True)
+    subparsers = parser.add_subparsers(dest="command")
+    parser.set_defaults(command="pipeline")
+
+    pipeline_parser = subparsers.add_parser(
+        "pipeline",
+        help="Run the full discover→crawl→download→extract→export pipeline for one or more collections.",
+    )
+    pipeline_parser.add_argument(
+        "--connector",
+        action="append",
+        dest="connectors",
+        help="Connector(s) to process (defaults to all configured connectors).",
+    )
+    pipeline_parser.add_argument(
+        "--collection-id",
+        action="append",
+        dest="collection_ids",
+        help="Explicit connector:collection_id pairs (repeat flag to process multiple collections).",
+    )
+    pipeline_parser.add_argument(
+        "--start-date",
+        dest="start_date",
+        help="ISO date to include collections discovered on/after this date.",
+    )
+    pipeline_parser.add_argument(
+        "--end-date",
+        dest="end_date",
+        help="ISO date to include collections discovered on/before this date.",
+    )
+    pipeline_parser.add_argument(
+        "--target",
+        choices=["responses", "call", "all"],
+        default="all",
+        help="Which documents to crawl during the pipeline (default: all).",
+    )
+    pipeline_parser.add_argument(
+        "--workspace-root",
+        type=Path,
+        default=Path("data/comments"),
+        help="Base directory for per-connector artifacts (default: data/comments).",
+    )
+    pipeline_parser.add_argument(
+        "--raw-dir-name",
+        default="raw",
+        help="Subdirectory name under each collection where downloads are stored (default: raw).",
+    )
+    pipeline_parser.add_argument(
+        "--database",
+        type=Path,
+        default=Path("data/comments/ai_pipeline.sqlite"),
+        help="SQLite database path for download metadata (default: data/comments/ai_pipeline.sqlite).",
+    )
+    pipeline_parser.add_argument(
+        "--blob-dir",
+        type=Path,
+        default=Path("data/comments/blobs"),
+        help="Directory for extracted text blobs (default: data/comments/blobs).",
+    )
+    pipeline_parser.add_argument(
+        "--export-db",
+        type=Path,
+        default=Path("data/app_data/ai_corpus.db"),
+        help="Destination SQLite database for normalized documents (default: data/app_data/ai_corpus.db).",
+    )
+    pipeline_parser.add_argument(
+        "--max-workers",
+        type=int,
+        default=4,
+        help="Parallel workers for download/extract stages (default: 4).",
+    )
+    pipeline_parser.add_argument(
+        "--no-cache",
+        action="store_true",
+        help="Force re-downloading artifacts even if cached in SQLite.",
+    )
 
     discover_parser = subparsers.add_parser("discover", help="List available collections.")
     discover_parser.add_argument(
@@ -224,6 +298,221 @@ def _docmeta_from_dict(data: Dict) -> DocMeta:
     )
 
 
+def _iter_meta_file(meta_file: Path) -> Iterator[DocMeta]:
+    if not meta_file.exists():
+        return
+    with meta_file.open("r", encoding="utf-8") as fh:
+        for line in fh:
+            if not line.strip():
+                continue
+            yield _docmeta_from_dict(json.loads(line))
+
+
+def _ensure_database_handle(db: Union[Database, Path, str]) -> Database:
+    if isinstance(db, Database):
+        return db
+    if isinstance(db, Path):
+        path = db
+    else:
+        path = Path(db)
+    resolved = path.expanduser().resolve()
+    resolved.parent.mkdir(parents=True, exist_ok=True)
+    return Database(f"sqlite:///{resolved}")
+
+
+def _run_crawl_stage(
+    connector_name: str,
+    connector,
+    collection_id: str,
+    target: str,
+    output_path: Path,
+) -> bool:
+    docs: List[DocMeta] = []
+    if target in {"responses", "all"}:
+        docs.extend(harvest_documents(connector, collection_id=collection_id))
+    if target in {"call", "all"}:
+        docs.extend(harvest_call_document(connector, collection_id=collection_id))
+    if not docs:
+        tqdm.write(
+            f"[crawl] No documents harvested for {connector_name}:{collection_id} "
+            f"(target={target}). Check the connector logic or upstream source; aborting."
+        )
+        return False
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("w", encoding="utf-8") as fh:
+        for doc in docs:
+            payload = dataclasses.asdict(doc)
+            payload["kind"] = doc.kind
+            fh.write(json.dumps(payload) + "\n")
+    return True
+
+
+def _run_download_call_stage(
+    connector_name: str,
+    connector,
+    collection_id: str,
+    meta_file: Path,
+    out_dir: Path,
+    database: Union[Database, Path, str],
+    use_cache: bool = True,
+) -> None:
+    meta_items = [item for item in _iter_meta_file(meta_file) if item.kind == "call"]
+    if not meta_items:
+        tqdm.write(
+            f"[download-call] No call documents found in {meta_file} "
+            f"for {connector_name}:{collection_id}."
+        )
+        return
+    db_handle = _ensure_database_handle(database)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for doc in meta_items:
+        download_call(
+            connector,
+            doc,
+            out_dir,
+            database=db_handle,
+            use_cache=use_cache,
+        )
+
+
+def _run_download_responses_stage(
+    connector,
+    meta_file: Path,
+    out_dir: Path,
+    database: Union[Database, Path, str],
+    max_workers: int | None,
+    use_cache: bool = True,
+) -> None:
+    meta_items = [item for item in _iter_meta_file(meta_file) if item.kind != "call"]
+    db_handle = _ensure_database_handle(database)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    download_responses(
+        connector,
+        meta_items,
+        out_dir,
+        database=db_handle,
+        max_workers=max_workers,
+        use_cache=use_cache,
+    )
+
+
+def _run_extract_stage(
+    database: Union[Database, Path, str],
+    blob_dir: Path,
+    max_workers: int = 1,
+) -> None:
+    _ = max_workers  # Placeholder: extraction currently runs sequentially.
+    db_handle = _ensure_database_handle(database)
+    blob_store = BlobStore(blob_dir)
+    pending = list(db_handle.iter_downloads(extracted=False))
+    if not pending:
+        tqdm.write("No pending downloads to extract.")
+        return
+    progress = tqdm(
+        total=len(pending),
+        desc="Extracting",
+        unit="doc",
+        disable=False,
+        dynamic_ncols=True,
+    )
+    for record in pending:
+        artifact = record.get("payload") or {}
+        text = extract_text_from_artifacts(artifact)
+        if text:
+            stored_path = blob_store.store_bytes(text.encode("utf-8"), suffix="txt")
+            db_handle.mark_extracted(
+                record["doc_id"],
+                text_path=str(stored_path),
+                sha256_text=stored_path.name,
+            )
+        progress.update(1)
+    progress.close()
+
+
+def _run_export_stage(
+    meta_file: Path,
+    database: Union[Database, Path, str],
+    blob_dir: Path,
+    destination_db_url: str = DEFAULT_DB_URL,
+) -> None:
+    download_db = _ensure_database_handle(database)
+    blob_store = BlobStore(blob_dir)
+    destination_db = Database(destination_db_url)
+    buffer: List[NormalizedDocument] = []
+
+    def _flush():
+        if buffer:
+            destination_db.upsert_documents(buffer)
+            buffer.clear()
+
+    if not meta_file.exists():
+        tqdm.write(f"[export] Metadata file {meta_file} does not exist; skipping export.")
+        return
+
+    with meta_file.open("r", encoding="utf-8") as fh:
+        for line in fh:
+            if not line.strip():
+                continue
+            meta = _docmeta_from_dict(json.loads(line))
+            download_record = download_db.get_download(meta.doc_id)
+            if not download_record:
+                continue
+            payload = download_record.get("payload") or {}
+            letters = payload.get("letters") if isinstance(payload, dict) else None
+            if letters:
+                base = normalize_doc(meta)
+                base_dict = dataclasses.asdict(base)
+                for index, letter in enumerate(letters, start=1):
+                    text_path_value = letter.get("text_path") if isinstance(letter, dict) else None
+                    if not text_path_value:
+                        continue
+                    text_path = Path(text_path_value)
+                    if not text_path.exists():
+                        continue
+                    text_bytes = text_path.read_bytes()
+                    stored_blob = blob_store.store_bytes(text_bytes, suffix="txt")
+                    letter_doc_id = f"{meta.doc_id}#L{index:03d}"
+                    letter_payload = dict(base_dict)
+                    letter_payload.update(
+                        {
+                            "uid": hashlib.sha256(
+                                "|".join([base.source, base.collection_id, letter_doc_id]).encode("utf-8")
+                            ).hexdigest(),
+                            "doc_id": letter_doc_id,
+                            "title": letter.get("submitter_name") or base.title,
+                            "submitter_name": letter.get("submitter_name"),
+                            "submitted_at": letter.get("submitted_at"),
+                            "text_path": str(stored_blob),
+                            "sha256_text": stored_blob.name,
+                            "bytes_text": len(text_bytes),
+                            "pdf_path": payload.get("pdf"),
+                            "raw_meta": {
+                                "bundle_meta": base.raw_meta,
+                                "letter_meta": letter,
+                                "bundle_doc_id": meta.doc_id,
+                                "bundle_pdf_path": payload.get("pdf"),
+                                "letter_index": index,
+                                "original_letter_path": str(text_path),
+                            },
+                        }
+                    )
+                    buffer.append(NormalizedDocument(**letter_payload))
+                    if len(buffer) >= 50:
+                        _flush()
+                continue
+
+            if not download_record.get("text_path"):
+                continue
+            normalized = normalize_doc(meta)
+            normalized.pdf_path = payload.get("pdf")
+            normalized.text_path = download_record.get("text_path")
+            normalized.sha256_text = download_record.get("sha256_text")
+            buffer.append(normalized)
+            if len(buffer) >= 50:
+                _flush()
+    _flush()
+
+
 def main(argv: List[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -253,6 +542,82 @@ def main(argv: List[str] | None = None) -> int:
         connector_cfg["debug"] = True
         connector_cfg["headless"] = False
     global_flags = {"verbose": args.verbose}
+
+    if args.command == "pipeline":
+        overrides = _parse_collection_overrides(getattr(args, "collection_ids", None))
+        discover_kwargs = {}
+        start_date = getattr(args, "start_date", None)
+        end_date = getattr(args, "end_date", None)
+        if start_date:
+            discover_kwargs["start_date"] = start_date
+        if end_date:
+            discover_kwargs["end_date"] = end_date
+        workspace_root = args.workspace_root.expanduser().resolve()
+        blob_dir = args.blob_dir.expanduser().resolve()
+        blob_dir.mkdir(parents=True, exist_ok=True)
+        raw_dir_name = args.raw_dir_name
+        download_db_path = args.database.expanduser().resolve()
+        download_db_path.parent.mkdir(parents=True, exist_ok=True)
+        export_db_path = args.export_db.expanduser().resolve()
+        export_db_path.parent.mkdir(parents=True, exist_ok=True)
+        connector_names = args.connectors
+        if not connector_names and overrides:
+            connector_names = sorted(overrides.keys())
+        processed = 0
+        for name, connector in _ensure_connectors(connector_names, sources_cfg, global_cfg):
+            collection_ids = overrides.get(name)
+            if not collection_ids:
+                discovered = discover_collections(connector, **discover_kwargs)
+                collection_ids = [c.collection_id for c in discovered]
+            if not collection_ids:
+                logging.info("[pipeline] No collections found for connector %s; skipping.", name)
+                continue
+            for collection_id in collection_ids:
+                base_dir = workspace_root / name / collection_id
+                meta_path = base_dir / f"{collection_id}.meta.jsonl"
+                raw_dir = base_dir / raw_dir_name
+                logging.info("[pipeline] Crawling %s:%s", name, collection_id)
+                crawled = _run_crawl_stage(name, connector, collection_id, args.target, meta_path)
+                if not crawled:
+                    continue
+                logging.info("[pipeline] Downloading call for %s:%s", name, collection_id)
+                _run_download_call_stage(
+                    name,
+                    connector,
+                    collection_id,
+                    meta_path,
+                    raw_dir,
+                    download_db_path,
+                    use_cache=not args.no_cache,
+                )
+                logging.info("[pipeline] Downloading responses for %s:%s", name, collection_id)
+                _run_download_responses_stage(
+                    connector,
+                    meta_path,
+                    raw_dir,
+                    download_db_path,
+                    max_workers=args.max_workers,
+                    use_cache=not args.no_cache,
+                )
+                logging.info("[pipeline] Extracting text for %s:%s", name, collection_id)
+                _run_extract_stage(
+                    download_db_path,
+                    blob_dir,
+                    max_workers=args.max_workers,
+                )
+                logging.info("[pipeline] Exporting normalized rows for %s:%s", name, collection_id)
+                _run_export_stage(
+                    meta_path,
+                    download_db_path,
+                    blob_dir,
+                    destination_db_url=f"sqlite:///{export_db_path}",
+                )
+                processed += 1
+        if processed:
+            logging.info("[pipeline] Completed %d collection(s).", processed)
+        else:
+            logging.warning("[pipeline] No collections were processed.")
+        return 0
 
     if args.command == "discover":
         results = {}
@@ -343,183 +708,49 @@ def main(argv: List[str] | None = None) -> int:
 
     if args.command == "crawl":
         connector = build_connector(args.connector, sources_cfg.get(args.connector, {}), global_cfg)
-        docs: List[DocMeta] = []
-        if args.target in {"responses", "all"}:
-            docs.extend(harvest_documents(connector, collection_id=args.collection_id))
-        if args.target in {"call", "all"}:
-            docs.extend(harvest_call_document(connector, collection_id=args.collection_id))
-        if not docs:
-            tqdm.write(
-                f"[crawl] No documents harvested for {args.connector}:{args.collection_id} "
-                f"(target={args.target}). "
-                "Check the connector logic or upstream source; aborting."
-            )
-            return 1
-        args.output.parent.mkdir(parents=True, exist_ok=True)
-        with args.output.open("w", encoding="utf-8") as fh:
-            for doc in docs:
-                payload = dataclasses.asdict(doc)
-                payload["kind"] = doc.kind
-                fh.write(json.dumps(payload) + "\n")
-        return 0
+        success = _run_crawl_stage(args.connector, connector, args.collection_id, args.target, args.output)
+        return 0 if success else 1
 
     if args.command == "download-call":
         connector = build_connector(args.connector, sources_cfg.get(args.connector, {}), global_cfg)
-        meta_items: List[DocMeta] = []
-        with args.meta_file.open("r", encoding="utf-8") as fh:
-            for line in fh:
-                if not line.strip():
-                    continue
-                item = _docmeta_from_dict(json.loads(line))
-                if item.kind == "call":
-                    meta_items.append(item)
-        if not meta_items:
-            tqdm.write(
-                f"[download-call] No call documents found in {args.meta_file} "
-                f"for {args.connector}:{args.collection_id}."
-            )
-            return 0
-        db_path = args.database.expanduser().resolve()
-        db_path.parent.mkdir(parents=True, exist_ok=True)
-        database = Database(f"sqlite:///{db_path}")
-        args.out_dir.mkdir(parents=True, exist_ok=True)
-        for doc in meta_items:
-            download_call(
-                connector,
-                doc,
-                args.out_dir,
-                database=database,
-                use_cache=not args.no_cache,
-            )
+        _run_download_call_stage(
+            args.connector,
+            connector,
+            args.collection_id,
+            args.meta_file,
+            args.out_dir,
+            args.database,
+            use_cache=not args.no_cache,
+        )
         return 0
 
     if args.command == "download-responses":
         connector = build_connector(args.connector, sources_cfg.get(args.connector, {}), global_cfg)
-        meta_items: List[DocMeta] = []
-        with args.meta_file.open("r", encoding="utf-8") as fh:
-            for line in fh:
-                if line.strip():
-                    item = _docmeta_from_dict(json.loads(line))
-                    if item.kind != "call":
-                        meta_items.append(item)
-        db_path = args.database.expanduser().resolve()
-        db_path.parent.mkdir(parents=True, exist_ok=True)
-        database = Database(f"sqlite:///{db_path}")
-        download_responses(
+        _run_download_responses_stage(
             connector,
-            meta_items,
+            args.meta_file,
             args.out_dir,
-            database=database,
+            args.database,
             max_workers=args.max_workers,
             use_cache=not args.no_cache,
         )
         return 0
 
     if args.command == "extract":
-        db_path = args.database.expanduser().resolve()
-        database = Database(f"sqlite:///{db_path}")
-        blob_store = BlobStore(args.blob_dir)
-        pending = list(database.iter_downloads(extracted=False))
-        if not pending:
-            tqdm.write("No pending downloads to extract.")
-            return 0
-        progress = tqdm(
-            total=len(pending),
-            desc="Extracting",
-            unit="doc",
-            disable=False,
-            dynamic_ncols=True,
+        _run_extract_stage(
+            args.database,
+            args.blob_dir,
+            max_workers=args.max_workers,
         )
-        for record in pending:
-            artifact = record.get("payload") or {}
-            text = extract_text_from_artifacts(artifact)
-            if text:
-                stored_path = blob_store.store_bytes(text.encode("utf-8"), suffix="txt")
-                database.mark_extracted(
-                    record["doc_id"],
-                    text_path=str(stored_path),
-                    sha256_text=stored_path.name,
-                )
-            progress.update(1)
-        progress.close()
         return 0
 
     if args.command == "export":
-        download_db_path = args.database.expanduser().resolve()
-        download_db_path.parent.mkdir(parents=True, exist_ok=True)
-        download_db = Database(f"sqlite:///{download_db_path}")
-        blob_store = BlobStore(args.blob_dir)
-        destination_db = Database(args.database_url)
-        buffer: List[NormalizedDocument] = []
-
-        def _flush():
-            if buffer:
-                destination_db.upsert_documents(buffer)
-                buffer.clear()
-
-        with args.meta_file.open("r", encoding="utf-8") as fh:
-            for line in fh:
-                if not line.strip():
-                    continue
-                meta = _docmeta_from_dict(json.loads(line))
-                download_record = download_db.get_download(meta.doc_id)
-                if not download_record:
-                    continue
-                payload = download_record.get("payload") or {}
-                letters = payload.get("letters") if isinstance(payload, dict) else None
-                if letters:
-                    base = normalize_doc(meta)
-                    base_dict = dataclasses.asdict(base)
-                    for index, letter in enumerate(letters, start=1):
-                        text_path_value = letter.get("text_path") if isinstance(letter, dict) else None
-                        if not text_path_value:
-                            continue
-                        text_path = Path(text_path_value)
-                        if not text_path.exists():
-                            continue
-                        text_bytes = text_path.read_bytes()
-                        stored_blob = blob_store.store_bytes(text_bytes, suffix="txt")
-                        letter_doc_id = f"{meta.doc_id}#L{index:03d}"
-                        letter_payload = dict(base_dict)
-                        letter_payload.update(
-                            {
-                                "uid": hashlib.sha256(
-                                    "|".join([base.source, base.collection_id, letter_doc_id]).encode("utf-8")
-                                ).hexdigest(),
-                                "doc_id": letter_doc_id,
-                                "title": letter.get("submitter_name") or base.title,
-                                "submitter_name": letter.get("submitter_name"),
-                                "submitted_at": letter.get("submitted_at"),
-                                "text_path": str(stored_blob),
-                                "sha256_text": stored_blob.name,
-                                "bytes_text": len(text_bytes),
-                                "pdf_path": payload.get("pdf"),
-                                "raw_meta": {
-                                    "bundle_meta": base.raw_meta,
-                                    "letter_meta": letter,
-                                    "bundle_doc_id": meta.doc_id,
-                                    "bundle_pdf_path": payload.get("pdf"),
-                                    "letter_index": index,
-                                    "original_letter_path": str(text_path),
-                                },
-                            }
-                        )
-                        buffer.append(NormalizedDocument(**letter_payload))
-                        if len(buffer) >= 50:
-                            _flush()
-                    continue
-
-                if not download_record.get("text_path"):
-                    continue
-                normalized = normalize_doc(meta)
-                normalized.pdf_path = payload.get("pdf")
-                normalized.text_path = download_record.get("text_path")
-                normalized.sha256_text = download_record.get("sha256_text")
-                buffer.append(normalized)
-                if len(buffer) >= 50:
-                    _flush()
-
-        _flush()
+        _run_export_stage(
+            args.meta_file,
+            args.database,
+            args.blob_dir,
+            destination_db_url=args.database_url,
+        )
         return 0
 
     parser.error(f"Unhandled command {args.command}")
