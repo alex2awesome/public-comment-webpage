@@ -70,6 +70,18 @@ class RegulationsGovConnector(BaseConnector):
         self.max_workers = int(self.config.get("max_workers", 2))
         self.fr_base = self.global_config.get("federal_register_base", "https://www.federalregister.gov/api/v1").rstrip("/")
         self.fr_rate_limiter = RateLimiter(min_interval=0.5)
+        min_updates = self.global_config.get("regulations_min_updates")
+        try:
+            self.min_update_documents = int(min_updates) if min_updates is not None else 0
+        except (TypeError, ValueError):
+            self.min_update_documents = 0
+        min_comments = self.global_config.get("regulations_min_comments")
+        try:
+            self.min_comment_count = int(min_comments) if min_comments is not None else 0
+        except (TypeError, ValueError):
+            self.min_comment_count = 0
+        self.drop_null_comments = bool(self.global_config.get("regulations_drop_null_comments"))
+        self._document_detail_cache: Dict[str, Optional[Dict[str, Any]]] = {}
 
     # Discovery -----------------------------------------------------
     def discover(
@@ -232,13 +244,29 @@ class RegulationsGovConnector(BaseConnector):
             return None
         title = attrs.get("title") or docket_id
         agency = attrs.get("agencyAcronym") or attrs.get("agencyId")
+        document_count = attrs.get("numberOfDocuments")
+        comment_count = attrs.get("commentCount")
+        if (
+            self.min_update_documents
+            and document_count is not None
+            and document_count < self.min_update_documents
+        ):
+            return None
+        if (
+            self.min_comment_count
+            and comment_count is not None
+            and comment_count < self.min_comment_count
+        ):
+            return None
+        if self.drop_null_comments and comment_count is None:
+            return None
         extra = {
             "last_modified": attrs.get("lastModifiedDate"),
             "comment_due_date": attrs.get("commentDueDate") or attrs.get("commentsCloseDate"),
             "comment_period_start": attrs.get("commentPeriodStartDate"),
             "comment_period_end": attrs.get("commentPeriodEndDate"),
-            "comment_count": attrs.get("commentCount"),
-            "document_count": attrs.get("numberOfDocuments"),
+            "comment_count": comment_count,
+            "document_count": document_count,
             "agency": agency,
             "docket_type": attrs.get("docketType"),
         }
@@ -409,6 +437,43 @@ class RegulationsGovConnector(BaseConnector):
                 out[att_id] = entry
         return out
 
+    def _extract_pdf_url(self, formats: Optional[List[Dict[str, Any]]]) -> Optional[str]:
+        if not formats:
+            return None
+        for fmt in formats:
+            fmt_name = (fmt.get("format") or "").lower()
+            file_url = fmt.get("fileUrl")
+            if fmt_name == "pdf" and file_url:
+                return file_url
+        return None
+
+    def _extract_pdf_url_from_attachments(self, attachments: List[Dict]) -> Optional[str]:
+        for attachment in attachments or []:
+            links = attachment.get("links") or {}
+            download_url = links.get("download") or links.get("file")
+            if download_url and download_url.lower().endswith(".pdf"):
+                return download_url
+        return None
+
+    def _fetch_document_detail(self, doc_id: str) -> Optional[Dict[str, Any]]:
+        if doc_id in self._document_detail_cache:
+            return self._document_detail_cache[doc_id]
+        resp = regs_backoff_get(
+            f"documents/{doc_id}",
+            api_key=self.api_key,
+            base_url=self.base_url,
+            params={"include": "attachments"},
+            user_agent=next_user_agent(),
+            rate_limiter=self.rate_limiter,
+            raise_for_status=False,
+        )
+        if resp is None or resp.status_code != 200:
+            self._document_detail_cache[doc_id] = None
+            return None
+        payload = resp.json() or {}
+        self._document_detail_cache[doc_id] = payload
+        return payload
+
     def _build_docmeta(
         self,
         collection_id: str,
@@ -419,7 +484,7 @@ class RegulationsGovConnector(BaseConnector):
     ) -> Optional[DocMeta]:
         attrs = item.get("attributes") or {}
         relationships = item.get("relationships") or {}
-        attachments_meta = []
+        attachments_meta: List[Dict] = []
         for rel in relationships.get("attachments", {}).get("data", []):
             att_info = attachments_index.get(rel.get("id"))
             if att_info:
@@ -429,12 +494,35 @@ class RegulationsGovConnector(BaseConnector):
         links = item.get("links") or {}
         if links.get("self"):
             urls["json"] = links["self"]
-        if attrs.get("fileFormats"):
-            for fmt in attrs["fileFormats"]:
-                if fmt.get("format").lower() == "pdf" and fmt.get("fileUrl"):
-                    urls["pdf"] = fmt["fileUrl"]
-                if fmt.get("fileUrl") and fmt.get("format").lower() == "html":
-                    urls["html"] = fmt["fileUrl"]
+        doc_id = item.get("id") or attrs.get("documentId") or attrs.get("commentId")
+        pdf_url = self._extract_pdf_url(attrs.get("fileFormats"))
+        if not pdf_url:
+            pdf_url = self._extract_pdf_url_from_attachments(attachments_meta)
+        needs_detail = (not pdf_url) or (is_comment and not attachments_meta)
+        if needs_detail and doc_id:
+            detail_payload = self._fetch_document_detail(doc_id)
+            if detail_payload:
+                detail_data = detail_payload.get("data")
+                if isinstance(detail_data, list):
+                    detail_data = next(
+                        (entry for entry in detail_data if entry.get("id") == doc_id),
+                        detail_data[0] if detail_data else {},
+                    )
+                detail_data = detail_data or {}
+                detail_attrs = detail_data.get("attributes") or {}
+                if not pdf_url:
+                    pdf_url = self._extract_pdf_url(detail_attrs.get("fileFormats"))
+                detail_attachments = self._hydrate_attachments(detail_payload.get("included", []))
+                if not attachments_meta:
+                    attachments_meta = detail_attachments
+                elif detail_attachments:
+                    attachments_meta.extend(att for att in detail_attachments if att not in attachments_meta)
+        if not attachments_meta:
+            attachments_meta = []
+        if not pdf_url:
+            pdf_url = self._extract_pdf_url_from_attachments(attachments_meta)
+        if pdf_url:
+            urls["pdf"] = pdf_url
         return DocMeta(
             source=self.name,
             collection_id=collection_id,

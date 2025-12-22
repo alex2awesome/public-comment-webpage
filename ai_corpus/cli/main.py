@@ -25,6 +25,7 @@ from ai_corpus.pipelines.extract import extract_text_from_artifacts
 from ai_corpus.rules import RULE_VERSION_COLUMNS, normalize_rule_row
 from ai_corpus.storage.db import Database, DEFAULT_DB_URL
 from ai_corpus.storage.fs import BlobStore
+from ai_corpus.utils.http import RateLimiter, backoff_get, get_http_session, next_user_agent
 from tqdm import tqdm
 
 LOGGER = logging.getLogger(__name__)
@@ -33,6 +34,23 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="ai-corpus",
         description="Harvest public comments about AI regulation from multiple sources.",
+    )
+    parser.add_argument(
+        "--regulations-min-updates",
+        type=int,
+        default=None,
+        help="Minimum number of government-issued documents a Regulations.gov docket must expose before it is processed.",
+    )
+    parser.add_argument(
+        "--regulations-min-comments",
+        type=int,
+        default=None,
+        help="Minimum number of public comments a Regulations.gov docket must expose before it is processed.",
+    )
+    parser.add_argument(
+        "--regulations-drop-null-comments",
+        action="store_true",
+        help="Skip Regulations.gov dockets that do not report a comment count.",
     )
     parser.add_argument(
         "--config",
@@ -57,6 +75,23 @@ def build_parser() -> argparse.ArgumentParser:
     pipeline_parser = subparsers.add_parser(
         "pipeline",
         help="Run the full discover→crawl→download→extract→export pipeline for one or more collections.",
+    )
+    pipeline_parser.add_argument(
+        "--regulations-min-updates",
+        type=int,
+        default=None,
+        help="Minimum number of government-issued documents a Regulations.gov docket must expose before it is processed.",
+    )
+    pipeline_parser.add_argument(
+        "--regulations-min-comments",
+        type=int,
+        default=None,
+        help="Minimum number of public comments a Regulations.gov docket must expose before it is processed.",
+    )
+    pipeline_parser.add_argument(
+        "--regulations-drop-null-comments",
+        action="store_true",
+        help="Skip Regulations.gov dockets that do not report a comment count.",
     )
     pipeline_parser.add_argument(
         "--connector",
@@ -182,6 +217,21 @@ def build_parser() -> argparse.ArgumentParser:
     extract_parser = subparsers.add_parser("extract", help="Extract text from downloaded artifacts.")
     extract_parser.add_argument("--database", type=Path, required=True, help="SQLite database with download records.")
     extract_parser.add_argument("--blob-dir", type=Path, required=True, help="Directory for blob storage.")
+
+    backfill_parser = subparsers.add_parser("backfill", help="Backfill text blobs for downloaded PDF artifacts.")
+    backfill_parser.add_argument("--database", type=Path, required=True, help="SQLite database with download records.")
+    backfill_parser.add_argument("--blob-dir", type=Path, required=True, help="Directory for blob storage.")
+    backfill_parser.add_argument(
+        "--workspace-root",
+        type=Path,
+        default=Path("data/comments"),
+        help="Workspace root containing per-connector raw directories.",
+    )
+    backfill_parser.add_argument(
+        "--raw-dir-name",
+        default="raw",
+        help="Subdirectory name for raw artifacts under each collection (default: raw).",
+    )
     extract_parser.add_argument("--max-workers", type=int, default=1, help="Parallel extraction workers.")
 
     export_parser = subparsers.add_parser("export", help="Normalize metadata and persist to the database.")
@@ -319,6 +369,81 @@ def _ensure_database_handle(db: Union[Database, Path, str]) -> Database:
     resolved.parent.mkdir(parents=True, exist_ok=True)
     return Database(f"sqlite:///{resolved}")
 
+def _resolve_artifact_path(path_value: str) -> Path:
+    candidate = Path(path_value).expanduser()
+    if not candidate.is_absolute():
+        candidate = (Path.cwd() / candidate).resolve()
+    return candidate
+
+_BACKFILL_SESSION = get_http_session({})
+_BACKFILL_RATE_LIMITER = RateLimiter(min_interval=0.5)
+
+
+def _infer_pdf_path(
+    record: Dict[str, object],
+    workspace_root: Path,
+    raw_dir_name: str,
+) -> Optional[Path]:
+    connector = record.get("connector")
+    collection_id = record.get("collection_id")
+    doc_id = record.get("doc_id")
+    if not connector or not collection_id or not doc_id:
+        return None
+    raw_dir = workspace_root / str(connector) / str(collection_id) / raw_dir_name
+    if not raw_dir.exists():
+        return None
+    doc_id_str = str(doc_id)
+    candidates: List[Path] = []
+    base_name = doc_id_str if doc_id_str.lower().endswith(".pdf") else f"{doc_id_str}.pdf"
+    direct = raw_dir / base_name
+    candidates.append(direct)
+    if not doc_id_str.lower().endswith(".pdf"):
+        pattern = f"*{doc_id_str}*.pdf"
+        candidates.extend(raw_dir.glob(pattern))
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate.resolve()
+    return None
+
+
+def _load_meta_entry(
+    workspace_root: Path,
+    connector: str,
+    collection_id: str,
+    doc_id: str,
+) -> Optional[Dict[str, object]]:
+    meta_path = workspace_root / connector / collection_id / f"{collection_id}.meta.jsonl"
+    if not meta_path.exists():
+        return None
+    with meta_path.open("r", encoding="utf-8") as fh:
+        for line in fh:
+            if not line.strip():
+                continue
+            try:
+                data = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if data.get("doc_id") == doc_id:
+                return data
+    return None
+
+
+def _download_pdf_from_url(url: str, dest_path: Path, *, force: bool = False) -> bool:
+    dest_path.parent.mkdir(parents=True, exist_ok=True)
+    if dest_path.exists() and dest_path.stat().st_size > 0 and not force:
+        return True
+    response = backoff_get(
+        url,
+        rate_limiter=_BACKFILL_RATE_LIMITER,
+        headers={"User-Agent": next_user_agent()},
+        session=_BACKFILL_SESSION,
+        raise_for_status=False,
+    )
+    if response is None or response.status_code != 200:
+        return False
+    dest_path.write_bytes(response.content)
+    return True
+
 
 def _run_crawl_stage(
     connector_name: str,
@@ -438,6 +563,89 @@ def _run_extract_stage(
     progress.close()
 
 
+def _run_backfill_stage(
+    database: Union[Database, Path, str],
+    blob_dir: Path,
+    workspace_root: Path,
+    raw_dir_name: str,
+) -> None:
+    db_handle = _ensure_database_handle(database)
+    blob_dir = blob_dir.expanduser().resolve()
+    blob_dir.mkdir(parents=True, exist_ok=True)
+    blob_store = BlobStore(blob_dir)
+    workspace_root = workspace_root.expanduser().resolve()
+
+    pending: List[tuple[str, Path]] = []
+    for record in db_handle.iter_downloads():
+        payload = record.get("payload") or {}
+        pdf_path_value = payload.get("pdf")
+        if not pdf_path_value:
+            if payload.get("html"):
+                continue
+            inferred = _infer_pdf_path(record, workspace_root, raw_dir_name)
+            if not inferred:
+                connector = record.get("connector")
+                collection_id = record.get("collection_id")
+                doc_id = record.get("doc_id")
+                if connector and collection_id and doc_id:
+                    meta_entry = _load_meta_entry(workspace_root, connector, collection_id, doc_id) or {}
+                    urls = meta_entry.get("urls") or {}
+                    pdf_url = urls.get("pdf") or urls.get("html")
+                    if pdf_url:
+                        inferred = (workspace_root / connector / collection_id / raw_dir_name / f"{doc_id}.pdf").resolve()
+                        success = _download_pdf_from_url(pdf_url, inferred)
+                        if not success:
+                            tqdm.write(
+                                f"[backfill] Failed to download PDF for {doc_id} from {pdf_url}; rerun download stage."
+                            )
+                            continue
+                    else:
+                        tqdm.write(
+                            f"[backfill] No PDF path recorded for {doc_id}; rerun download stage with --no-cache."
+                        )
+                        continue
+                else:
+                    tqdm.write(
+                        f"[backfill] No PDF path recorded for {record.get('doc_id')}; rerun download stage with --no-cache."
+                    )
+                    continue
+            payload["pdf"] = str(inferred)
+            db_handle.update_download_payload(record["doc_id"], payload)
+            pdf_path_value = str(inferred)
+        if record.get("text_path"):
+            continue
+        resolved_path = _resolve_artifact_path(str(pdf_path_value))
+        if not resolved_path.exists():
+            tqdm.write(
+                f"[backfill] Missing PDF for {record['doc_id']}: {resolved_path}"
+            )
+            continue
+        pending.append((record["doc_id"], resolved_path))
+
+    if not pending:
+        tqdm.write("[backfill] No PDF artifacts require processing.")
+        return
+
+    progress = tqdm(
+        total=len(pending),
+        desc="Backfilling",
+        unit="doc",
+        disable=False,
+        dynamic_ncols=True,
+    )
+    for doc_id, pdf_path in pending:
+        text = extract_text_from_artifacts({"pdf": str(pdf_path)})
+        if not text:
+            progress.write(f"[backfill] Failed to extract text for {doc_id}")
+            progress.update(1)
+            continue
+        stored_path = blob_store.store_bytes(text.encode("utf-8"), suffix="txt")
+        db_handle.mark_extracted(doc_id, text_path=str(stored_path), sha256_text=stored_path.name)
+        progress.update(1)
+    progress.close()
+    tqdm.write(f"[backfill] Processed {len(pending)} document(s).")
+
+
 def _run_export_stage(
     meta_file: Path,
     database: Union[Database, Path, str],
@@ -545,6 +753,13 @@ def main(argv: List[str] | None = None) -> int:
 
     config = load_config(args.config)
     global_cfg, sources_cfg = _load_sources(config)
+    global_cfg = dict(global_cfg)
+    if getattr(args, "regulations_min_updates", None) is not None:
+        global_cfg["regulations_min_updates"] = args.regulations_min_updates
+    if getattr(args, "regulations_min_comments", None) is not None:
+        global_cfg["regulations_min_comments"] = args.regulations_min_comments
+    if getattr(args, "regulations_drop_null_comments", False):
+        global_cfg["regulations_drop_null_comments"] = True
     debug_connectors = set(args.debug_connectors or [])
     for connector_name in debug_connectors:
         connector_cfg = sources_cfg.setdefault(connector_name, {})
@@ -626,6 +841,15 @@ def main(argv: List[str] | None = None) -> int:
             logging.info("[pipeline] Completed %d collection(s).", processed)
         else:
             logging.warning("[pipeline] No collections were processed.")
+        return 0
+
+    if args.command == "backfill":
+        _run_backfill_stage(
+            args.database,
+            args.blob_dir,
+            args.workspace_root,
+            args.raw_dir_name,
+        )
         return 0
 
     if args.command == "discover":

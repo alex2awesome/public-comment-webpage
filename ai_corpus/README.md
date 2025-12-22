@@ -52,7 +52,7 @@ This package orchestrates connectors and shared pipeline stages to harvest AI po
 
 - **UK GOV (`gov_uk`)** – The public API exposes consultation metadata but not individual submissions. The connector therefore discovers the consultation list via the API and scraped publication pages to retrieve any posted PDFs/HTML responses, feeding them through the standard download pipeline.
 
-- **Regulations.gov (`regulations_gov`)** – The connector now enumerates both public comments and every agency-authored document (notices, supporting material, updates that cite comments, etc.) for a docket. Government PDFs are tagged as call documents so the default pipeline invocation downloads the entire regulatory record without extra flags, while comments continue to flow through the response path.
+- **Regulations.gov (`regulations_gov`)** – The connector now enumerates both public comments and every agency-authored document (notices, supporting material, updates that cite comments, etc.) for a docket. Government PDFs are tagged as call documents so the default pipeline invocation downloads the entire regulatory record without extra flags, while comments continue to flow through the response path. Those agency PDFs are fetched and run through the shared extraction stage, so they now land in the normalized SQLite alongside comments. Use `--regulations-min-updates N` to skip dockets that expose fewer than `N` government-issued documents, `--regulations-min-comments N` to require at least `N` public comments, and `--regulations-drop-null-comments` if you’d like to exclude dockets where the API never reports a comment count. These filters are enforced during discovery so low-signal dockets are never scheduled.
 - **NIST AI RMF (`nist_airmf`)** and **NITRD AI RFI (`nitrd_ai_rfi`)** – These connectors leverage official APIs or static file listings, so their `fetch` implementations primarily perform authenticated API calls or deterministic file downloads.
 
 ## Typical End-to-End Run
@@ -109,6 +109,7 @@ Why keep the individual stages? They still power advanced workflows: resume a pa
 | `download-call` | `... download-call` | Meta file, download dir, SQLite path | Call rows inserted into `ai_pipeline.sqlite` (`downloads` table) |
 | `download-responses` | `... download-responses` | Meta file, download dir, SQLite path | Response rows + connector payloads (e.g., CPPA `letters`) |
 | `extract` *(optional)* | `... extract` | SQLite DB, blob dir | Fallback text files (`data/comments/blobs/<sha>.txt`) with `sha256_text` pointers |
+| `backfill` *(optional)* | `... backfill` | SQLite DB, blob dir | Parses previously downloaded PDFs (e.g., agency notices) and stores their text blobs |
 | `export` | `... export` | Meta file, SQLite DB, blob dir, normalized DB URL | Upserts into `data/app_data/ai_corpus.db` and copies blob references |
 
 ### Running against date ranges

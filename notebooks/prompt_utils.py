@@ -6,6 +6,7 @@ import ast
 import asyncio
 import json
 from typing import Callable, Iterable, List, Optional
+import os 
 
 from openai import AsyncOpenAI, OpenAI, PermissionDeniedError, InternalServerError
 from tqdm.auto import tqdm
@@ -21,11 +22,18 @@ __all__ = [
     "ARGUMENTATION_PROMPT",
 ]
 
+os.environ['OPENAI_API_KEY'] = open('/Users/spangher/.openai-reglab-project-key.txt').read().strip()
 async_client = AsyncOpenAI()
 sync_client = OpenAI()
 
 
 def _is_json_like(candidate: str) -> bool:
+    """Return True when `candidate` parses as JSON or as a Python literal.
+
+    This helper lets validators accept both strict JSON strings and pythonic
+    dictionaries/lists that some models occasionally emit. The input must be a
+    string containing the serialized structure (not the parsed object).
+    """
     try:
         json.loads(candidate)
         return True
@@ -39,7 +47,19 @@ def _is_json_like(candidate: str) -> bool:
 
 
 def numbered_list_checker(output: str, expected_count: int = None) -> bool:
-    """Ensure the model output is a numbered list with `expected_count` items."""
+    """Validate that `output` is an `n.` numbered list.
+
+    Parameters
+    ----------
+    output:
+        The raw model text to inspect. The function expects double-newline
+        separators between list items (matching the prompt instructions used in
+        the notebooks).
+    expected_count:
+        Optional integer specifying how many list items must appear. When
+        provided, the function first checks the block count before validating
+        each `n.` prefix.
+    """
     parts = output.strip().split("\n\n")
     if expected_count is not None:
         if len(parts) != expected_count:
@@ -63,11 +83,49 @@ async def process_batch(
     backoff_base: float = 0.5,
     model: str = "gpt-5-mini",
 ) -> List[str]:
-    """Run an async batch of prompt completions.
+    """Submit a batch of prompts concurrently to the Responses API.
 
-    Provide either:
-        - `texts` along with `prompt_template` (containing `{input_text}`), or
-        - `prompts`, an iterable of already-formatted prompt strings.
+    Usage
+    -----
+    Either supply `prompt_template` + `texts` (the template must contain the
+    token `{input_text}` which will be `.format()`-ed with each item in
+    `texts`), or pass a fully formatted iterable via `prompts`. The function
+    spawns up to `concurrency` async requests, retries failures with exponential
+    backoff, and enforces optional validators (`check_json`, `check_additional`).
+
+    Parameters
+    ----------
+    texts:
+        Iterable of raw comment strings. Used only when `prompt_template` is
+        provided. Each text becomes `prompt_template.format(input_text=<text>)`.
+    prompt_template:
+        String prompt containing `{input_text}` placeholder. See the exported
+        prompt constants below for ready-to-use templates.
+    prompts:
+        Already-rendered prompt strings. Use this when you have heterogeneous
+        prompts that do not share a template.
+    concurrency:
+        Maximum number of simultaneous API calls. Tune down if you approach rate
+        limits; tune up for faster throughput.
+    check_json:
+        When True, the response must parse as JSON (or pythonic literal via
+        `_is_json_like`). Failed parses trigger a retry up to `max_attempts`.
+    check_additional:
+        Optional list of callables receiving the raw string and returning True
+        when the output passes custom validation (e.g., `numbered_list_checker`).
+    max_attempts:
+        Total attempts per prompt (initial try + retries).
+    backoff_base:
+        Seconds for the first retry delay. Each subsequent retry doubles the
+        delay (capped only by the caller’s patience).
+    model:
+        OpenAI Responses model identifier (defaults to `gpt-5-mini`).
+
+    Returns
+    -------
+    List[str]
+        One entry per prompt. Failed prompts become `""` so callers can align
+        outputs with their inputs.
     """
     if prompts is not None:
         prompt_list = list(prompts)
@@ -159,7 +217,13 @@ def process_one(
     *,
     model: str = "gpt-5-mini",
 ) -> str:
-    """Run a synchronous prompt completion."""
+    """Submit a single prompt via the synchronous Responses client.
+
+    Provide either a raw `prompt` string, *or* a `prompt_template` plus `text`
+    (again, the template must contain `{input_text}`). This is convenient inside
+    exploratory notebooks when you want a quick one-off run without launching
+    the async machinery.
+    """
     if prompt == None:
         prompt = prompt_template.format(input_text=text)
     resp = sync_client.responses.create(
@@ -169,6 +233,7 @@ def process_one(
     return resp.output_text
 
 
+#: Prompt template for stripping boilerplate from HTML-origin comments. Requires `{input_text}`.
 CLEANER_PROMPT = """You are a diligent text cleaner. You receive raw text, parsed from HTML on the internet that 
   mixes true comments with online boilerplate: navigation menus, cookie notices, language selectors, legal disclaimers, and other boilerplate. 
   Return only the substantive article body as plain text paragraph(s).
@@ -190,6 +255,7 @@ CLEANER_PROMPT = """You are a diligent text cleaner. You receive raw text, parse
   Output:
 """
 
+#: Prompt template for classifying commenter identities. Insert `{input_text}`.
 ANALYSIS_PROMPT = """You are a capable legal and public policy assistant. 
 
 I am trying to categorize different comments to RFCs based on who the identify of the person is who wrote the comment. 
@@ -244,6 +310,7 @@ Respond with a JSON in the following format:
 Your response:
 """
 
+#: Prompt template for yes/no detection of AI-focused content. Insert `{input_text}`.
 AI_PROMPT = """You are a capable legal and public policy assistant. 
 
 I am trying to categorize different comments to RFCs. Is the comment about artificial intelligence (AI) legislation? 
@@ -256,6 +323,7 @@ Answer with just a Yes/No and explain why.
 Your response:
 """
 
+#: Prompt template for summarizing argument types raised in a comment. Insert `{input_text}`.
 ARGUMENTATION_PROMPT = """You are a capable legal and public policy assistant. 
 
 I am trying to categorize different comments to RFCs to identify the argument that the writer is making about AI legislation.

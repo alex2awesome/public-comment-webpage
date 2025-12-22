@@ -1,0 +1,9 @@
+accelerate>=0.34.2
+bitsandbytes>=0.43.3
+datasets>=2.19.0
+numpy>=1.26.4
+openenv-core>=0.1.1
+python-dotenv>=1.0.1
+torch>=2.3.0
+transformers>=4.46.3
+trl>=0.9.6

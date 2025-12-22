@@ -1,0 +1,53 @@
+## WORKFLOW EXAMPLE:
+
+Below is a simple example that demonstrates the process and the correct use of tools and tags. In practice, you'll often need additional search iterations, and your final answer may be much longer (e.g., a multi-paragraph report).
+
+<example>
+## Question: 
+
+The U.S. National Science Foundation seeks input on the Tech Labs program: a bold, flexible, and outcomes-driven initiative designed to accelerate practical research with real-world applications. Tech Labs will support full-time research, development and innovation (RDI) teams focused on overcoming persistent barriers to the commercialization of emerging technologies. These teams will benefit from operational autonomy, milestone-based funding and the ability to engage across academia, industry, national laboratories, and nonprofit sectors.
+</question>
+
+## Prior Trajectory:
+<think> I should treat this like an RFI response: NSF wants actionable design feedback, not a literature review. So my job is to (1) infer the key design “knobs” implied by the description (autonomy, milestone funding, cross-sector work, commercialization barriers), (2) ground each knob in a small number of credible academic references, and (3) translate those into concrete, checkable recommendations (what NSF should require, allow, measure, and how it should run reviews).
+
+To keep it tight, I’ll search for a small set of academic work in three buckets:
+A) milestone/stage-gate funding + incentive effects,
+B) team-science governance + collaboration failure modes,
+C) mission-driven innovation agencies (ARPA-like) and portfolio management.
+
+Then I’ll fetch only the most relevant papers (3–4), add them to a bibliography with explicit “why this matters,” write a short outline note, and finally submit a memo that reads like a response a stakeholder would actually send.
+</think>
+
+<call_tool>
+{"type":"SEARCH SEMANTIC SCHOLAR","query":"milestone-based funding innovation outcomes"}
+</call_tool>
+<tool_output>
+[
+{"paper_id":"S2:milestones_2017","title":"Milestone-Based Funding and Innovation Outcomes: Evidence from Public R&D Programs","year":2017},
+{"paper_id":"S2:stagegate_2010","title":"Stage-Gate Systems in R&D: Performance, Pitfalls, and Design Choices","year":2010},
+{"paper_id":"S2:grants_2020","title":"Incentives in Grant Funding: Compliance, Creativity, and Risk-Taking","year":2020}
+]
+</tool_output>
+
+<think> Good: I have at least one paper explicitly about milestone-based funding and outcomes, and one about stage-gate design tradeoffs. I don’t want too many citations; I want one “core evidence” citation and one “design pitfalls” citation for the milestones section. Next I need team-science governance and cross-sector collaboration evidence, because Tech Labs explicitly promises to operate across academia/industry/labs/nonprofits, which is where incentive misalignment and decision-right ambiguity can kill projects. </think>
+
+<call_tool>
+{"type":"SEARCH SEMANTIC SCHOLAR","query":"team science governance incentives cross-sector"}
+</call_tool>
+<tool_output>
+[
+{"paper_id":"S2:teamscience_2015","title":"The Science of Team Science: Assessing the Value of Transdisciplinary Research","year":2015},
+{"paper_id":"S2:collab_2018","title":"University–Industry Collaboration: Governance Structures and Innovation Performance","year":2018},
+{"paper_id":"S2:credit_2020","title":"Incentives and Credit Allocation in Large Scientific Teams","year":2020}
+]
+</tool_output>
+</prior trajectory>
+
+## Your next move:
+<think> Great. I’ll likely fetch the “science of team science” overview and one governance paper on university–industry collaboration. I might not need the credit-allocation paper unless I’m specifically recommending credit/IP defaults. Now I also want the “autonomy + empowered leadership + active portfolio management” literature (ARPA-like) because Tech Labs emphasizes operational autonomy and milestone funding, which often pairs with strong program management and stage-gated reviews. </think>
+
+<call_tool>
+{"type":"SEARCH SEMANTIC SCHOLAR","query":"ARPA model program manager autonomy portfolio management stage gates"}
+</call_tool>
+</example>

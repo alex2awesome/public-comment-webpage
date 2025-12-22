@@ -1,0 +1,557 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>C AutoMetric Report Card</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  
+  <style>
+    body.dark-mode { background-color: #121212; color: #e0e0e0; }
+    body.dark-mode .card { background-color: #1e1e1e; border-color: #333; color: #e0e0e0; }
+    body.dark-mode .table, body-dark-mode .table td { background-color: #1e1e1e; color: #e0e0e0; border-color: #333; }
+  </style>
+  <script>const RC_CORR = {}; const RC_RUNTIME = {}; const RC_ROB = {"available": false}; const RC_DOCS = {"Clear_Ask_and_Escalation_Rationale_gpt-5-mini": "---\n# Metric Card for Clear_Ask_and_Escalation_Rationale_gpt-5-mini\n\n**Clear Ask and Escalation Rationale** The draft states specific requests or decisions sought and explains why escalation is warranted now.\n\n## Metric Details\n\n**Clear_Ask_and_Escalation_Rationale_gpt-5-mini** is a **reference-free** LLM-as-a-Judge metric that prompts an LLM to rate a system output along a single, run-time-specified evaluation axis.\nIn this case the axis is `**Clear Ask and Escalation Rationale** The draft states specific requests or decisions sought and explains why escalation is warranted now.`.\n\nThe prompt supplies:\n\n1. **Task description** *d*\n2. **Axis rubric** `**Clear Ask and Escalation Rationale** The draft states specific requests or decisions sought and explains why escalation is warranted now.`\n3. **Input text** *x*\n4. **Output text** *y*\n\nGreedy decoding (temperature = 0) yields an integer score $\\hat{s}\\!\\in\\!\\{1,2,3,4,5\\}$; higher = better adherence to the axis.\n\n- **Metric Type:** LLM as a Judge\n- **Range:** 1-5 (1 = worst, 5 = best)\n- **Higher is Better?:** Yes\n- **Reference-Based?:** No\n- **Input-Required?:** Yes\n\n### Formal Definition\n\nLet $f _{\\theta}$ be the LLM and\n$\\pi _{\text{RF}}(d,\\{axis\\},x,y)$ construct the textual prompt.\n\n$$\n\\hat{s} \\;=\\; \\operatorname*{arg\\,max}\\limits_{s \\in \\{1,\\dots,5\\}} f _{\theta}\\!\bigl(s \\,\bigl|\\, \\pi _{\text{RF}}(d,\\{axis\\},x,y)\bigr)\n$$\n\nThe metric value is $\\operatorname{LJ}^{\text{RF}}_{\\{axis\\}}(d,x,y)=\\hat{s}$.\n\n### Inputs and Outputs\n- **Inputs:**\n  - **Task description** *d*\n  - **Axis rubric** `**Clear Ask and Escalation Rationale** The draft states specific requests or decisions sought and explains why escalation is warranted now.`\n  - **Input text** *x*\n  - **Output text** *y*\n- **Outputs:**\n  - Scalar score $\\hat{s} \\in \\{1,2,3,4,5\\}$\n\n## Intended Use\n\n- **Domain:** Policy triage / Text evaluation / Administrative decision support\n- **Tasks:** \n  - Escalation triage for citizen submissions\n  - Ranking candidate feedback drafts by clarity of ask\n  - Identifying missing escalation rationale or timing justifications\n  - Summarizing the specific requests and why escalation is needed\n  - Flagging drafts that require urgent human review\n  - Generating concise commentary to help editors improve clarity\n- **Best Suited For:** \n  - Inputs are written in clear, grammatical language where asks and rationales are present or clearly absent.\n  - A small-to-moderate set of candidate drafts must be ranked quickly using a consistent rubric.\n  - Escalation criteria are well defined and do not rely on institutional knowledge or confidential context.\n  - High-volume, low-to-medium-stakes workflows where automated triage speeds human review.\n  - When the goal is to detect and report missing explicit asks or weak timing justifications rather than to make final policy decisions.\n- **Not Recommended For:** \n  - Situations requiring verification of factual claims, legal interpretation, or confidential case details that the model cannot access or validate.\n  - High-stakes escalation decisions involving political sensitivity, safety, legal liability, or ethics where human judgment and institutional accountability are required.\n  - Inputs that are ambiguous, heavily implied, culturally or politically nuanced, or adversarial, where subtle reading and context are essential.\n  - Workflows requiring fully auditable, provenance-backed decisions for regulatory compliance without human review.\n  - Very long threads or multi-document contexts where essential context is distributed and must be reconciled before judging escalation rationale.\n\n## Metric Implementation\n\n### Reference Implementations\n\n- **Libraries/Packages:**\n  - [AutoMetrics LLM as a Judge (reference-free)](https://github.com/XenonMolecule/autometrics/blob/main/autometrics/metrics/generated/GeneratedLLMJudgeMetric.py)\n\n### Computational Complexity\n\n- **Efficiency:**\n  - Requires a single LLM call per input-output pair.\n  - AutoMetrics does parallel calls on batched inputs.\n\n- **Scalability:**\n  - Performance is linear in the number of input-output pairs.\n  - Performance depends on the underlying LLM model and the dataset size.  Additional consideration would include whether or not the LLM is a reasoning model.\n\n## Known Limitations\n\n- **Biases:** \n  - Preference for explicit linguistic markers (e.g., 'please escalate', 'we request') which causes implicit or nuanced asks to be underrated.\n  - Tendency to equate specificity with quality, thereby favoring verbose, checklist-style drafts over concise but clear requests.\n  - Recency or saliency bias toward urgent language (e.g., 'now', 'immediately') that may overweight dramatic but non-critical submissions.\n  - Domain bias where the evaluator better recognizes escalation rationale in high-profile areas (e.g., safety/security) than in technical, regulatory, or bureaucratic topics.\n  - Cultural and linguistic bias against indirect or polite forms of asking common in some languages and cultures, leading to underestimation of clarity.\n  - Conservatism or risk-averse bias prompting under-escalation when uncertainty exists, due to training on safe/responsible responses.\n  - Overreliance on surface features (deadlines, named officials) which can penalize legitimate strategic asks that intentionally omit such details.\n  - Bias toward drafting norms typical of formal institutions, disadvantaging grassroots or informal citizen voices that still merit escalation.\n- **Task Misalignment Risks:** \n  - Treating explicit ask-and-rationale as the sole criterion and ignoring other escalation-relevant factors such as potential harm, legal requirements, or contextual urgency.\n  - Conflating clarity with merit: promoting drafts that ask clearly but for inappropriate or low-priority actions, while suppressing ambiguous drafts that point to serious systemic issues.\n  - Overemphasizing immediate temporal language and thereby escalating issues that are time-stamped but low-impact while de-prioritizing high-impact long-term matters.\n  - Failing to account for confidentiality or safety reasons why a citizen might omit explicit requests or details, and penalizing such cautious wording.\n  - Applying a generic checklist across policy domains without adjusting for domain-specific escalation thresholds or required evidence.\n  - Prioritizing linguistic form over stakeholder alignment, leading to escalation of well-written but misaligned requests and ignoring poorly worded but substantively important concerns.\n  - Using escalation as a binary outcome rather than graded, which can force false all-or-nothing decisions instead of recommending further information-gathering.\n  - Relying on model training priors (e.g., professional memo styles) that mismatch common citizen writing and thus mis-evaluate civic submissions.\n- **Failure Cases:** \n  - False negative: The model fails to escalate a draft that implies a clear ask by context (e.g., reporting imminent public harm) because the citizen used indirect language.\n  - False positive: The model recommends escalation for a draft that contains urgent-sounding language but is a rhetorical complaint without an actionable ask.\n  - Missed domain signal: The model ignores technical indicators (e.g., regulatory citations, incident codes) that make an escalation rationale compelling because it lacks domain-specific knowledge.\n  - Context loss: The model evaluates an excerpt without context and downgrades a draft that in full would include the necessary escalation rationale or authority contact.\n  - Overfitting to format: The model elevates drafts that include template phrases like 'we request' even when the requested action is vague or impractical.\n  - Ambiguity handling failure: The model cannot recommend a graded next step (e.g., request more info) and instead either escalates prematurely or not at all.\n  - Adversarial input: A submitter uses sensationalist wording to game the model into escalation, resulting in resource misallocation.\n  - Privacy/safety oversight: The model suggests escalation that would expose sensitive personal data or jeopardize whistleblower safety because it doesn't flag confidentiality concerns.\n  - Hallucination: The model invents a rationale or urgency (e.g., claiming a deadline exists) when none is present and bases an escalation recommendation on that hallucination.\n  - Cultural misread: The model undervalues directness-missing but culturally normative phrasing and therefore fails to escalate legitimate requests from certain populations.\n\n## Related Metrics\n\n- **Related Metrics:**\n  - **GRMRewardModel:** The GRMRewardModel is a general-purpose reward model designed to evaluate the quality and safety of LLM-generated outputs.\n  - **MAUVE:** MAUVE (Measuring the Alignment of Unconditional VErsions) quantifies the similarity between two text distributions (e.\n  - **SelfBLEU:** Self-BLEU is a reference-free diversity metric used in text generation tasks.\n\n## Further Reading\n\n- **Papers:**\n  - [Autometrics](https://github.com/XenonMolecule/autometrics)\n  - [Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena](https://openreview.net/pdf?id=uccHPGDlao)\n\n## Citation\n\n```\n@software{Ryan_Autometrics_2025,\n    author = {Ryan, Michael J. and Zhang, Yanzhe and Salunkhe, Amol and Chu, Yi and Rahman, Emily and Xu, Di and Yang, Diyi},\n    license = {MIT},\n    title = {{Autometrics}},\n    url = {https://github.com/XenonMolecule/autometrics},\n    version = {1.0.0},\n    year = {2025}\n}\n```\n\n## Metric Card Authors\n\n- **Authors:** This metric card was automatically generated by gpt-5.\n- **Acknowledgement of AI Assistance:** This metric card was entirely automatically generated by gpt-5 using the Autometrics library. No human intervention was involved. User discretion is advised.\n- **Contact:** For questions about the autometrics library, please contact [Michael J Ryan](mailto:mryan0@stanford.edu).", "Follow_Up_Path_and_Contactability_gpt-5-mini": "---\n# Metric Card for Follow_Up_Path_and_Contactability_gpt-5-mini\n\n**Follow Up Path and Contactability** The draft offers a concrete path for next steps meeting request timelines and contact information for response.\n\n## Metric Details\n\n**Follow_Up_Path_and_Contactability_gpt-5-mini** is a **reference-free** LLM-as-a-Judge metric that prompts an LLM to rate a system output along a single, run-time-specified evaluation axis.\nIn this case the axis is `**Follow Up Path and Contactability** The draft offers a concrete path for next steps meeting request timelines and contact information for response.`.\n\nThe prompt supplies:\n\n1. **Task description** *d*\n2. **Axis rubric** `**Follow Up Path and Contactability** The draft offers a concrete path for next steps meeting request timelines and contact information for response.`\n3. **Input text** *x*\n4. **Output text** *y*\n\nGreedy decoding (temperature = 0) yields an integer score $\\hat{s}\\!\\in\\!\\{1,2,3,4,5\\}$; higher = better adherence to the axis.\n\n- **Metric Type:** LLM as a Judge\n- **Range:** 1-5 (1 = worst, 5 = best)\n- **Higher is Better?:** Yes\n- **Reference-Based?:** No\n- **Input-Required?:** Yes\n\n### Formal Definition\n\nLet $f _{\\theta}$ be the LLM and\n$\\pi _{\text{RF}}(d,\\{axis\\},x,y)$ construct the textual prompt.\n\n$$\n\\hat{s} \\;=\\; \\operatorname*{arg\\,max}\\limits_{s \\in \\{1,\\dots,5\\}} f _{\theta}\\!\bigl(s \\,\bigl|\\, \\pi _{\text{RF}}(d,\\{axis\\},x,y)\bigr)\n$$\n\nThe metric value is $\\operatorname{LJ}^{\text{RF}}_{\\{axis\\}}(d,x,y)=\\hat{s}$.\n\n### Inputs and Outputs\n- **Inputs:**\n  - **Task description** *d*\n  - **Axis rubric** `**Follow Up Path and Contactability** The draft offers a concrete path for next steps meeting request timelines and contact information for response.`\n  - **Input text** *x*\n  - **Output text** *y*\n- **Outputs:**\n  - Scalar score $\\hat{s} \\in \\{1,2,3,4,5\\}$\n\n## Intended Use\n\n- **Domain:** Text Evaluation / Triage\n- **Tasks:** \n  - Policy feedback triage and escalation\n  - Draft response ranking for agency follow-up readiness\n  - Customer/citizen correspondence screening for contactability\n  - Quality control of template responses for next-step clarity\n  - Prioritization of messages that require routing to officials\n- **Best Suited For:** \n  - Drafts are short to medium length and contain explicit procedural language (e.g., 'please meet', 'we will follow up by', 'contact at')\n  - The evaluation goal is binary or scalar (present/absent or degree of concreteness) rather than fact verification\n  - Responses follow institutional templates or consistent phrasing that the judge can learn to recognize\n  - There is no need to validate contact information against external databases \u2014 only to check presence and format\n  - High volume of submissions where rapid, consistent triage is required\n- **Not Recommended For:** \n  - Situations that require external validation of contact details, calendar availability, or the truthfulness of claims\n  - Cases needing nuanced legal, medical, or highly specialized policy interpretation to decide escalation\n  - Inputs that are long, ambiguous, or heavily implicit about next steps or contactability\n  - Workflows that involve sensitive personal data requiring strict privacy or compliance checks beyond surface text features\n  - Multilingual materials or noisy OCR text where format detection and language understanding degrade\n\n## Metric Implementation\n\n### Reference Implementations\n\n- **Libraries/Packages:**\n  - [AutoMetrics LLM as a Judge (reference-free)](https://github.com/XenonMolecule/autometrics/blob/main/autometrics/metrics/generated/GeneratedLLMJudgeMetric.py)\n\n### Computational Complexity\n\n- **Efficiency:**\n  - Requires a single LLM call per input-output pair.\n  - AutoMetrics does parallel calls on batched inputs.\n\n- **Scalability:**\n  - Performance is linear in the number of input-output pairs.\n  - Performance depends on the underlying LLM model and the dataset size.  Additional consideration would include whether or not the LLM is a reasoning model.\n\n## Known Limitations\n\n- **Biases:** \n  - Surface-form bias: preferring drafts that explicitly list contact details and timelines regardless of their appropriateness or accuracy.\n  - Authority bias: favoring drafts that invoke official-sounding steps or titles even if those steps are infeasible or irrelevant to the agency.\n  - Privacy-neglect bias: underweighting concerns about exposing sensitive contact details or asking for contact where doing so would risk the submitter.\n  - English/format bias: treating English-language or Western-styled contact conventions (email/phone) as normative and penalizing other cultural or local conventions.\n  - Technical-access bias: assuming recipients have access to email/phone or can attend meetings, disadvantaging drafts that suggest low-bandwidth or asynchronous paths.\n  - Recency/verbosity bias: equating more detailed timelines and multiple contact options with higher quality, even when succinct or limited contact is preferable.\n  - Policy-ignorance bias: giving equal credit to contact paths that violate agency rules because the judge lacks domain-specific constraints.\n  - Template bias: over-recognizing templated phrasings (e.g., \u201cplease contact us at\u201d) as sufficient evidence of contactability without verifying completeness.\n- **Task Misalignment Risks:** \n  - Focusing solely on contactability may ignore whether escalation is appropriate, ethical, or permitted under agency rules (e.g., privacy, confidentiality, or legal restrictions).\n  - The axis conflates presence of contact/timelines with effective escalation, missing crucial dimensions like content accuracy, urgency, or jurisdictional relevance.\n  - Automated prioritization based on this axis could systematically escalate low-quality but well-formatted drafts while leaving out urgent reports that lack explicit contact fields.\n  - Evaluating drafts by this axis might incentivize authors to include contact info even when doing so endangers the submitter (e.g., sensitive complaints, whistleblowing).\n  - The axis may promote a single-mode view of contact (meeting requests, phone, email) and fail to recognize acceptable alternative contacts (advocates, ombudspersons, anonymous reporting portals).\n  - If the judge lacks access to agency-specific escalation workflows, it may recommend contact paths that conflict with mandated procedures, causing operational friction.\n  - Narrow axis emphasis can produce blind spots for accessibility needs (e.g., accommodations, language access) that affect actual contactability.\n- **Failure Cases:** \n  - False positive escalation: the judge flags a draft as actionable because it lists contact info, but the contact is inappropriate (private email, non-agency account) or fabricated.\n  - False negative escalation: a high-priority submission lacking explicit contact fields is downgraded despite clear urgency and a need for agency follow-up.\n  - Privacy breach risk: the judge recommends adding contact prompts or public meeting requests for submissions that should remain confidential, exposing the submitter to harm.\n  - Policy-conflict recommendation: the judge elevates a draft that requests direct meetings contrary to agency protocols (e.g., legal review required before contact).\n  - Misinterpreted timelines: ambiguous phrasing like 'as soon as possible' or 'within two weeks' is mis-scored or normalized incorrectly, leading to incorrect urgency assessments.\n  - Unverifiable contact acceptance: the judge accepts embedded phone/email without verifying format, leading to escalation attempts that bounce or reach the wrong person.\n  - Cultural/format misread: nonstandard contact methods (social-service caseworker, community liaison) are penalized, reducing appropriate follow-up for certain populations.\n  - Template gaming: actors craft superficially complete contact/timeline fields to get escalated even when the underlying request is irrelevant or malicious.\n  - Accessibility neglect: the judge recommends in-person meetings without noting accommodation needs or alternatives, creating barriers for some submitters.\n  - Ambiguity in scope: the judge escalates drafts whose requested follow-up falls outside the agency's jurisdiction, wasting resources and causing delays.\n\n## Related Metrics\n\n- **Related Metrics:**\n  - **GRMRewardModel:** The GRMRewardModel is a general-purpose reward model designed to evaluate the quality and safety of LLM-generated outputs.\n  - **MAUVE:** MAUVE (Measuring the Alignment of Unconditional VErsions) quantifies the similarity between two text distributions (e.\n  - **SelfBLEU:** Self-BLEU is a reference-free diversity metric used in text generation tasks.\n\n## Further Reading\n\n- **Papers:**\n  - [Autometrics](https://github.com/XenonMolecule/autometrics)\n  - [Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena](https://openreview.net/pdf?id=uccHPGDlao)\n\n## Citation\n\n```\n@software{Ryan_Autometrics_2025,\n    author = {Ryan, Michael J. and Zhang, Yanzhe and Salunkhe, Amol and Chu, Yi and Rahman, Emily and Xu, Di and Yang, Diyi},\n    license = {MIT},\n    title = {{Autometrics}},\n    url = {https://github.com/XenonMolecule/autometrics},\n    version = {1.0.0},\n    year = {2025}\n}\n```\n\n## Metric Card Authors\n\n- **Authors:** This metric card was automatically generated by gpt-5.\n- **Acknowledgement of AI Assistance:** This metric card was entirely automatically generated by gpt-5 using the Autometrics library. No human intervention was involved. User discretion is advised.\n- **Contact:** For questions about the autometrics library, please contact [Michael J Ryan](mailto:mryan0@stanford.edu).", "Policy_Citation_and_Evidence_Grounding_gpt-5-mini": "---\n# Metric Card for Policy_Citation_and_Evidence_Grounding_gpt-5-mini\n\n**Policy Citation and Evidence Grounding** The draft accurately cites relevant OMB guidance memos dates and sections or docket identifiers to anchor the request.\n\n## Metric Details\n\n**Policy_Citation_and_Evidence_Grounding_gpt-5-mini** is a **reference-free** LLM-as-a-Judge metric that prompts an LLM to rate a system output along a single, run-time-specified evaluation axis.\nIn this case the axis is `**Policy Citation and Evidence Grounding** The draft accurately cites relevant OMB guidance memos dates and sections or docket identifiers to anchor the request.`.\n\nThe prompt supplies:\n\n1. **Task description** *d*\n2. **Axis rubric** `**Policy Citation and Evidence Grounding** The draft accurately cites relevant OMB guidance memos dates and sections or docket identifiers to anchor the request.`\n3. **Input text** *x*\n4. **Output text** *y*\n\nGreedy decoding (temperature = 0) yields an integer score $\\hat{s}\\!\\in\\!\\{1,2,3,4,5\\}$; higher = better adherence to the axis.\n\n- **Metric Type:** LLM as a Judge\n- **Range:** 1-5 (1 = worst, 5 = best)\n- **Higher is Better?:** Yes\n- **Reference-Based?:** No\n- **Input-Required?:** Yes\n\n### Formal Definition\n\nLet $f _{\\theta}$ be the LLM and\n$\\pi _{\text{RF}}(d,\\{axis\\},x,y)$ construct the textual prompt.\n\n$$\n\\hat{s} \\;=\\; \\operatorname*{arg\\,max}\\limits_{s \\in \\{1,\\dots,5\\}} f _{\theta}\\!\bigl(s \\,\bigl|\\, \\pi _{\text{RF}}(d,\\{axis\\},x,y)\bigr)\n$$\n\nThe metric value is $\\operatorname{LJ}^{\text{RF}}_{\\{axis\\}}(d,x,y)=\\hat{s}$.\n\n### Inputs and Outputs\n- **Inputs:**\n  - **Task description** *d*\n  - **Axis rubric** `**Policy Citation and Evidence Grounding** The draft accurately cites relevant OMB guidance memos dates and sections or docket identifiers to anchor the request.`\n  - **Input text** *x*\n  - **Output text** *y*\n- **Outputs:**\n  - Scalar score $\\hat{s} \\in \\{1,2,3,4,5\\}$\n\n## Intended Use\n\n- **Domain:** Policy evaluation / Document triage (Citation verification & evidence grounding)\n- **Tasks:** \n  - Rank candidate policy feedback drafts by citation completeness and specificity\n  - Flag drafts that cite OMB memos with missing or malformed dates/section identifiers\n  - Detect discrepancies between asserted policy claims and the citations provided\n  - Triage which citizen submissions merit escalation to agency officials based on citation strength\n  - Classify drafts as adequately grounded, insufficiently grounded, or unverifiable (given provided text)\n  - Generate structured summaries of cited guidance (when source excerpts provided) for reviewers\n  - Identify ambiguous or vague references (e.g., 'recent OMB guidance') that need precise docket/memo identifiers\n- **Best Suited For:** \n  - High-volume triage where drafts include explicit citation strings (title, memo date, docket ID) that can be pattern-matched.\n  - Workflows that supply the model with the full text or authoritative excerpts of the referenced OMB memos for cross-checking.\n  - Situations where the goal is to flag potential issues (missing/malformed citations, unsupported claims) to prioritize human review.\n  - Automated pre-screening to reduce reviewer load by filtering clearly well-grounded vs. clearly deficient drafts.\n  - Quality-control checks for internal consistency (e.g., whether the date in the citation matches the memo title provided).\n  - Integration into a human-in-the-loop pipeline where final escalations and legal interpretations are made by agency officials.\n- **Not Recommended For:** \n  - Cases demanding authoritative, up-to-date verification against live federal dockets or OMB repositories when those documents are not provided in the prompt.\n  - Situations that require legal interpretation of how a cited OMB memo applies to complex policy facts or regulatory obligations.\n  - High-stakes final decisions (e.g., formal agency responses or legal filings) without human expert review and source verification.\n  - Inputs with ambiguous, abbreviated, or OCR-corrupted citations that require external research to resolve.\n  - Tasks that expect the model to invent or recall precise section contents or docket histories beyond its training cutoff or provided sources.\n  - Contexts that require tracking real-time changes to guidance (rescissions, superseding memos) where model cannot access live updates.\n\n## Metric Implementation\n\n### Reference Implementations\n\n- **Libraries/Packages:**\n  - [AutoMetrics LLM as a Judge (reference-free)](https://github.com/XenonMolecule/autometrics/blob/main/autometrics/metrics/generated/GeneratedLLMJudgeMetric.py)\n\n### Computational Complexity\n\n- **Efficiency:**\n  - Requires a single LLM call per input-output pair.\n  - AutoMetrics does parallel calls on batched inputs.\n\n- **Scalability:**\n  - Performance is linear in the number of input-output pairs.\n  - Performance depends on the underlying LLM model and the dataset size.  Additional consideration would include whether or not the LLM is a reasoning model.\n\n## Known Limitations\n\n- **Biases:** \n  - Recency bias: preferring guidance it 'remembers' and penalizing newer or updated guidance beyond the model's knowledge cutoff.\n  - Authority/source bias: favoring OMB memos over other legitimate grounding sources (statutes, regs, agency-specific dockets).\n  - Exact-match bias: rewarding verbatim citation formatting while penalizing paraphrased or partial but correct references.\n  - Jurisdictional bias: assuming OMB guidance applies uniformly across contexts instead of checking topical/applicability differences.\n  - Language bias: worse performance on citations in languages or formats not well represented in training data.\n  - Confirmation bias: more likely to accept citations that fit expected patterns and to distrust atypical but correct references.\n  - Format bias: privileging citations in a specific citation style (dates/section numbers) over other valid identifiers (docket names, RINs).\n  - Availability bias: over-relying on well-known/high-profile memos and under-weighting obscure but relevant guidance.\n- **Task Misalignment Risks:** \n  - Overfocusing on citation form rather than substantive policy relevance, causing escalations for formally-cited but irrelevant drafts.\n  - Penalizing valid drafts that ground requests in non-OMB authorities (statutes, CFR sections, agency dockets) because the axis privileges OMB citations.\n  - Treating absence of exact date/section numbers as fatal even when the referenced guidance is clearly identifiable by title or subject.\n  - Failing to account for superseded, amended, or revoked guidance and thus mis-evaluating whether a citation is current and applicable.\n  - Prioritizing easily-verifiable docket identifiers while ignoring context that affects applicability (e.g., rulemaking stage).\n  - Applying the same strictness across all submissions regardless of intended escalation level (informational vs high-priority), leading to mismatched triage.\n  - Relying on model-internal knowledge rather than external verification, causing confident but unsupported judgments about citation existence.\n  - Encouraging writers to insert boilerplate citations to pass the axis instead of producing accurate, substantive grounding.\n- **Failure Cases:** \n  - Hallucinated citations: the judge accepts or invents OMB memo titles/dates/sections that do not exist.\n  - False negatives: rejecting correct but paraphrased or abbreviated citations because they do not match expected strings exactly.\n  - Outdated-evidence error: marking a citation as valid when it has been superseded or revoked (or marking a current citation as invalid due to model cutoff).\n  - Incorrect attribution: assigning a memo to OMB when it originated from another agency or interagency source.\n  - Docket misidentification: accepting an incorrect docket identifier that is plausibly formatted but points to a different proceeding.\n  - Context-mismatch: flagging a technically accurate citation that is not actually relevant to the citizen's request or jurisdiction.\n  - Overconfidence: producing definitive verification statements without external lookup, leading to misleading escalation decisions.\n  - Partial-match acceptance: treating a partial or similarly numbered section as fully correct when it materially changes meaning.\n  - Failure to detect confidentiality or restricted dockets and recommending escalation where inappropriate.\n  - Bias-amplified errors: systematically downgrading submissions from certain demographic or stylistic groups due to language/form differences in citations.\n  - Format-only scoring: rewarding drafts that include citations formatted correctly but that misuse or misunderstand the cited guidance content.\n  - Chain-of-trust error: assuming a cited memo's guidance applies wholesale without checking whether later guidance or agency interpretations modify its applicability.\n\n## Related Metrics\n\n- **Related Metrics:**\n  - **GRMRewardModel:** The GRMRewardModel is a general-purpose reward model designed to evaluate the quality and safety of LLM-generated outputs.\n  - **MAUVE:** MAUVE (Measuring the Alignment of Unconditional VErsions) quantifies the similarity between two text distributions (e.\n  - **SelfBLEU:** Self-BLEU is a reference-free diversity metric used in text generation tasks.\n\n## Further Reading\n\n- **Papers:**\n  - [Autometrics](https://github.com/XenonMolecule/autometrics)\n  - [Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena](https://openreview.net/pdf?id=uccHPGDlao)\n\n## Citation\n\n```\n@software{Ryan_Autometrics_2025,\n    author = {Ryan, Michael J. and Zhang, Yanzhe and Salunkhe, Amol and Chu, Yi and Rahman, Emily and Xu, Di and Yang, Diyi},\n    license = {MIT},\n    title = {{Autometrics}},\n    url = {https://github.com/XenonMolecule/autometrics},\n    version = {1.0.0},\n    year = {2025}\n}\n```\n\n## Metric Card Authors\n\n- **Authors:** This metric card was automatically generated by gpt-5.\n- **Acknowledgement of AI Assistance:** This metric card was entirely automatically generated by gpt-5 using the Autometrics library. No human intervention was involved. User discretion is advised.\n- **Contact:** For questions about the autometrics library, please contact [Michael J Ryan](mailto:mryan0@stanford.edu)."}; const RC_DOCS_MAP = {}; const RC_PY_CODE = "# Auto-generated static regression for Autometrics_Regression_c\nfrom typing import ClassVar\nimport numpy as np\nfrom autometrics.aggregator.generated.GeneratedRegressionMetric import GeneratedStaticRegressionAggregator\n\n\n\n# Auto-generated metric file for Clear_Ask_and_Escalation_Rationale_gpt-5-mini\nimport dspy\nimport os\nfrom autometrics.metrics.generated.GeneratedLLMJudgeMetric import GeneratedRefFreeLLMJudgeMetric\nfrom typing import ClassVar\n\nDEFAULT_MODEL_Clear_Ask_and_Escalation_Rationale_gpt_5_mini_LLMJudge = dspy.LM(model='openai/gpt-5-mini', api_key=os.getenv(\"OPENAI_API_KEY\"))\n\nclass Clear_Ask_and_Escalation_Rationale_gpt_5_mini_LLMJudge(GeneratedRefFreeLLMJudgeMetric):\n    \"\"\"\"\"\"\n\n    description: ClassVar[str] = \"**Clear Ask and Escalation Rationale** The draft states specific requests or decisions sought and explains why escalation is warranted now.\"\n\n    def __init__(self, model: dspy.LM = DEFAULT_MODEL_Clear_Ask_and_Escalation_Rationale_gpt_5_mini_LLMJudge):\n        super().__init__(\n            name=\"Clear_Ask_and_Escalation_Rationale_gpt-5-mini\",\n            description=\"**Clear Ask and Escalation Rationale** The draft states specific requests or decisions sought and explains why escalation is warranted now.\",\n            axis=\"**Clear Ask and Escalation Rationale** The draft states specific requests or decisions sought and explains why escalation is warranted now.\",\n            model=model,\n            task_description=\"Rank candidate policy feedback drafts for follow-up: given a citizen\\u2019s submission, \\n    determine which responses merit escalation to agency officials.\",\n            metric_card=\"None\",\n            max_workers=32,\n        )\n\n    def __repr__(self):\n        return f\"Clear_Ask_and_Escalation_Rationale_gpt_5_mini_LLMJudge(model=dspy.LM(model='openai/gpt-5-mini', api_key=os.getenv(\\\"OPENAI_API_KEY\\\")))\"\n\n\n\n# Auto-generated metric file for Follow_Up_Path_and_Contactability_gpt-5-mini\nimport dspy\nimport os\nfrom autometrics.metrics.generated.GeneratedLLMJudgeMetric import GeneratedRefFreeLLMJudgeMetric\nfrom typing import ClassVar\n\nDEFAULT_MODEL_Follow_Up_Path_and_Contactability_gpt_5_mini_LLMJudge = dspy.LM(model='openai/gpt-5-mini', api_key=os.getenv(\"OPENAI_API_KEY\"))\n\nclass Follow_Up_Path_and_Contactability_gpt_5_mini_LLMJudge(GeneratedRefFreeLLMJudgeMetric):\n    \"\"\"\"\"\"\n\n    description: ClassVar[str] = \"**Follow Up Path and Contactability** The draft offers a concrete path for next steps meeting request timelines and contact information for response.\"\n\n    def __init__(self, model: dspy.LM = DEFAULT_MODEL_Follow_Up_Path_and_Contactability_gpt_5_mini_LLMJudge):\n        super().__init__(\n            name=\"Follow_Up_Path_and_Contactability_gpt-5-mini\",\n            description=\"**Follow Up Path and Contactability** The draft offers a concrete path for next steps meeting request timelines and contact information for response.\",\n            axis=\"**Follow Up Path and Contactability** The draft offers a concrete path for next steps meeting request timelines and contact information for response.\",\n            model=model,\n            task_description=\"Rank candidate policy feedback drafts for follow-up: given a citizen\\u2019s submission, \\n    determine which responses merit escalation to agency officials.\",\n            metric_card=\"None\",\n            max_workers=32,\n        )\n\n    def __repr__(self):\n        return f\"Follow_Up_Path_and_Contactability_gpt_5_mini_LLMJudge(model=dspy.LM(model='openai/gpt-5-mini', api_key=os.getenv(\\\"OPENAI_API_KEY\\\")))\"\n\n\n\n# Auto-generated metric file for Policy_Citation_and_Evidence_Grounding_gpt-5-mini\nimport dspy\nimport os\nfrom autometrics.metrics.generated.GeneratedLLMJudgeMetric import GeneratedRefFreeLLMJudgeMetric\nfrom typing import ClassVar\n\nDEFAULT_MODEL_Policy_Citation_and_Evidence_Grounding_gpt_5_mini_LLMJudge = dspy.LM(model='openai/gpt-5-mini', api_key=os.getenv(\"OPENAI_API_KEY\"))\n\nclass Policy_Citation_and_Evidence_Grounding_gpt_5_mini_LLMJudge(GeneratedRefFreeLLMJudgeMetric):\n    \"\"\"\"\"\"\n\n    description: ClassVar[str] = \"**Policy Citation and Evidence Grounding** The draft accurately cites relevant OMB guidance memos dates and sections or docket identifiers to anchor the request.\"\n\n    def __init__(self, model: dspy.LM = DEFAULT_MODEL_Policy_Citation_and_Evidence_Grounding_gpt_5_mini_LLMJudge):\n        super().__init__(\n            name=\"Policy_Citation_and_Evidence_Grounding_gpt-5-mini\",\n            description=\"**Policy Citation and Evidence Grounding** The draft accurately cites relevant OMB guidance memos dates and sections or docket identifiers to anchor the request.\",\n            axis=\"**Policy Citation and Evidence Grounding** The draft accurately cites relevant OMB guidance memos dates and sections or docket identifiers to anchor the request.\",\n            model=model,\n            task_description=\"Rank candidate policy feedback drafts for follow-up: given a citizen\\u2019s submission, \\n    determine which responses merit escalation to agency officials.\",\n            metric_card=\"None\",\n            max_workers=32,\n        )\n\n    def __repr__(self):\n        return f\"Policy_Citation_and_Evidence_Grounding_gpt_5_mini_LLMJudge(model=dspy.LM(model='openai/gpt-5-mini', api_key=os.getenv(\\\"OPENAI_API_KEY\\\")))\"\n\n\n\n\n\nINPUT_METRICS = [\n        Clear_Ask_and_Escalation_Rationale_gpt_5_mini_LLMJudge(),\n        Follow_Up_Path_and_Contactability_gpt_5_mini_LLMJudge(),\n        Policy_Citation_and_Evidence_Grounding_gpt_5_mini_LLMJudge()\n]\n\nclass Autometrics_Regression_c_StaticRegression(GeneratedStaticRegressionAggregator):\n    \"\"\"Regression aggregator over component metrics with a linear model.\n\nComponents and weights:\n- Clear_Ask_and_Escalation_Rationale_gpt-5-mini: 0.122917\n- Follow_Up_Path_and_Contactability_gpt-5-mini: 0.088450\n- Policy_Citation_and_Evidence_Grounding_gpt-5-mini: 0.021574\n\nIntercept: 0.500000\"\"\"\n\n    description: ClassVar[str] = 'Regression aggregator over component metrics with a linear model.\\n\\nComponents and weights:\\n- Clear_Ask_and_Escalation_Rationale_gpt-5-mini: 0.122917\\n- Follow_Up_Path_and_Contactability_gpt-5-mini: 0.088450\\n- Policy_Citation_and_Evidence_Grounding_gpt-5-mini: 0.021574\\n\\nIntercept: 0.500000'\n\n    def __init__(self):\n        super().__init__(\n            name='Autometrics_Regression_c',\n            description='Regression aggregator over component metrics with a linear model.\\n\\nComponents and weights:\\n- Clear_Ask_and_Escalation_Rationale_gpt-5-mini: 0.122917\\n- Follow_Up_Path_and_Contactability_gpt-5-mini: 0.088450\\n- Policy_Citation_and_Evidence_Grounding_gpt-5-mini: 0.021574\\n\\nIntercept: 0.500000',\n            input_metrics=INPUT_METRICS,\n            feature_names=['Clear_Ask_and_Escalation_Rationale_gpt-5-mini', 'Follow_Up_Path_and_Contactability_gpt-5-mini', 'Policy_Citation_and_Evidence_Grounding_gpt-5-mini'],\n            coefficients=[0.12291677455886724, 0.08844963591943523, 0.021573922580993547],\n            intercept=0.5,\n            scaler_mean=[3.9358974358974357, 1.8717948717948718, 2.923076923076923],\n            scaler_scale=[1.2744002469713371, 0.9108881881195697, 1.6545913646053003],\n        )\n\n    def __repr__(self):\n        return f\"ElasticNet(name={repr(self.name)})\"\n"; const RC_PY_FILENAME = "Autometrics_Regression_c.py";</script>
+</head>
+<body>
+  <div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>C AutoMetric Report Card</h1>
+      <div class="d-flex align-items-center">
+        <div class="form-check form-switch me-3">
+          <input class="form-check-input" type="checkbox" id="darkModeToggle">
+          <label class="form-check-label" for="darkModeToggle">Dark Mode</label>
+        </div>
+        <button class="btn btn-primary" onclick="window.print()">Export to PDF</button>
+        <button class="btn btn-outline-primary ms-2" type="button" onclick="downloadPython()">Export to Python</button>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Regression Coefficients</h2>
+          <table class="table table-striped"><thead><tr><th>Metric</th><th>Coeff.</th></tr></thead>
+            <tbody><tr><td><a href="#" class="coeff-link" data-metric="Clear_Ask_and_Escalation_Rationale_gpt-5-mini">Clear_Ask_and_Escalation_Rationale_gpt-5-mini</a></td><td>0.1229</td></tr><tr><td><a href="#" class="coeff-link" data-metric="Follow_Up_Path_and_Contactability_gpt-5-mini">Follow_Up_Path_and_Contactability_gpt-5-mini</a></td><td>0.0884</td></tr><tr><td><a href="#" class="coeff-link" data-metric="Policy_Citation_and_Evidence_Grounding_gpt-5-mini">Policy_Citation_and_Evidence_Grounding_gpt-5-mini</a></td><td>0.0216</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Correlation</h2>
+          <div id="correlation-chart" style="height:420px;"></div>
+          <div id="correlation-stats" class="mt-2" style="text-align:center; font-size: 1rem; font-weight: 600;"></div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Robustness <sup><span class="robust-tip text-primary" data-tip-id="robustness-tip-template" style="cursor:pointer; text-decoration: underline; font-size: 0.9rem;">?</span></sup></h2>
+          <div id="robustness-sens" style="height:240px;"></div>
+          <div id="robustness-stab" style="height:240px;"></div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Run Time Distribution</h2>
+          <div id="runtime-chart" style="height:300px;"></div>
+          <p id="runtime-info" class="mt-2"></p>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Metric Details</h2>
+          <div class="accordion" id="metricDetails">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="descHeader"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#descPanel">Descriptions</button></h2>
+              <div id="descPanel" class="accordion-collapse collapse"><div class="accordion-body"><ul><li><strong>Clear_Ask_and_Escalation_Rationale_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">**Clear Ask and Escalation Rationale** The draft states specific requests or decisions sought and explains why escalation is warranted now.</pre></div></li>
+<li><strong>Follow_Up_Path_and_Contactability_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">**Follow Up Path and Contactability** The draft offers a concrete path for next steps meeting request timelines and contact information for response.</pre></div></li>
+<li><strong>Policy_Citation_and_Evidence_Grounding_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">**Policy Citation and Evidence Grounding** The draft accurately cites relevant OMB guidance memos dates and sections or docket identifiers to anchor the request.</pre></div></li></ul></div></div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="usageHeader"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#usagePanel">Usage</button></h2>
+              <div id="usagePanel" class="accordion-collapse collapse"><div class="accordion-body"><ul><li><strong>Clear_Ask_and_Escalation_Rationale_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- **Domain:** Policy triage / Text evaluation / Administrative decision support
+- **Tasks:** 
+  - Escalation triage for citizen submissions
+  - Ranking candidate feedback drafts by clarity of ask
+  - Identifying missing escalation rationale or timing justifications
+  - Summarizing the specific requests and why escalation is needed
+  - Flagging drafts that require urgent human review
+  - Generating concise commentary to help editors improve clarity
+- **Best Suited For:** 
+  - Inputs are written in clear, grammatical language where asks and rationales are present or clearly absent.
+  - A small-to-moderate set of candidate drafts must be ranked quickly using a consistent rubric.
+  - Escalation criteria are well defined and do not rely on institutional knowledge or confidential context.
+  - High-volume, low-to-medium-stakes workflows where automated triage speeds human review.
+  - When the goal is to detect and report missing explicit asks or weak timing justifications rather than to make final policy decisions.
+- **Not Recommended For:** 
+  - Situations requiring verification of factual claims, legal interpretation, or confidential case details that the model cannot access or validate.
+  - High-stakes escalation decisions involving political sensitivity, safety, legal liability, or ethics where human judgment and institutional accountability are required.
+  - Inputs that are ambiguous, heavily implied, culturally or politically nuanced, or adversarial, where subtle reading and context are essential.
+  - Workflows requiring fully auditable, provenance-backed decisions for regulatory compliance without human review.
+  - Very long threads or multi-document contexts where essential context is distributed and must be reconciled before judging escalation rationale.</pre></div></li>
+<li><strong>Follow_Up_Path_and_Contactability_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- **Domain:** Text Evaluation / Triage
+- **Tasks:** 
+  - Policy feedback triage and escalation
+  - Draft response ranking for agency follow-up readiness
+  - Customer/citizen correspondence screening for contactability
+  - Quality control of template responses for next-step clarity
+  - Prioritization of messages that require routing to officials
+- **Best Suited For:** 
+  - Drafts are short to medium length and contain explicit procedural language (e.g., 'please meet', 'we will follow up by', 'contact at')
+  - The evaluation goal is binary or scalar (present/absent or degree of concreteness) rather than fact verification
+  - Responses follow institutional templates or consistent phrasing that the judge can learn to recognize
+  - There is no need to validate contact information against external databases — only to check presence and format
+  - High volume of submissions where rapid, consistent triage is required
+- **Not Recommended For:** 
+  - Situations that require external validation of contact details, calendar availability, or the truthfulness of claims
+  - Cases needing nuanced legal, medical, or highly specialized policy interpretation to decide escalation
+  - Inputs that are long, ambiguous, or heavily implicit about next steps or contactability
+  - Workflows that involve sensitive personal data requiring strict privacy or compliance checks beyond surface text features
+  - Multilingual materials or noisy OCR text where format detection and language understanding degrade</pre></div></li>
+<li><strong>Policy_Citation_and_Evidence_Grounding_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- **Domain:** Policy evaluation / Document triage (Citation verification &amp; evidence grounding)
+- **Tasks:** 
+  - Rank candidate policy feedback drafts by citation completeness and specificity
+  - Flag drafts that cite OMB memos with missing or malformed dates/section identifiers
+  - Detect discrepancies between asserted policy claims and the citations provided
+  - Triage which citizen submissions merit escalation to agency officials based on citation strength
+  - Classify drafts as adequately grounded, insufficiently grounded, or unverifiable (given provided text)
+  - Generate structured summaries of cited guidance (when source excerpts provided) for reviewers
+  - Identify ambiguous or vague references (e.g., 'recent OMB guidance') that need precise docket/memo identifiers
+- **Best Suited For:** 
+  - High-volume triage where drafts include explicit citation strings (title, memo date, docket ID) that can be pattern-matched.
+  - Workflows that supply the model with the full text or authoritative excerpts of the referenced OMB memos for cross-checking.
+  - Situations where the goal is to flag potential issues (missing/malformed citations, unsupported claims) to prioritize human review.
+  - Automated pre-screening to reduce reviewer load by filtering clearly well-grounded vs. clearly deficient drafts.
+  - Quality-control checks for internal consistency (e.g., whether the date in the citation matches the memo title provided).
+  - Integration into a human-in-the-loop pipeline where final escalations and legal interpretations are made by agency officials.
+- **Not Recommended For:** 
+  - Cases demanding authoritative, up-to-date verification against live federal dockets or OMB repositories when those documents are not provided in the prompt.
+  - Situations that require legal interpretation of how a cited OMB memo applies to complex policy facts or regulatory obligations.
+  - High-stakes final decisions (e.g., formal agency responses or legal filings) without human expert review and source verification.
+  - Inputs with ambiguous, abbreviated, or OCR-corrupted citations that require external research to resolve.
+  - Tasks that expect the model to invent or recall precise section contents or docket histories beyond its training cutoff or provided sources.
+  - Contexts that require tracking real-time changes to guidance (rescissions, superseding memos) where model cannot access live updates.</pre></div></li></ul></div></div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="limitsHeader"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#limitsPanel">Limitations</button></h2>
+              <div id="limitsPanel" class="accordion-collapse collapse"><div class="accordion-body"><ul><li><strong>Clear_Ask_and_Escalation_Rationale_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- **Biases:** 
+  - Preference for explicit linguistic markers (e.g., 'please escalate', 'we request') which causes implicit or nuanced asks to be underrated.
+  - Tendency to equate specificity with quality, thereby favoring verbose, checklist-style drafts over concise but clear requests.
+  - Recency or saliency bias toward urgent language (e.g., 'now', 'immediately') that may overweight dramatic but non-critical submissions.
+  - Domain bias where the evaluator better recognizes escalation rationale in high-profile areas (e.g., safety/security) than in technical, regulatory, or bureaucratic topics.
+  - Cultural and linguistic bias against indirect or polite forms of asking common in some languages and cultures, leading to underestimation of clarity.
+  - Conservatism or risk-averse bias prompting under-escalation when uncertainty exists, due to training on safe/responsible responses.
+  - Overreliance on surface features (deadlines, named officials) which can penalize legitimate strategic asks that intentionally omit such details.
+  - Bias toward drafting norms typical of formal institutions, disadvantaging grassroots or informal citizen voices that still merit escalation.
+- **Task Misalignment Risks:** 
+  - Treating explicit ask-and-rationale as the sole criterion and ignoring other escalation-relevant factors such as potential harm, legal requirements, or contextual urgency.
+  - Conflating clarity with merit: promoting drafts that ask clearly but for inappropriate or low-priority actions, while suppressing ambiguous drafts that point to serious systemic issues.
+  - Overemphasizing immediate temporal language and thereby escalating issues that are time-stamped but low-impact while de-prioritizing high-impact long-term matters.
+  - Failing to account for confidentiality or safety reasons why a citizen might omit explicit requests or details, and penalizing such cautious wording.
+  - Applying a generic checklist across policy domains without adjusting for domain-specific escalation thresholds or required evidence.
+  - Prioritizing linguistic form over stakeholder alignment, leading to escalation of well-written but misaligned requests and ignoring poorly worded but substantively important concerns.
+  - Using escalation as a binary outcome rather than graded, which can force false all-or-nothing decisions instead of recommending further information-gathering.
+  - Relying on model training priors (e.g., professional memo styles) that mismatch common citizen writing and thus mis-evaluate civic submissions.
+- **Failure Cases:** 
+  - False negative: The model fails to escalate a draft that implies a clear ask by context (e.g., reporting imminent public harm) because the citizen used indirect language.
+  - False positive: The model recommends escalation for a draft that contains urgent-sounding language but is a rhetorical complaint without an actionable ask.
+  - Missed domain signal: The model ignores technical indicators (e.g., regulatory citations, incident codes) that make an escalation rationale compelling because it lacks domain-specific knowledge.
+  - Context loss: The model evaluates an excerpt without context and downgrades a draft that in full would include the necessary escalation rationale or authority contact.
+  - Overfitting to format: The model elevates drafts that include template phrases like 'we request' even when the requested action is vague or impractical.
+  - Ambiguity handling failure: The model cannot recommend a graded next step (e.g., request more info) and instead either escalates prematurely or not at all.
+  - Adversarial input: A submitter uses sensationalist wording to game the model into escalation, resulting in resource misallocation.
+  - Privacy/safety oversight: The model suggests escalation that would expose sensitive personal data or jeopardize whistleblower safety because it doesn't flag confidentiality concerns.
+  - Hallucination: The model invents a rationale or urgency (e.g., claiming a deadline exists) when none is present and bases an escalation recommendation on that hallucination.
+  - Cultural misread: The model undervalues directness-missing but culturally normative phrasing and therefore fails to escalate legitimate requests from certain populations.</pre></div></li>
+<li><strong>Follow_Up_Path_and_Contactability_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- **Biases:** 
+  - Surface-form bias: preferring drafts that explicitly list contact details and timelines regardless of their appropriateness or accuracy.
+  - Authority bias: favoring drafts that invoke official-sounding steps or titles even if those steps are infeasible or irrelevant to the agency.
+  - Privacy-neglect bias: underweighting concerns about exposing sensitive contact details or asking for contact where doing so would risk the submitter.
+  - English/format bias: treating English-language or Western-styled contact conventions (email/phone) as normative and penalizing other cultural or local conventions.
+  - Technical-access bias: assuming recipients have access to email/phone or can attend meetings, disadvantaging drafts that suggest low-bandwidth or asynchronous paths.
+  - Recency/verbosity bias: equating more detailed timelines and multiple contact options with higher quality, even when succinct or limited contact is preferable.
+  - Policy-ignorance bias: giving equal credit to contact paths that violate agency rules because the judge lacks domain-specific constraints.
+  - Template bias: over-recognizing templated phrasings (e.g., “please contact us at”) as sufficient evidence of contactability without verifying completeness.
+- **Task Misalignment Risks:** 
+  - Focusing solely on contactability may ignore whether escalation is appropriate, ethical, or permitted under agency rules (e.g., privacy, confidentiality, or legal restrictions).
+  - The axis conflates presence of contact/timelines with effective escalation, missing crucial dimensions like content accuracy, urgency, or jurisdictional relevance.
+  - Automated prioritization based on this axis could systematically escalate low-quality but well-formatted drafts while leaving out urgent reports that lack explicit contact fields.
+  - Evaluating drafts by this axis might incentivize authors to include contact info even when doing so endangers the submitter (e.g., sensitive complaints, whistleblowing).
+  - The axis may promote a single-mode view of contact (meeting requests, phone, email) and fail to recognize acceptable alternative contacts (advocates, ombudspersons, anonymous reporting portals).
+  - If the judge lacks access to agency-specific escalation workflows, it may recommend contact paths that conflict with mandated procedures, causing operational friction.
+  - Narrow axis emphasis can produce blind spots for accessibility needs (e.g., accommodations, language access) that affect actual contactability.
+- **Failure Cases:** 
+  - False positive escalation: the judge flags a draft as actionable because it lists contact info, but the contact is inappropriate (private email, non-agency account) or fabricated.
+  - False negative escalation: a high-priority submission lacking explicit contact fields is downgraded despite clear urgency and a need for agency follow-up.
+  - Privacy breach risk: the judge recommends adding contact prompts or public meeting requests for submissions that should remain confidential, exposing the submitter to harm.
+  - Policy-conflict recommendation: the judge elevates a draft that requests direct meetings contrary to agency protocols (e.g., legal review required before contact).
+  - Misinterpreted timelines: ambiguous phrasing like 'as soon as possible' or 'within two weeks' is mis-scored or normalized incorrectly, leading to incorrect urgency assessments.
+  - Unverifiable contact acceptance: the judge accepts embedded phone/email without verifying format, leading to escalation attempts that bounce or reach the wrong person.
+  - Cultural/format misread: nonstandard contact methods (social-service caseworker, community liaison) are penalized, reducing appropriate follow-up for certain populations.
+  - Template gaming: actors craft superficially complete contact/timeline fields to get escalated even when the underlying request is irrelevant or malicious.
+  - Accessibility neglect: the judge recommends in-person meetings without noting accommodation needs or alternatives, creating barriers for some submitters.
+  - Ambiguity in scope: the judge escalates drafts whose requested follow-up falls outside the agency's jurisdiction, wasting resources and causing delays.</pre></div></li>
+<li><strong>Policy_Citation_and_Evidence_Grounding_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- **Biases:** 
+  - Recency bias: preferring guidance it 'remembers' and penalizing newer or updated guidance beyond the model's knowledge cutoff.
+  - Authority/source bias: favoring OMB memos over other legitimate grounding sources (statutes, regs, agency-specific dockets).
+  - Exact-match bias: rewarding verbatim citation formatting while penalizing paraphrased or partial but correct references.
+  - Jurisdictional bias: assuming OMB guidance applies uniformly across contexts instead of checking topical/applicability differences.
+  - Language bias: worse performance on citations in languages or formats not well represented in training data.
+  - Confirmation bias: more likely to accept citations that fit expected patterns and to distrust atypical but correct references.
+  - Format bias: privileging citations in a specific citation style (dates/section numbers) over other valid identifiers (docket names, RINs).
+  - Availability bias: over-relying on well-known/high-profile memos and under-weighting obscure but relevant guidance.
+- **Task Misalignment Risks:** 
+  - Overfocusing on citation form rather than substantive policy relevance, causing escalations for formally-cited but irrelevant drafts.
+  - Penalizing valid drafts that ground requests in non-OMB authorities (statutes, CFR sections, agency dockets) because the axis privileges OMB citations.
+  - Treating absence of exact date/section numbers as fatal even when the referenced guidance is clearly identifiable by title or subject.
+  - Failing to account for superseded, amended, or revoked guidance and thus mis-evaluating whether a citation is current and applicable.
+  - Prioritizing easily-verifiable docket identifiers while ignoring context that affects applicability (e.g., rulemaking stage).
+  - Applying the same strictness across all submissions regardless of intended escalation level (informational vs high-priority), leading to mismatched triage.
+  - Relying on model-internal knowledge rather than external verification, causing confident but unsupported judgments about citation existence.
+  - Encouraging writers to insert boilerplate citations to pass the axis instead of producing accurate, substantive grounding.
+- **Failure Cases:** 
+  - Hallucinated citations: the judge accepts or invents OMB memo titles/dates/sections that do not exist.
+  - False negatives: rejecting correct but paraphrased or abbreviated citations because they do not match expected strings exactly.
+  - Outdated-evidence error: marking a citation as valid when it has been superseded or revoked (or marking a current citation as invalid due to model cutoff).
+  - Incorrect attribution: assigning a memo to OMB when it originated from another agency or interagency source.
+  - Docket misidentification: accepting an incorrect docket identifier that is plausibly formatted but points to a different proceeding.
+  - Context-mismatch: flagging a technically accurate citation that is not actually relevant to the citizen's request or jurisdiction.
+  - Overconfidence: producing definitive verification statements without external lookup, leading to misleading escalation decisions.
+  - Partial-match acceptance: treating a partial or similarly numbered section as fully correct when it materially changes meaning.
+  - Failure to detect confidentiality or restricted dockets and recommending escalation where inappropriate.
+  - Bias-amplified errors: systematically downgrading submissions from certain demographic or stylistic groups due to language/form differences in citations.
+  - Format-only scoring: rewarding drafts that include citations formatted correctly but that misuse or misunderstand the cited guidance content.
+  - Chain-of-trust error: assuming a cited memo's guidance applies wholesale without checking whether later guidance or agency interpretations modify its applicability.</pre></div></li></ul></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Compute Requirements</h2>
+          <table class="table table-striped"><thead><tr><th>Metric</th><th>GPU RAM (MB)</th><th>CPU RAM (MB)</th></tr></thead>
+            <tbody><tr><td>Clear_Ask_and_Escalation_Rationale_gpt-5-mini</td><td>--</td><td>--</td></tr><tr><td>Follow_Up_Path_and_Contactability_gpt-5-mini</td><td>--</td><td>--</td></tr><tr><td>Policy_Citation_and_Evidence_Grounding_gpt-5-mini</td><td>--</td><td>--</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-5 card p-3">
+      <h3>Metric Summary</h3>
+      <p>This aggregate metric estimates how escalation-worthy a submission is by linearly combining three component judgments: it most strongly rewards a clear, explicit ask with a stated rationale, next prioritizes the presence of concrete follow-up paths and contactability, and only lightly credits precise policy citations. The design suits high-volume triage: it helps rank drafts that are specific about what they want, why now, and how officials can respond. Its strengths are transparency and operational alignment, making it easy to explain why a draft scored highly and to coach authors to improve clarity and next-step readiness. However, it can under-score substantively important but implicitly framed submissions, over-reward well-formatted but low-priority requests, and reflect cultural or stylistic biases toward formal institutional language. The weak weight on citation means evidentiary grounding can be under-emphasized, so the score should not substitute for content relevance, risk, or jurisdiction checks. Because sample items show mid-range predicted scores despite true c=0, model calibration and decision thresholds must be tuned to the agency’s tolerance for false positives vs. false negatives. Regular retraining, cross-domain validation, and reliability checks (e.g., calibration curves) are advised, and human-in-the-loop review remains necessary for rights- or safety-impacting cases.</p>
+    </div>
+
+    <div class="mt-4 card p-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h3 class="mb-0">Examples</h3>
+        <button id="clear-examples-filter" class="btn btn-sm btn-outline-secondary" type="button">Show All</button>
+      </div>
+      
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+  <script>
+    function getThemeLayout() {
+      const color = getComputedStyle(document.body).color;
+      return { paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color } };
+    }
+    document.getElementById('darkModeToggle').addEventListener('change',e=>{document.body.classList.toggle('dark-mode',e.target.checked); drawAll();});
+    // Enable tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (el) {
+      const tip = new bootstrap.Tooltip(el, {trigger: 'hover focus', delay: {show: 0, hide: 50}, placement: 'right'});
+      el.addEventListener('shown.bs.tooltip', function () {
+        try { if (window.MathJax && MathJax.typesetPromise) { MathJax.typesetPromise(); } } catch(_) {}
+      });
+      return tip;
+    });
+
+    // Initialize tooltips; use template content for robustness
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.robust-tip').forEach(function (el) {
+        const id = el.getAttribute('data-tip-id');
+        let titleHtml = '';
+        if (id) {
+          const tpl = document.getElementById(id);
+          if (tpl) titleHtml = tpl.innerHTML;
+        }
+        if (!titleHtml) {
+          titleHtml = '<div style="max-width: 320px">Robustness tooltip unavailable.</div>';
+        }
+        const tip = new bootstrap.Tooltip(el, {
+          trigger: 'hover focus',
+          delay: {show: 0, hide: 50},
+          placement: 'right',
+          html: true,
+          title: titleHtml
+        });
+      });
+    });
+
+    function drawCorrelation() {
+      const layout = Object.assign({xaxis:{title:'Metric Score (normalized to target scale)'}, yaxis:{title:'Ground Truth'}}, getThemeLayout());
+      layout.legend = layout.legend || {}; layout.legend.font = { size: 9 }; layout.margin = {l:40,r:10,t:30,b:40};
+      const traces = [];
+      if (RC_CORR.metrics) {
+        // Determine top 3 metrics by absolute coefficient if available
+        let topNames = [];
+        try {
+          const coeffPairs = ([["Clear_Ask_and_Escalation_Rationale_gpt-5-mini", 0.12291677455886724], ["Follow_Up_Path_and_Contactability_gpt-5-mini", 0.08844963591943523], ["Policy_Citation_and_Evidence_Grounding_gpt-5-mini", 0.021573922580993547], ["(intercept)", 0.5]]);
+          const sorted = coeffPairs.filter(p=>p[0] !== '(intercept)').sort((a,b)=>Math.abs(b[1]) - Math.abs(a[1]));
+          topNames = sorted.slice(0,3).map(p=>p[0]);
+        } catch (e) { topNames = []; }
+        for (const m of RC_CORR.metrics) {
+          const rlab = (m.r!=null ? (m.r.toFixed ? m.r.toFixed(2) : m.r) : 'NA');
+          const tlab = (m.tau!=null ? (m.tau.toFixed ? m.tau.toFixed(2) : m.tau) : 'NA');
+          const visible = (topNames.includes(m.name)) ? true : 'legendonly';
+          const ids = m.ids || [];
+          const text = ids.map(id => 'ID: ' + id);
+          traces.push({ x: m.x_norm || m.x || [], y: m.y || [], mode: 'markers', name: (m.name || '') + ' (r=' + rlab + ', τ=' + tlab + ')', visible, text: text, hovertemplate: '%{text}<br>x=%{x:.3f}<br>y=%{y:.3f}<extra></extra>' });
+        }
+      }
+      if (RC_CORR.regression) {
+        const rlab = (RC_CORR.regression.r!=null ? (RC_CORR.regression.r.toFixed ? RC_CORR.regression.r.toFixed(2) : RC_CORR.regression.r) : 'NA');
+        const tlab = (RC_CORR.regression.tau!=null ? (RC_CORR.regression.tau.toFixed ? RC_CORR.regression.tau.toFixed(2) : RC_CORR.regression.tau) : 'NA');
+        const ids = RC_CORR.regression.ids || [];
+        const text = ids.map(id => 'ID: ' + id);
+        traces.push({ x: RC_CORR.regression.x_norm || RC_CORR.regression.x || [], y: RC_CORR.regression.y || [], mode: 'markers', name: (RC_CORR.regression.name || 'Aggregate') + ' (r=' + rlab + ', τ=' + tlab + ')', marker: { size: 8, color: 'black' }, text: text, hovertemplate: '%{text}<br>x=%{x:.3f}<br>y=%{y:.3f}<extra></extra>' });
+        document.getElementById('correlation-stats').innerText = 'Aggregate metric: r=' + rlab + ', τ=' + tlab;
+      }
+      Plotly.newPlot('correlation-chart', traces, layout, {displayModeBar: false});
+      // Click-to-jump: when a point is clicked, locate its ID in the examples table and jump to it
+      const chart = document.getElementById('correlation-chart');
+      chart.on('plotly_click', function(data) {
+        try {
+          if (!data || !data.points || data.points.length === 0) return;
+          const pt = data.points[0];
+          const idText = (pt.text || '').toString(); // format: 'ID: <val>'
+          const id = idText.startsWith('ID: ') ? idText.slice(4) : idText;
+          const tblEl = document.getElementById('examples-table');
+          if (!tblEl) return;
+          // Try DataTables jQuery API first
+          if (window.jQuery && jQuery.fn && jQuery.fn.dataTable) {
+            const dt = jQuery(tblEl).DataTable();
+            // Search by exact match in first column (ID)
+            dt.search('');
+            dt.columns(0).search('^' + id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', true, false).draw();
+            // Scroll into view first visible row after draw completes
+            setTimeout(function(){
+              let rowNode = null;
+              try {
+                const idxs = dt.rows({ search: 'applied' }).indexes();
+                if (idxs && idxs.length) rowNode = dt.row(idxs[0]).node();
+              } catch(_){ }
+              if (!rowNode) {
+                try { rowNode = dt.row(0).node(); } catch(_) {}
+              }
+              if (rowNode && rowNode.scrollIntoView) {
+                rowNode.scrollIntoView({behavior:'smooth', block:'center'});
+                try { rowNode.classList.add('table-active'); setTimeout(()=>rowNode.classList.remove('table-active'), 1200); } catch(_) {}
+              }
+            }, 60);
+          } else if (typeof DataTable !== 'undefined') {
+            // Vanilla DataTables 2 API
+            const dt = DataTable.get(tblEl) || new DataTable(tblEl);
+            dt.search('');
+            // Filter to rows whose first cell (ID) matches
+            dt.columns().every(function(idx) {
+              if (idx === 0) {
+                this.search('^' + id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', true, false);
+              } else {
+                this.search('');
+              }
+            });
+            dt.draw();
+            setTimeout(function(){
+              let firstRow = null;
+              try {
+                const nodes = dt.rows({ search: 'applied' }).nodes();
+                if (nodes && nodes.length) firstRow = nodes[0];
+              } catch(_) {}
+              if (!firstRow) {
+                const body = tblEl.tBodies && tblEl.tBodies[0];
+                firstRow = body && body.rows && body.rows[0];
+              }
+              if (!firstRow) {
+                try {
+                  const rows = Array.from(tblEl.tBodies[0].rows || []);
+                  firstRow = rows.find(r => (r.cells && r.cells[0] && (r.cells[0].textContent||'').trim() === id));
+                } catch(_) {}
+              }
+              if (firstRow && firstRow.scrollIntoView) {
+                firstRow.scrollIntoView({behavior:'smooth', block:'center'});
+                try { firstRow.classList.add('table-active'); setTimeout(()=>firstRow.classList.remove('table-active'), 1200); } catch(_) {}
+              }
+            }, 60);
+          }
+        } catch(e) { try { console.error('[ReportCard] click-jump failed', e); } catch(_){} }
+      });
+    }
+
+    function drawRuntime() {
+      const layout = Object.assign({yaxis:{title:'Time per Sample (s)'}}, getThemeLayout());
+      const boxes = [];
+      if (RC_RUNTIME.per_metric) {
+        for (const [name, arr] of Object.entries(RC_RUNTIME.per_metric)) {
+          boxes.push({ y: arr, type: 'box', name });
+        }
+      }
+      Plotly.newPlot('runtime-chart', boxes, layout);
+      if (RC_RUNTIME.aggregate) {
+        const agg = RC_RUNTIME.aggregate;
+        var seq = (agg.sequence_mean||0);
+        if (typeof seq === 'number' && seq.toFixed) { seq = seq.toFixed(2); }
+        var par = (agg.parallel_mean||0);
+        if (typeof par === 'number' && par.toFixed) { par = par.toFixed(2); }
+        var seqCI = (agg.sequence_ci||0);
+        if (typeof seqCI === 'number' && seqCI.toFixed) { seqCI = seqCI.toFixed(2); }
+        var parCI = (agg.parallel_ci||0);
+        if (typeof parCI === 'number' && parCI.toFixed) { parCI = parCI.toFixed(2); }
+        document.getElementById('runtime-info').innerHTML = 'Avg time/sample (sequence): ' + seq + 's ± ' + seqCI + 's' + '<br/>' + 'Avg time/sample (parallel): ' + par + 's ± ' + parCI + 's (95% CI)';
+      }
+    }
+
+    function drawRobustness() {
+      if (!RC_ROB.available || !RC_ROB.scores) {
+        document.getElementById('robustness-sens').innerHTML = '<em>Robustness not available.</em>';
+        document.getElementById('robustness-stab').innerHTML = '';
+        return;
+      }
+      const names = Object.keys(RC_ROB.scores);
+      const sens = names.map(n => (RC_ROB.scores[n] && RC_ROB.scores[n].sensitivity) || 0);
+      const stab = names.map(n => (RC_ROB.scores[n] && RC_ROB.scores[n].stability) || 0);
+      Plotly.newPlot('robustness-sens', [{x: names, y: sens, type:'bar', name:'Sensitivity'}], Object.assign({yaxis:{title:'Sensitivity'}}, getThemeLayout()));
+      Plotly.newPlot('robustness-stab', [{x: names, y: stab, type:'bar', name:'Stability'}], Object.assign({yaxis:{title:'Stability'}}, getThemeLayout()));
+    }
+
+    function downloadPython() {
+      try {
+        const code = RC_PY_CODE || '';
+        if (!code) { return; }
+        const blob = new Blob([code], { type: 'text/x-python' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const name = (RC_PY_FILENAME && typeof RC_PY_FILENAME === 'string' && RC_PY_FILENAME.trim()) ? RC_PY_FILENAME : 'AutoMetricsRegression.py';
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function(){ URL.revokeObjectURL(url); try { a.remove(); } catch(_){} }, 0);
+      } catch(_) { }
+    }
+
+    function drawAll() { drawCorrelation(); drawRuntime(); drawRobustness(); }
+    drawAll();
+  </script>
+  <!-- Modal for Metric Card -->
+  <div class="modal fade" id="metricDocModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="metricDocTitle"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="metricDocBody" style="white-space: normal;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function() {
+      const tbl = document.getElementById('examples-table');
+      if (!tbl) return;
+      const clearBtn = document.getElementById('clear-examples-filter');
+      try {
+        if (window.jQuery && jQuery.fn && typeof jQuery.fn.dataTable !== 'undefined') {
+          jQuery(tbl).DataTable({
+            paging: true,
+            pageLength: 5,
+            ordering: true,
+            searching: true,
+            scrollX: true
+          });
+          if (clearBtn) {
+            clearBtn.addEventListener('click', function(){
+              try {
+                const dt = jQuery(tbl).DataTable();
+                dt.search('');
+                dt.columns().every(function(){ this.search(''); });
+                dt.draw();
+              } catch(_) {}
+            });
+          }
+        } else if (typeof DataTable !== 'undefined') {
+          new DataTable(tbl, {
+            paging: true,
+            pageLength: 5,
+            ordering: true,
+            searching: true,
+            scrollX: true
+          });
+          if (clearBtn) {
+            clearBtn.addEventListener('click', function(){
+              try {
+                const dt = DataTable.get(tbl);
+                dt.search('');
+                dt.columns().every(function(){ this.search(''); });
+                dt.draw();
+              } catch(_) {}
+            });
+          }
+        }
+      } catch (e) { try { console.error('[ReportCard] DataTables init error:', e); } catch(_){} }
+    })();
+  </script>
+  <script>
+    // Click handlers for regression coefficient metric links -> open modal with metric card
+    document.addEventListener('click', function(e) {
+      const a = e.target.closest && e.target.closest('a.coeff-link');
+      if (!a) return;
+      e.preventDefault();
+      try {
+        let metric = a.getAttribute('data-metric');
+        // Resolve submetric to parent metric if available
+        if (RC_DOCS && !(metric in RC_DOCS) && RC_DOCS_MAP && RC_DOCS_MAP[metric]) {
+          metric = RC_DOCS_MAP[metric];
+        }
+        const doc = (RC_DOCS && RC_DOCS[metric]) ? RC_DOCS[metric] : 'No metric card available.';
+        const titleNode = document.getElementById('metricDocTitle');
+        const bodyNode = document.getElementById('metricDocBody');
+        if (titleNode) titleNode.textContent = metric + ' — Metric Card';
+        if (bodyNode) {
+          try {
+            bodyNode.innerHTML = marked.parse(doc);
+          } catch(_) {
+            bodyNode.textContent = doc;
+          }
+        }
+        const modalEl = document.getElementById('metricDocModal');
+        if (modalEl && bootstrap && bootstrap.Modal) {
+          const modal = bootstrap.Modal.getOrCreateInstance(modalEl, {backdrop: true});
+          modal.show();
+        }
+      } catch(_) {}
+    });
+  </script>
+  <div id="robustness-tip-template" class="d-none">
+    <div style="max-width: 360px">
+      <strong>Sensitivity</strong> (worse_obvious): how much the metric tends to drop when the output is intentionally degraded. For each example, we measure the relative drop from the original to the average worse_obvious score, clip negative values to 0 (no drop), and then average across examples.
+      <br/><br/>
+      <strong>Stability</strong> (same_obvious): how consistent the metric stays under neutral edits that should not change meaning. For each example, we measure how close the original is to the average same_obvious score (scaled by the original magnitude), clip below 0, and then average across examples. Higher means more stable.
+    </div>
+  </div>
+</body>
+</html>

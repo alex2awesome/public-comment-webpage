@@ -1,0 +1,590 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>C AutoMetric Report Card</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  
+  <style>
+    body.dark-mode { background-color: #121212; color: #e0e0e0; }
+    body.dark-mode .card { background-color: #1e1e1e; border-color: #333; color: #e0e0e0; }
+    body.dark-mode .table, body-dark-mode .table td { background-color: #1e1e1e; color: #e0e0e0; border-color: #333; }
+  </style>
+  <script>const RC_CORR = {}; const RC_RUNTIME = {}; const RC_ROB = {"available": false}; const RC_DOCS = {"Structure_and_organization_gpt-5-mini": "---\n# Metric Card for Structure_and_organization_gpt-5-mini\n\n**Structure and organization** Presence of headings, numbering, and well organized arguments that aid rapid review by officials.\n\n## Metric Details\n\n**Structure_and_organization_gpt-5-mini** is a **reference-free** LLM-as-a-Judge metric that prompts an LLM to rate a system output along a single, run-time-specified evaluation axis.\nIn this case the axis is `**Structure and organization** Presence of headings, numbering, and well organized arguments that aid rapid review by officials.`.\n\nThe prompt supplies:\n\n1. **Task description** *d*\n2. **Axis rubric** `**Structure and organization** Presence of headings, numbering, and well organized arguments that aid rapid review by officials.`\n3. **Input text** *x*\n4. **Output text** *y*\n\nGreedy decoding (temperature = 0) yields an integer score $\\hat{s}\\!\\in\\!\\{1,2,3,4,5\\}$; higher = better adherence to the axis.\n\n- **Metric Type:** LLM as a Judge\n- **Range:** 1-5 (1 = worst, 5 = best)\n- **Higher is Better?:** Yes\n- **Reference-Based?:** No\n- **Input-Required?:** Yes\n\n### Formal Definition\n\nLet $f _{\\theta}$ be the LLM and\n$\\pi _{\text{RF}}(d,\\{axis\\},x,y)$ construct the textual prompt.\n\n$$\n\\hat{s} \\;=\\; \\operatorname*{arg\\,max}\\limits_{s \\in \\{1,\\dots,5\\}} f _{\theta}\\!\bigl(s \\,\bigl|\\, \\pi _{\text{RF}}(d,\\{axis\\},x,y)\bigr)\n$$\n\nThe metric value is $\\operatorname{LJ}^{\text{RF}}_{\\{axis\\}}(d,x,y)=\\hat{s}$.\n\n### Inputs and Outputs\n- **Inputs:**\n  - **Task description** *d*\n  - **Axis rubric** `**Structure and organization** Presence of headings, numbering, and well organized arguments that aid rapid review by officials.`\n  - **Input text** *x*\n  - **Output text** *y*\n- **Outputs:**\n  - Scalar score $\\hat{s} \\in \\{1,2,3,4,5\\}$\n\n## Intended Use\n\n- **Domain:** Document Triage / Text Evaluation\n- **Tasks:** \n  - Policy feedback triage (escalation prioritization based on organization)\n  - Evaluating presence and quality of headings, numbering, and sections\n  - Scoring drafts against an organization/formatting rubric\n  - Flagging submissions that need reformatting before review\n  - Sorting submissions by readability and scannability for officials\n  - Generating structured summaries and outlines of submissions\n  - Quality control of public comments for adherence to submission templates\n  - Assisting template and guideline design based on common structural errors\n- **Best Suited For:** \n  - When documents are in a single common language (e.g., English) and use conventional document structure.\n  - High-volume intake where consistent, automated triage of organizational quality is needed to save reviewer time.\n  - When a clear, written rubric for structure/organization exists and can be applied automatically.\n  - When surface features (headings, numbering, short executive summaries) are reliable proxies for faster human review.\n  - When submissions are electronic and preserve formatting (not plain-text pasted without markup).\n- **Not Recommended For:** \n  - When the primary evaluation requires substantive policy judgment, legal interpretation, or factual verification rather than organizational assessment.\n  - When documents use domain-specific or nonstandard organizational conventions that the judge has not been primed on.\n  - When submissions contain sensitive, classified, or legally privileged content requiring human oversight.\n  - When the input is noisy or formatting is lost (e.g., scanned images or OCR with errors), making structure detection unreliable.\n  - When the goal is to detect author intent, rhetorical strategy, or nuanced tone rather than explicit structural elements.\n\n## Metric Implementation\n\n### Reference Implementations\n\n- **Libraries/Packages:**\n  - [AutoMetrics LLM as a Judge (reference-free)](https://github.com/XenonMolecule/autometrics/blob/main/autometrics/metrics/generated/GeneratedLLMJudgeMetric.py)\n\n### Computational Complexity\n\n- **Efficiency:**\n  - Requires a single LLM call per input-output pair.\n  - AutoMetrics does parallel calls on batched inputs.\n\n- **Scalability:**\n  - Performance is linear in the number of input-output pairs.\n  - Performance depends on the underlying LLM model and the dataset size.  Additional consideration would include whether or not the LLM is a reasoning model.\n\n## Known Limitations\n\n- **Biases:** \n  - Surface-cue bias: over-reliance on explicit headings/numbering as proxies for quality or urgency.\n  - Template bias: preference for formats seen frequently in training data, penalizing nonstandard but valid structures.\n  - Language proficiency bias: penalizing well-reasoned submissions from non-native speakers that use less conventional organization.\n  - Cultural/document-convention bias: favoring Western/English document structures (e.g., 'Executive Summary', numbered lists).\n  - Length bias: equating longer, more sectioned responses with higher importance regardless of content.\n  - Formatting-gaming bias: susceptible to being fooled by submissions that mimic structure without substantive content.\n  - Training-data recency bias: preferring contemporary online formatting norms over legacy or domain-specific formats.\n  - Punctuation/tokenization bias: misinterpreting or missing structure due to unusual punctuation or encoding artifacts.\n- **Task Misalignment Risks:** \n  - Escalation misprioritization: promoting well-structured but low-impact items while downgrading brief but urgent submissions.\n  - Content-neglect risk: failing to surface policy-significant content that lacks formal headings or numbering.\n  - Overfitting to format: optimizing for checklistable features rather than officials' actual review needs.\n  - Accessibility misalignment: preferring visual layout over accessibility-friendly formats (e.g., plain text or assistive-technology-friendly phrasing).\n  - Agency-format mismatch: enforcing structures not used or valued by the target agency, causing false negatives/positives.\n  - Equity misalignment: systematically disadvantaging communities or submitters who use different rhetorical conventions.\n- **Failure Cases:** \n  - False positive: a perfectly structured draft with headings and numbered recommendations that contains inaccurate or irrelevant policy content is escalated.\n  - False negative: a terse, poorly sectioned citizen report contains urgent legal violations but is assigned low priority because of weak structure.\n  - Missed subtext: nuanced or coded complaints (e.g., brief anecdotal reports) lack explicit headings and are overlooked.\n  - Formatting noise: OCR errors, pasted email threads, or embedded images break heading detection and produce low structure scores.\n  - Gaming the evaluator: submitters add superficial headings and numbered lists to manipulate escalation outcomes.\n  - Inconsistent scoring: model rates similar structures differently across contexts due to sensitivity to wording or tokenization.\n  - Multilingual failure: non-English submissions use valid organizational cues unfamiliar to the model and are mis-rated.\n  - Attachment blindness: important content conveyed in attachments, screenshots, or linked documents is ignored because the judge evaluates only the visible structure.\n  - Overconfidence/hallucination: model invents headings or reorganizes content in its internal representation and rates structure inaccurately.\n  - Edge-format failure: proposals using domain-specific formats (e.g., regulatory templates, legal citations) are misinterpreted as unstructured.\n\n## Related Metrics\n\n- **Related Metrics:**\n  - **GRMRewardModel:** The GRMRewardModel is a general-purpose reward model designed to evaluate the quality and safety of LLM-generated outputs.\n  - **MAUVE:** MAUVE (Measuring the Alignment of Unconditional VErsions) quantifies the similarity between two text distributions (e.\n  - **SelfBLEU:** Self-BLEU is a reference-free diversity metric used in text generation tasks.\n\n## Further Reading\n\n- **Papers:**\n  - [Autometrics](https://github.com/XenonMolecule/autometrics)\n  - [Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena](https://openreview.net/pdf?id=uccHPGDlao)\n\n## Citation\n\n```\n@software{Ryan_Autometrics_2025,\n    author = {Ryan, Michael J. and Zhang, Yanzhe and Salunkhe, Amol and Chu, Yi and Rahman, Emily and Xu, Di and Yang, Diyi},\n    license = {MIT},\n    title = {{Autometrics}},\n    url = {https://github.com/XenonMolecule/autometrics},\n    version = {1.0.0},\n    year = {2025}\n}\n```\n\n## Metric Card Authors\n\n- **Authors:** This metric card was automatically generated by gpt-5.\n- **Acknowledgement of AI Assistance:** This metric card was entirely automatically generated by gpt-5 using the Autometrics library. No human intervention was involved. User discretion is advised.\n- **Contact:** For questions about the autometrics library, please contact [Michael J Ryan](mailto:mryan0@stanford.edu).", "FKGL": "---\n# Metric Card for FKGL (Flesch-Kincaid Grade Level)\n\nThe Flesch-Kincaid Grade Level (FKGL) is a readability metric designed to evaluate the complexity of English-language texts. FKGL scores correspond to U.S. school grade levels, making it easy for educators, writers, and practitioners to understand the level of education required to comprehend a given text.\n\n## Metric Details\n\n### Metric Description\n\nThe FKGL metric calculates readability using the average sentence length (words per sentence) and the average syllables per word. It is widely used to assess the difficulty of documents in fields such as education, technical communication, and public policy. Lower FKGL scores indicate easier-to-read material, while higher scores signify increased complexity.\n\n- **Metric Type:** Fluency\n- **Range:** No theoretical upper bound; typical range is approximately -3.4 to above 20.\n- **Higher is Better?:** No\n- **Reference-Based?:** No\n- **Input-Required?:** Yes\n\n### Formal Definition\n\nThe FKGL formula is:\n\n$$\n\text{FKGL} = 0.39 \\left( \frac{\text{total words}}{\text{total sentences}} \right) + 11.8 \\left( \frac{\text{total syllables}}{\text{total words}} \right) - 15.59\n$$\n\nwhere:\n- $\text{total words}$ is the number of words in the text,\n- $\text{total sentences}$ is the number of sentences in the text,\n- $\text{total syllables}$ is the number of syllables in the text.\n\nThe result corresponds to a U.S. grade level.\n\n### Inputs and Outputs\n\n- **Inputs:**  \n- Text (string) to analyze.  \n\n- **Outputs:**  \n- A scalar score representing the U.S. school grade level required to understand the input text.\n\n## Intended Use\n\n### Domains and Tasks\n\n- **Domain:** Text Generation, Education, Technical Communication  \n- **Tasks:** Readability assessment, document simplification, educational content evaluation  \n\n### Applicability and Limitations\n\n- **Best Suited For:**  \n- Analyzing educational materials, technical manuals, and legal documents to ensure they meet readability standards.  \n- Simplifying public-facing content such as insurance policies or government forms.  \n\n- **Not Recommended For:**  \n- Tasks involving creative or highly contextual text, where readability depends on subjective factors.  \n\n## Metric Implementation\n\n### Reference Implementations\n\n- **Libraries/Packages:**  \n- [TextStat](https://github.com/shivam5992/textstat): A Python library implementing FKGL and other readability formulas.  \n- [Microsoft Word Readability Statistics](https://support.microsoft.com/en-us/office/get-your-document-s-readability-and-level-statistics-85b4969e-e80a-4777-8dd3-f7fc3c8b3fd2): FKGL is included in Word's readability analysis tool.  \n\n### Computational Complexity\n\n- **Efficiency:**  \nFKGL is computationally efficient, with a complexity approximately linear in the number of words and sentences.  \n- **Scalability:**  \nFKGL scales well for texts of varying lengths and can handle large datasets with appropriate preprocessing.\n\n## Known Limitations\n\n- **Biases:**  \n- FKGL does not account for the semantic content, context, or layout of the text, which may impact readability.  \n- Polysyllabic words disproportionately influence scores, potentially overestimating difficulty in texts with technical or specialized vocabulary.  \n\n- **Task Misalignment Risks:**  \n- May fail to accurately represent the reading comprehension difficulty for non-native speakers or readers with diverse literacy levels.  \n\n- **Failure Cases:**  \n- Poorly segmented texts (e.g., incorrect sentence splitting) can lead to inaccurate FKGL scores.  \n\n## Related Metrics\n\n- **Flesch Reading Ease (FRE):** A complementary metric providing a score from 0 to 100 for readability, inversely correlated with FKGL.  \n- **Gunning Fog Index:** Another grade-level readability formula focusing on sentence length and complex words.  \n- **Automated Readability Index (ARI):** Similar in purpose but uses character counts instead of syllables.\n\n## Further Reading\n\n- **Papers:**  \n- [Kincaid et al. (1975)](https://apps.dtic.mil/sti/pdfs/ADA006655.pdf): \"Derivation of New Readability Formulas (Automated Readability Index, Fog Count, and Flesch Reading Ease Formula) for Navy Enlisted Personnel.\"\n\n- **Blogs/Tutorials:**  \n- [TextStat Documentation](https://github.com/shivam5992/textstat)\n\n## Citation\n\n```\n@article{kincaid1975derivation,\n  title={Derivation of new readability formulas (automated readability index, fog count and flesch reading ease formula) for navy enlisted personnel},\n  author={Kincaid, J Peter and Fishburne Jr, Robert P and Rogers, Richard L and Chissom, Brad S},\n  year={1975},\n  publisher={Institute for Simulation and Training, University of Central Florida}\n}\n```\n\n## Metric Card Authors\n\n- **Authors:** Michael J. Ryan  \n- **Acknowledgment of AI Assistance:**  \nPortions of this metric card were drafted with assistance from OpenAI's ChatGPT, based on user-provided inputs and relevant documentation. All content has been reviewed and curated by the author to ensure accuracy.  \n- **Contact:** mryan0@stanford.edu\n    ", "Document_genre_suitability_gpt-5-mini": "---\n# Metric Card for Document_genre_suitability_gpt-5-mini\n\n**Document genre suitability** Whether the item is a formal comment, analysis, or summary versus email routing, headers, contact lists, or boilerplate.\n\n## Metric Details\n\n**Document_genre_suitability_gpt-5-mini** is a **reference-free** LLM-as-a-Judge metric that prompts an LLM to rate a system output along a single, run-time-specified evaluation axis.\nIn this case the axis is `**Document genre suitability** Whether the item is a formal comment, analysis, or summary versus email routing, headers, contact lists, or boilerplate.`.\n\nThe prompt supplies:\n\n1. **Task description** *d*\n2. **Axis rubric** `**Document genre suitability** Whether the item is a formal comment, analysis, or summary versus email routing, headers, contact lists, or boilerplate.`\n3. **Input text** *x*\n4. **Output text** *y*\n\nGreedy decoding (temperature = 0) yields an integer score $\\hat{s}\\!\\in\\!\\{1,2,3,4,5\\}$; higher = better adherence to the axis.\n\n- **Metric Type:** LLM as a Judge\n- **Range:** 1-5 (1 = worst, 5 = best)\n- **Higher is Better?:** Yes\n- **Reference-Based?:** No\n- **Input-Required?:** Yes\n\n### Formal Definition\n\nLet $f _{\\theta}$ be the LLM and\n$\\pi _{\text{RF}}(d,\\{axis\\},x,y)$ construct the textual prompt.\n\n$$\n\\hat{s} \\;=\\; \\operatorname*{arg\\,max}\\limits_{s \\in \\{1,\\dots,5\\}} f _{\theta}\\!\bigl(s \\,\bigl|\\, \\pi _{\text{RF}}(d,\\{axis\\},x,y)\bigr)\n$$\n\nThe metric value is $\\operatorname{LJ}^{\text{RF}}_{\\{axis\\}}(d,x,y)=\\hat{s}$.\n\n### Inputs and Outputs\n- **Inputs:**\n  - **Task description** *d*\n  - **Axis rubric** `**Document genre suitability** Whether the item is a formal comment, analysis, or summary versus email routing, headers, contact lists, or boilerplate.`\n  - **Input text** *x*\n  - **Output text** *y*\n- **Outputs:**\n  - Scalar score $\\hat{s} \\in \\{1,2,3,4,5\\}$\n\n## Intended Use\n\n- **Domain:** Text Classification / Document Genre Identification (applied to policy feedback triage)\n- **Tasks:** \n  - Triage policy feedback drafts for escalation\n  - Classify documents into genre labels: formal comment, analysis, summary, email header, contact list, boilerplate\n  - Detect presence of substantive policy claims or recommendations\n  - Filter out routing/administrative metadata from textual content\n  - Produce brief justifications for genre labels to support human reviewers\n  - Prioritize items for human review based on genre + content signals\n- **Best Suited For:** \n  - Input texts are digital, machine-readable, and primarily prose (no scanned images or embedded attachments).\n  - Documents contain clear discourse cues (arguments, recommendations, citations) and are of short-to-moderate length (a few paragraphs to a few pages).\n  - There is a need for high-throughput initial triage to reduce manual review workload. \n  - Labeled examples or a small rule set are available to align the judge\u2019s genre definitions with agency conventions.\n  - The goal is to separate substantive feedback from administrative/boilerplate material, not to make final legal or policy determinations.\n  - Outputs will be used to surface candidates for human escalation rather than to fully automate consequential decisions.\n- **Not Recommended For:** \n  - Inputs are scanned documents, images, or attachments requiring OCR that may lose layout/context. \n  - Critical decisions require provenance verification (authorship, representativeness), legal interpretation, or regulatory compliance judgments beyond textual genre. \n  - Documents are extremely short, fragmentary, or contain only terse headers where genre cues are ambiguous. \n  - Text relies heavily on domain-specific legal jargon or novel formats not represented in the judge\u2019s training data without adaptation. \n  - There is a requirement for complete explainability/auditability at a fine-grained legal standard (the model\u2019s probabilistic judgments may be insufficient). \n  - Content includes sensitive PII or classified material for which automated triage is not permitted without specialized safeguards.\n\n## Metric Implementation\n\n### Reference Implementations\n\n- **Libraries/Packages:**\n  - [AutoMetrics LLM as a Judge (reference-free)](https://github.com/XenonMolecule/autometrics/blob/main/autometrics/metrics/generated/GeneratedLLMJudgeMetric.py)\n\n### Computational Complexity\n\n- **Efficiency:**\n  - Requires a single LLM call per input-output pair.\n  - AutoMetrics does parallel calls on batched inputs.\n\n- **Scalability:**\n  - Performance is linear in the number of input-output pairs.\n  - Performance depends on the underlying LLM model and the dataset size.  Additional consideration would include whether or not the LLM is a reasoning model.\n\n## Known Limitations\n\n- **Biases:** \n  - Length bias: preferring longer documents as substantive and shorter ones as non-substantive, even when short items are high-value summaries or urgent points.\n  - Format bias: over-weighting visual/format cues (headings, bullet lists, salutations) and misclassifying plain-text substantive arguments as boilerplate.\n  - Template-matching bias: labeling anything matching common boilerplate or form-language as non-substantive regardless of whether it contains unique policy points.\n  - Keyword bias: relying on presence/absence of policy keywords or legal citations and missing novel phrasing of substantive points.\n  - Modality bias: treating attachments or embedded content (e.g., images, tables, PDFs) as less likely to contain substantive feedback if not parsed.\n  - Source bias: expecting certain agency-specific structures and penalizing submissions that use different conventions (cross-agency or international variations).\n  - Language/cultural bias: underperforming on non-standard dialects, non-English inputs, or culturally different document conventions.\n  - Recency/training bias: favoring genres seen frequently in training data and failing on rarer or emerging formats.\n  - Conservatism bias: defaulting to classifying ambiguous content as non-escalation to avoid false positives, potentially missing important items.\n  - Overconfidence bias: producing overly certain genre judgments without surfacing uncertainty or needing human review for borderline cases.\n- **Task Misalignment Risks:** \n  - Axis ignores urgency/impact: documents that are non-standard in genre but contain urgent or high-impact policy input may be deprioritized by a pure genre filter.\n  - Content vs. form mismatch: the axis focuses on form rather than substance, so substantive comments embedded in headers, footers, or email threads can be missed.\n  - Loss of nuance about partial relevance: multi-part submissions (routing metadata + substantive comment) may be forced into a single genre label, losing escalation-relevant signal.\n  - Misaligns with stakeholder identity: the axis doesn\u2019t capture who submitted the comment (e.g., subject-matter expert vs general public), which affects escalation decisions.\n  - Agency-process misfit: different agencies require different routing policies; a single genre rubric may not match each agency\u2019s escalation rules.\n  - Attachment handling mismatch: classifying the primary message but ignoring attachments with substantive analysis creates misalignment with the true escalation need.\n  - Contextual dependency ignored: prior correspondence, docket numbers, or linked documents that change genre relevance are not considered by a narrow genre classifier.\n  - Evaluation threshold mismatch: the axis does not define a threshold for escalation (e.g., minimal substantive content required), so operational decisions may diverge from the rubric.\n- **Failure Cases:** \n  - A short, high-value executive summary is labeled as 'non-substantive' because of length-based heuristics and not escalated.\n  - A long routing email that contains a pasted formal comment is labeled 'email/routing' and the embedded comment is ignored.\n  - A submission includes a mix of boilerplate and a single paragraph of policy recommendations; the model discards the whole item as boilerplate.\n  - An attached PDF with detailed analysis is not parsed and the plain-text email is classified as non-escalation.\n  - Templates with customized insertions are classified as boilerplate due to partial template-match, losing the unique substantive insertions.\n  - Non-English or code-switched comments are misclassified as headers/metadata because the judge lacks robust multilingual pattern recognition.\n  - Adversarial formatting (e.g., inserting substantive text inside a signature block) fools the classifier into skipping escalation.\n  - The model overreports confidence and provides no 'uncertain' flag for borderline documents that require human review.\n  - Inconsistent decisions across similar inputs because of sensitivity to punctuation/whitespace or minor formatting differences.\n  - Agency-specific header conventions (e.g., docket IDs placed in the body) are misinterpreted as non-substantive and dropped.\n  - The judge prioritizes keyword presence and escalates documents with policy terms used in an unrelated boilerplate context, causing false positives.\n  - A comment containing legal citations but no recommendations is escalated despite being informational only, increasing reviewer burden.\n\n## Related Metrics\n\n- **Related Metrics:**\n  - **GRMRewardModel:** The GRMRewardModel is a general-purpose reward model designed to evaluate the quality and safety of LLM-generated outputs.\n  - **MAUVE:** MAUVE (Measuring the Alignment of Unconditional VErsions) quantifies the similarity between two text distributions (e.\n  - **SelfBLEU:** Self-BLEU is a reference-free diversity metric used in text generation tasks.\n\n## Further Reading\n\n- **Papers:**\n  - [Autometrics](https://github.com/XenonMolecule/autometrics)\n  - [Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena](https://openreview.net/pdf?id=uccHPGDlao)\n\n## Citation\n\n```\n@software{Ryan_Autometrics_2025,\n    author = {Ryan, Michael J. and Zhang, Yanzhe and Salunkhe, Amol and Chu, Yi and Rahman, Emily and Xu, Di and Yang, Diyi},\n    license = {MIT},\n    title = {{Autometrics}},\n    url = {https://github.com/XenonMolecule/autometrics},\n    version = {1.0.0},\n    year = {2025}\n}\n```\n\n## Metric Card Authors\n\n- **Authors:** This metric card was automatically generated by gpt-5.\n- **Acknowledgement of AI Assistance:** This metric card was entirely automatically generated by gpt-5 using the Autometrics library. No human intervention was involved. User discretion is advised.\n- **Contact:** For questions about the autometrics library, please contact [Michael J Ryan](mailto:mryan0@stanford.edu).", "Signal_to_noise_ratio_gpt-5-mini": "---\n# Metric Card for Signal_to_noise_ratio_gpt-5-mini\n\n**Signal to noise ratio** Proportion of substantive content relative to extraneous headers, signatures, duplication, or formatting artifacts.\n\n## Metric Details\n\n**Signal_to_noise_ratio_gpt-5-mini** is a **reference-free** LLM-as-a-Judge metric that prompts an LLM to rate a system output along a single, run-time-specified evaluation axis.\nIn this case the axis is `**Signal to noise ratio** Proportion of substantive content relative to extraneous headers, signatures, duplication, or formatting artifacts.`.\n\nThe prompt supplies:\n\n1. **Task description** *d*\n2. **Axis rubric** `**Signal to noise ratio** Proportion of substantive content relative to extraneous headers, signatures, duplication, or formatting artifacts.`\n3. **Input text** *x*\n4. **Output text** *y*\n\nGreedy decoding (temperature = 0) yields an integer score $\\hat{s}\\!\\in\\!\\{1,2,3,4,5\\}$; higher = better adherence to the axis.\n\n- **Metric Type:** LLM as a Judge\n- **Range:** 1-5 (1 = worst, 5 = best)\n- **Higher is Better?:** Yes\n- **Reference-Based?:** No\n- **Input-Required?:** Yes\n\n### Formal Definition\n\nLet $f _{\\theta}$ be the LLM and\n$\\pi _{\text{RF}}(d,\\{axis\\},x,y)$ construct the textual prompt.\n\n$$\n\\hat{s} \\;=\\; \\operatorname*{arg\\,max}\\limits_{s \\in \\{1,\\dots,5\\}} f _{\theta}\\!\bigl(s \\,\bigl|\\, \\pi _{\text{RF}}(d,\\{axis\\},x,y)\bigr)\n$$\n\nThe metric value is $\\operatorname{LJ}^{\text{RF}}_{\\{axis\\}}(d,x,y)=\\hat{s}$.\n\n### Inputs and Outputs\n- **Inputs:**\n  - **Task description** *d*\n  - **Axis rubric** `**Signal to noise ratio** Proportion of substantive content relative to extraneous headers, signatures, duplication, or formatting artifacts.`\n  - **Input text** *x*\n  - **Output text** *y*\n- **Outputs:**\n  - Scalar score $\\hat{s} \\in \\{1,2,3,4,5\\}$\n\n## Intended Use\n\n- **Domain:** Text classification / Content triage\n- **Tasks:** \n  - Triage citizen feedback for escalation\n  - Filter and label substantive vs. extraneous content\n  - Extract candidate policy-relevant excerpts for reviewer attention\n  - Score or rank drafts by signal-to-noise ratio\n  - Preprocess submissions for human review or downstream summarization\n- **Best Suited For:** \n  - Input submissions are primarily in English and reasonably well-formed (few OCR errors or corrupted encoding).\n  - There is a clear, operational definition of what counts as \u2018substantive\u2019 (examples or annotation guidelines available).\n  - Submissions are moderate to long in length where boilerplate, signatures, and quoted threads are present and detectable.\n  - Large-scale automated triage is needed to prioritize a subset of items for human review.\n  - You want consistent, repeatable SNR scoring and automatic extraction of likely policy-relevant passages.\n- **Not Recommended For:** \n  - Inputs contain heavy OCR artifacts, malformed encodings, or numerous non-textual artifacts that impede reliable parsing.\n  - Material is in languages or dialects the model handles poorly or mixes many languages without clear markers.\n  - Determining policy relevance requires deep domain expertise or legal judgement that goes beyond signal/noise identification.\n  - High-stakes escalation decisions that cannot tolerate false negatives without human oversight.\n  - Substantive content is extremely implicit or embedded in metaphors or coded language where surface cues are unreliable.\n\n## Metric Implementation\n\n### Reference Implementations\n\n- **Libraries/Packages:**\n  - [AutoMetrics LLM as a Judge (reference-free)](https://github.com/XenonMolecule/autometrics/blob/main/autometrics/metrics/generated/GeneratedLLMJudgeMetric.py)\n\n### Computational Complexity\n\n- **Efficiency:**\n  - Requires a single LLM call per input-output pair.\n  - AutoMetrics does parallel calls on batched inputs.\n\n- **Scalability:**\n  - Performance is linear in the number of input-output pairs.\n  - Performance depends on the underlying LLM model and the dataset size.  Additional consideration would include whether or not the LLM is a reasoning model.\n\n## Known Limitations\n\n- **Biases:** \n  - Format bias: favoring responses with clean structure, headings, or bullet lists even if those contain little substantive content.\n  - Length bias: equating longer text with higher signal, disadvantaging concise but important submissions.\n  - Template bias: discounting or ignoring content that resembles standard templates or legal boilerplate even when those templates contain critical legal claims.\n  - Language/style bias: penalizing nonstandard grammar, dialects, or translations that appear noisy though content is substantive.\n  - Header/signature bias: treating salutations, signatures, and address blocks as pure noise and discarding substantive information contained there.\n  - Duplication bias: automatically down-weighting repeated phrases or quoted threads that may nonetheless indicate emphasis or chronology important to escalation.\n  - OCR/artifact bias: misclassifying OCR errors, line breaks, or special characters as noise, losing true signal especially from scanned attachments.\n  - Cultural formatting bias: preferring Western-centric document conventions (subject lines, concise abstracts) over other valid formats.\n  - Citations-as-noise bias: counting dense legal citations or references as low signal because they disrupt prose or appear mechanical.\n  - Length-of-paragraph bias: treating long paragraphs with embedded nuance as noisy because they lack visual formatting cues.\n- **Task Misalignment Risks:** \n  - Overemphasis on signal-to-noise may deprioritize highly relevant but brief submissions (e.g., urgent tip or legal complaint).\n  - Focusing on visible noise metrics can miss contextual signals needed for escalation, such as sender credibility, attachments, or prior correspondence.\n  - Ranking by SNR alone may escalate polished but low-impact feedback while ignoring messy but high-impact reports.\n  - The judge may fail to consider agency-specific thresholds (legal thresholds, statutory relevance) and thus mis-rank policy-critical content.\n  - Signal heuristics can be gamed (e.g., adversaries adding boilerplate to appear substantive or inserting noise to avoid detection), undermining triage integrity.\n  - Cross-lingual and translation issues may cause systemic underestimation of signal for non-primary languages, reducing equitable escalation.\n  - Treating repeated quoted threads as noise may break chronological context necessary to assess escalation urgency.\n  - Narrow axis use could encourage human reviewers to rely solely on automated SNR scores instead of reading for real-world relevance.\n- **Failure Cases:** \n  - Substantive content hidden in an email thread's header (e.g., a one-line clarification) is removed as 'noise' and the draft is not escalated.\n  - A concise whistleblower tip (three sentences) is ranked very low because of short length despite high policy relevance.\n  - Scanned PDF with OCR errors yields garbled tokens and the judge marks it as low-signal even though the original contained detailed allegations.\n  - Legal complaint using boilerplate statutory language is marked as 'template noise' and deprioritized despite constituting a valid legal claim.\n  - Quotations and repeated content from multiple respondents are collapsed as duplication, losing evidence of widespread concern that should trigger escalation.\n  - Submissions in less-common languages or with translated structure are mis-scored due to formatting or punctuation differences, reducing their priority.\n  - Deliberately obfuscated malicious input (lots of headers, fake signatures) is scored as high-signal because of polished formatting, leading to false positives.\n  - Embedded attachments or links with substantive reports are ignored because the judge only evaluates visible inline text.\n  - Important numbered evidence embedded inside a signature block is discarded as non-substantive.\n  - Threshold miscalibration causes a cluster of mid-signal but important messages to be consistently ignored, creating blind spots in escalation coverage.\n\n## Related Metrics\n\n- **Related Metrics:**\n  - **GRMRewardModel:** The GRMRewardModel is a general-purpose reward model designed to evaluate the quality and safety of LLM-generated outputs.\n  - **MAUVE:** MAUVE (Measuring the Alignment of Unconditional VErsions) quantifies the similarity between two text distributions (e.\n  - **SelfBLEU:** Self-BLEU is a reference-free diversity metric used in text generation tasks.\n\n## Further Reading\n\n- **Papers:**\n  - [Autometrics](https://github.com/XenonMolecule/autometrics)\n  - [Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena](https://openreview.net/pdf?id=uccHPGDlao)\n\n## Citation\n\n```\n@software{Ryan_Autometrics_2025,\n    author = {Ryan, Michael J. and Zhang, Yanzhe and Salunkhe, Amol and Chu, Yi and Rahman, Emily and Xu, Di and Yang, Diyi},\n    license = {MIT},\n    title = {{Autometrics}},\n    url = {https://github.com/XenonMolecule/autometrics},\n    version = {1.0.0},\n    year = {2025}\n}\n```\n\n## Metric Card Authors\n\n- **Authors:** This metric card was automatically generated by gpt-5.\n- **Acknowledgement of AI Assistance:** This metric card was entirely automatically generated by gpt-5 using the Autometrics library. No human intervention was involved. User discretion is advised.\n- **Contact:** For questions about the autometrics library, please contact [Michael J Ryan](mailto:mryan0@stanford.edu)."}; const RC_DOCS_MAP = {}; const RC_PY_CODE = "# Auto-generated static regression for Autometrics_Regression_c\nfrom typing import ClassVar\nimport numpy as np\nfrom autometrics.aggregator.generated.GeneratedRegressionMetric import GeneratedStaticRegressionAggregator\n\nfrom autometrics.metrics.reference_free.FKGL import FKGL\n\n# Auto-generated metric file for Structure_and_organization_gpt-5-mini\nimport dspy\nimport os\nfrom autometrics.metrics.generated.GeneratedLLMJudgeMetric import GeneratedRefFreeLLMJudgeMetric\nfrom typing import ClassVar\n\nDEFAULT_MODEL_Structure_and_organization_gpt_5_mini_LLMJudge = dspy.LM(model='openai/gpt-5-mini', api_key=os.getenv(\"OPENAI_API_KEY\"))\n\nclass Structure_and_organization_gpt_5_mini_LLMJudge(GeneratedRefFreeLLMJudgeMetric):\n    \"\"\"\"\"\"\n\n    description: ClassVar[str] = \"**Structure and organization** Presence of headings, numbering, and well organized arguments that aid rapid review by officials.\"\n\n    def __init__(self, model: dspy.LM = DEFAULT_MODEL_Structure_and_organization_gpt_5_mini_LLMJudge):\n        super().__init__(\n            name=\"Structure_and_organization_gpt-5-mini\",\n            description=\"**Structure and organization** Presence of headings, numbering, and well organized arguments that aid rapid review by officials.\",\n            axis=\"**Structure and organization** Presence of headings, numbering, and well organized arguments that aid rapid review by officials.\",\n            model=model,\n            task_description=\"Rank candidate policy feedback drafts for follow-up: given a citizen\\u2019s submission, \\n    determine which responses merit escalation to agency officials.\",\n            metric_card=\"None\",\n            max_workers=32,\n        )\n\n    def __repr__(self):\n        return f\"Structure_and_organization_gpt_5_mini_LLMJudge(model=dspy.LM(model='openai/gpt-5-mini', api_key=os.getenv(\\\"OPENAI_API_KEY\\\")))\"\n\n\n\n# Auto-generated metric file for Document_genre_suitability_gpt-5-mini\nimport dspy\nimport os\nfrom autometrics.metrics.generated.GeneratedLLMJudgeMetric import GeneratedRefFreeLLMJudgeMetric\nfrom typing import ClassVar\n\nDEFAULT_MODEL_Document_genre_suitability_gpt_5_mini_LLMJudge = dspy.LM(model='openai/gpt-5-mini', api_key=os.getenv(\"OPENAI_API_KEY\"))\n\nclass Document_genre_suitability_gpt_5_mini_LLMJudge(GeneratedRefFreeLLMJudgeMetric):\n    \"\"\"\"\"\"\n\n    description: ClassVar[str] = \"**Document genre suitability** Whether the item is a formal comment, analysis, or summary versus email routing, headers, contact lists, or boilerplate.\"\n\n    def __init__(self, model: dspy.LM = DEFAULT_MODEL_Document_genre_suitability_gpt_5_mini_LLMJudge):\n        super().__init__(\n            name=\"Document_genre_suitability_gpt-5-mini\",\n            description=\"**Document genre suitability** Whether the item is a formal comment, analysis, or summary versus email routing, headers, contact lists, or boilerplate.\",\n            axis=\"**Document genre suitability** Whether the item is a formal comment, analysis, or summary versus email routing, headers, contact lists, or boilerplate.\",\n            model=model,\n            task_description=\"Rank candidate policy feedback drafts for follow-up: given a citizen\\u2019s submission, \\n    determine which responses merit escalation to agency officials.\",\n            metric_card=\"None\",\n            max_workers=32,\n        )\n\n    def __repr__(self):\n        return f\"Document_genre_suitability_gpt_5_mini_LLMJudge(model=dspy.LM(model='openai/gpt-5-mini', api_key=os.getenv(\\\"OPENAI_API_KEY\\\")))\"\n\n\n\n# Auto-generated metric file for Signal_to_noise_ratio_gpt-5-mini\nimport dspy\nimport os\nfrom autometrics.metrics.generated.GeneratedLLMJudgeMetric import GeneratedRefFreeLLMJudgeMetric\nfrom typing import ClassVar\n\nDEFAULT_MODEL_Signal_to_noise_ratio_gpt_5_mini_LLMJudge = dspy.LM(model='openai/gpt-5-mini', api_key=os.getenv(\"OPENAI_API_KEY\"))\n\nclass Signal_to_noise_ratio_gpt_5_mini_LLMJudge(GeneratedRefFreeLLMJudgeMetric):\n    \"\"\"\"\"\"\n\n    description: ClassVar[str] = \"**Signal to noise ratio** Proportion of substantive content relative to extraneous headers, signatures, duplication, or formatting artifacts.\"\n\n    def __init__(self, model: dspy.LM = DEFAULT_MODEL_Signal_to_noise_ratio_gpt_5_mini_LLMJudge):\n        super().__init__(\n            name=\"Signal_to_noise_ratio_gpt-5-mini\",\n            description=\"**Signal to noise ratio** Proportion of substantive content relative to extraneous headers, signatures, duplication, or formatting artifacts.\",\n            axis=\"**Signal to noise ratio** Proportion of substantive content relative to extraneous headers, signatures, duplication, or formatting artifacts.\",\n            model=model,\n            task_description=\"Rank candidate policy feedback drafts for follow-up: given a citizen\\u2019s submission, \\n    determine which responses merit escalation to agency officials.\",\n            metric_card=\"None\",\n            max_workers=32,\n        )\n\n    def __repr__(self):\n        return f\"Signal_to_noise_ratio_gpt_5_mini_LLMJudge(model=dspy.LM(model='openai/gpt-5-mini', api_key=os.getenv(\\\"OPENAI_API_KEY\\\")))\"\n\n\n\n\n\nINPUT_METRICS = [\n        Structure_and_organization_gpt_5_mini_LLMJudge(),\n        FKGL(),\n        Document_genre_suitability_gpt_5_mini_LLMJudge(),\n        Signal_to_noise_ratio_gpt_5_mini_LLMJudge()\n]\n\nclass Autometrics_Regression_c_StaticRegression(GeneratedStaticRegressionAggregator):\n    \"\"\"Regression aggregator over component metrics with a linear model.\n\nComponents and weights:\n- Structure_and_organization_gpt-5-mini: 0.136676\n- FKGL: -0.060194\n- Document_genre_suitability_gpt-5-mini: 0.033590\n- Signal_to_noise_ratio_gpt-5-mini: -0.085322\n\nIntercept: 0.500000\"\"\"\n\n    description: ClassVar[str] = 'Regression aggregator over component metrics with a linear model.\\n\\nComponents and weights:\\n- Structure_and_organization_gpt-5-mini: 0.136676\\n- FKGL: -0.060194\\n- Document_genre_suitability_gpt-5-mini: 0.033590\\n- Signal_to_noise_ratio_gpt-5-mini: -0.085322\\n\\nIntercept: 0.500000'\n\n    def __init__(self):\n        super().__init__(\n            name='Autometrics_Regression_c',\n            description='Regression aggregator over component metrics with a linear model.\\n\\nComponents and weights:\\n- Structure_and_organization_gpt-5-mini: 0.136676\\n- FKGL: -0.060194\\n- Document_genre_suitability_gpt-5-mini: 0.033590\\n- Signal_to_noise_ratio_gpt-5-mini: -0.085322\\n\\nIntercept: 0.500000',\n            input_metrics=INPUT_METRICS,\n            feature_names=['Structure_and_organization_gpt-5-mini', 'FKGL', 'Document_genre_suitability_gpt-5-mini', 'Signal_to_noise_ratio_gpt-5-mini'],\n            coefficients=[0.13667638802421547, -0.06019421812132741, 0.033589805848062745, -0.08532208760908981],\n            intercept=0.5,\n            scaler_mean=[2.1771929824561402, 18.85678352421958, 3.8210526315789473, 2.4859649122807017],\n            scaler_scale=[1.2075083151592887, 6.239676053449962, 1.5904028886125396, 1.0449441513643714],\n        )\n\n    def __repr__(self):\n        return f\"ElasticNet(name={repr(self.name)})\"\n"; const RC_PY_FILENAME = "Autometrics_Regression_c.py";</script>
+</head>
+<body>
+  <div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>C AutoMetric Report Card</h1>
+      <div class="d-flex align-items-center">
+        <div class="form-check form-switch me-3">
+          <input class="form-check-input" type="checkbox" id="darkModeToggle">
+          <label class="form-check-label" for="darkModeToggle">Dark Mode</label>
+        </div>
+        <button class="btn btn-primary" onclick="window.print()">Export to PDF</button>
+        <button class="btn btn-outline-primary ms-2" type="button" onclick="downloadPython()">Export to Python</button>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Regression Coefficients</h2>
+          <table class="table table-striped"><thead><tr><th>Metric</th><th>Coeff.</th></tr></thead>
+            <tbody><tr><td><a href="#" class="coeff-link" data-metric="Structure_and_organization_gpt-5-mini">Structure_and_organization_gpt-5-mini</a></td><td>0.1367</td></tr><tr><td><a href="#" class="coeff-link" data-metric="Document_genre_suitability_gpt-5-mini">Document_genre_suitability_gpt-5-mini</a></td><td>0.0336</td></tr><tr><td><a href="#" class="coeff-link" data-metric="FKGL">FKGL</a></td><td>-0.0602</td></tr><tr><td><a href="#" class="coeff-link" data-metric="Signal_to_noise_ratio_gpt-5-mini">Signal_to_noise_ratio_gpt-5-mini</a></td><td>-0.0853</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Correlation</h2>
+          <div id="correlation-chart" style="height:420px;"></div>
+          <div id="correlation-stats" class="mt-2" style="text-align:center; font-size: 1rem; font-weight: 600;"></div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Robustness <sup><span class="robust-tip text-primary" data-tip-id="robustness-tip-template" style="cursor:pointer; text-decoration: underline; font-size: 0.9rem;">?</span></sup></h2>
+          <div id="robustness-sens" style="height:240px;"></div>
+          <div id="robustness-stab" style="height:240px;"></div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Run Time Distribution</h2>
+          <div id="runtime-chart" style="height:300px;"></div>
+          <p id="runtime-info" class="mt-2"></p>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Metric Details</h2>
+          <div class="accordion" id="metricDetails">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="descHeader"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#descPanel">Descriptions</button></h2>
+              <div id="descPanel" class="accordion-collapse collapse"><div class="accordion-body"><ul><li><strong>Structure_and_organization_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">**Structure and organization** Presence of headings, numbering, and well organized arguments that aid rapid review by officials.</pre></div></li>
+<li><strong>FKGL:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">The FKGL metric calculates readability using the average sentence length (words per sentence) and the average syllables per word. It is widely used to assess the difficulty of documents in fields such as education, technical communication, and public policy. Lower FKGL scores indicate easier-to-read material, while higher scores signify increased complexity.
+
+- **Metric Type:** Fluency
+- **Range:** No theoretical upper bound; typical range is approximately -3.4 to above 20.
+- **Higher is Better?:** No
+- **Reference-Based?:** No
+- **Input-Required?:** Yes</pre></div></li>
+<li><strong>Document_genre_suitability_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">**Document genre suitability** Whether the item is a formal comment, analysis, or summary versus email routing, headers, contact lists, or boilerplate.</pre></div></li>
+<li><strong>Signal_to_noise_ratio_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">**Signal to noise ratio** Proportion of substantive content relative to extraneous headers, signatures, duplication, or formatting artifacts.</pre></div></li></ul></div></div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="usageHeader"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#usagePanel">Usage</button></h2>
+              <div id="usagePanel" class="accordion-collapse collapse"><div class="accordion-body"><ul><li><strong>Structure_and_organization_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- **Domain:** Document Triage / Text Evaluation
+- **Tasks:** 
+  - Policy feedback triage (escalation prioritization based on organization)
+  - Evaluating presence and quality of headings, numbering, and sections
+  - Scoring drafts against an organization/formatting rubric
+  - Flagging submissions that need reformatting before review
+  - Sorting submissions by readability and scannability for officials
+  - Generating structured summaries and outlines of submissions
+  - Quality control of public comments for adherence to submission templates
+  - Assisting template and guideline design based on common structural errors
+- **Best Suited For:** 
+  - When documents are in a single common language (e.g., English) and use conventional document structure.
+  - High-volume intake where consistent, automated triage of organizational quality is needed to save reviewer time.
+  - When a clear, written rubric for structure/organization exists and can be applied automatically.
+  - When surface features (headings, numbering, short executive summaries) are reliable proxies for faster human review.
+  - When submissions are electronic and preserve formatting (not plain-text pasted without markup).
+- **Not Recommended For:** 
+  - When the primary evaluation requires substantive policy judgment, legal interpretation, or factual verification rather than organizational assessment.
+  - When documents use domain-specific or nonstandard organizational conventions that the judge has not been primed on.
+  - When submissions contain sensitive, classified, or legally privileged content requiring human oversight.
+  - When the input is noisy or formatting is lost (e.g., scanned images or OCR with errors), making structure detection unreliable.
+  - When the goal is to detect author intent, rhetorical strategy, or nuanced tone rather than explicit structural elements.</pre></div></li>
+<li><strong>FKGL:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">### Domains and Tasks
+
+- **Domain:** Text Generation, Education, Technical Communication  
+- **Tasks:** Readability assessment, document simplification, educational content evaluation  
+
+### Applicability and Limitations
+
+- **Best Suited For:**  
+- Analyzing educational materials, technical manuals, and legal documents to ensure they meet readability standards.  
+- Simplifying public-facing content such as insurance policies or government forms.  
+
+- **Not Recommended For:**  
+- Tasks involving creative or highly contextual text, where readability depends on subjective factors.</pre></div></li>
+<li><strong>Document_genre_suitability_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- **Domain:** Text Classification / Document Genre Identification (applied to policy feedback triage)
+- **Tasks:** 
+  - Triage policy feedback drafts for escalation
+  - Classify documents into genre labels: formal comment, analysis, summary, email header, contact list, boilerplate
+  - Detect presence of substantive policy claims or recommendations
+  - Filter out routing/administrative metadata from textual content
+  - Produce brief justifications for genre labels to support human reviewers
+  - Prioritize items for human review based on genre + content signals
+- **Best Suited For:** 
+  - Input texts are digital, machine-readable, and primarily prose (no scanned images or embedded attachments).
+  - Documents contain clear discourse cues (arguments, recommendations, citations) and are of short-to-moderate length (a few paragraphs to a few pages).
+  - There is a need for high-throughput initial triage to reduce manual review workload. 
+  - Labeled examples or a small rule set are available to align the judge’s genre definitions with agency conventions.
+  - The goal is to separate substantive feedback from administrative/boilerplate material, not to make final legal or policy determinations.
+  - Outputs will be used to surface candidates for human escalation rather than to fully automate consequential decisions.
+- **Not Recommended For:** 
+  - Inputs are scanned documents, images, or attachments requiring OCR that may lose layout/context. 
+  - Critical decisions require provenance verification (authorship, representativeness), legal interpretation, or regulatory compliance judgments beyond textual genre. 
+  - Documents are extremely short, fragmentary, or contain only terse headers where genre cues are ambiguous. 
+  - Text relies heavily on domain-specific legal jargon or novel formats not represented in the judge’s training data without adaptation. 
+  - There is a requirement for complete explainability/auditability at a fine-grained legal standard (the model’s probabilistic judgments may be insufficient). 
+  - Content includes sensitive PII or classified material for which automated triage is not permitted without specialized safeguards.</pre></div></li>
+<li><strong>Signal_to_noise_ratio_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- **Domain:** Text classification / Content triage
+- **Tasks:** 
+  - Triage citizen feedback for escalation
+  - Filter and label substantive vs. extraneous content
+  - Extract candidate policy-relevant excerpts for reviewer attention
+  - Score or rank drafts by signal-to-noise ratio
+  - Preprocess submissions for human review or downstream summarization
+- **Best Suited For:** 
+  - Input submissions are primarily in English and reasonably well-formed (few OCR errors or corrupted encoding).
+  - There is a clear, operational definition of what counts as ‘substantive’ (examples or annotation guidelines available).
+  - Submissions are moderate to long in length where boilerplate, signatures, and quoted threads are present and detectable.
+  - Large-scale automated triage is needed to prioritize a subset of items for human review.
+  - You want consistent, repeatable SNR scoring and automatic extraction of likely policy-relevant passages.
+- **Not Recommended For:** 
+  - Inputs contain heavy OCR artifacts, malformed encodings, or numerous non-textual artifacts that impede reliable parsing.
+  - Material is in languages or dialects the model handles poorly or mixes many languages without clear markers.
+  - Determining policy relevance requires deep domain expertise or legal judgement that goes beyond signal/noise identification.
+  - High-stakes escalation decisions that cannot tolerate false negatives without human oversight.
+  - Substantive content is extremely implicit or embedded in metaphors or coded language where surface cues are unreliable.</pre></div></li></ul></div></div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="limitsHeader"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#limitsPanel">Limitations</button></h2>
+              <div id="limitsPanel" class="accordion-collapse collapse"><div class="accordion-body"><ul><li><strong>Structure_and_organization_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- **Biases:** 
+  - Surface-cue bias: over-reliance on explicit headings/numbering as proxies for quality or urgency.
+  - Template bias: preference for formats seen frequently in training data, penalizing nonstandard but valid structures.
+  - Language proficiency bias: penalizing well-reasoned submissions from non-native speakers that use less conventional organization.
+  - Cultural/document-convention bias: favoring Western/English document structures (e.g., 'Executive Summary', numbered lists).
+  - Length bias: equating longer, more sectioned responses with higher importance regardless of content.
+  - Formatting-gaming bias: susceptible to being fooled by submissions that mimic structure without substantive content.
+  - Training-data recency bias: preferring contemporary online formatting norms over legacy or domain-specific formats.
+  - Punctuation/tokenization bias: misinterpreting or missing structure due to unusual punctuation or encoding artifacts.
+- **Task Misalignment Risks:** 
+  - Escalation misprioritization: promoting well-structured but low-impact items while downgrading brief but urgent submissions.
+  - Content-neglect risk: failing to surface policy-significant content that lacks formal headings or numbering.
+  - Overfitting to format: optimizing for checklistable features rather than officials' actual review needs.
+  - Accessibility misalignment: preferring visual layout over accessibility-friendly formats (e.g., plain text or assistive-technology-friendly phrasing).
+  - Agency-format mismatch: enforcing structures not used or valued by the target agency, causing false negatives/positives.
+  - Equity misalignment: systematically disadvantaging communities or submitters who use different rhetorical conventions.
+- **Failure Cases:** 
+  - False positive: a perfectly structured draft with headings and numbered recommendations that contains inaccurate or irrelevant policy content is escalated.
+  - False negative: a terse, poorly sectioned citizen report contains urgent legal violations but is assigned low priority because of weak structure.
+  - Missed subtext: nuanced or coded complaints (e.g., brief anecdotal reports) lack explicit headings and are overlooked.
+  - Formatting noise: OCR errors, pasted email threads, or embedded images break heading detection and produce low structure scores.
+  - Gaming the evaluator: submitters add superficial headings and numbered lists to manipulate escalation outcomes.
+  - Inconsistent scoring: model rates similar structures differently across contexts due to sensitivity to wording or tokenization.
+  - Multilingual failure: non-English submissions use valid organizational cues unfamiliar to the model and are mis-rated.
+  - Attachment blindness: important content conveyed in attachments, screenshots, or linked documents is ignored because the judge evaluates only the visible structure.
+  - Overconfidence/hallucination: model invents headings or reorganizes content in its internal representation and rates structure inaccurately.
+  - Edge-format failure: proposals using domain-specific formats (e.g., regulatory templates, legal citations) are misinterpreted as unstructured.</pre></div></li>
+<li><strong>FKGL:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- **Biases:**  
+- FKGL does not account for the semantic content, context, or layout of the text, which may impact readability.  
+- Polysyllabic words disproportionately influence scores, potentially overestimating difficulty in texts with technical or specialized vocabulary.  
+
+- **Task Misalignment Risks:**  
+- May fail to accurately represent the reading comprehension difficulty for non-native speakers or readers with diverse literacy levels.  
+
+- **Failure Cases:**  
+- Poorly segmented texts (e.g., incorrect sentence splitting) can lead to inaccurate FKGL scores.</pre></div></li>
+<li><strong>Document_genre_suitability_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- **Biases:** 
+  - Length bias: preferring longer documents as substantive and shorter ones as non-substantive, even when short items are high-value summaries or urgent points.
+  - Format bias: over-weighting visual/format cues (headings, bullet lists, salutations) and misclassifying plain-text substantive arguments as boilerplate.
+  - Template-matching bias: labeling anything matching common boilerplate or form-language as non-substantive regardless of whether it contains unique policy points.
+  - Keyword bias: relying on presence/absence of policy keywords or legal citations and missing novel phrasing of substantive points.
+  - Modality bias: treating attachments or embedded content (e.g., images, tables, PDFs) as less likely to contain substantive feedback if not parsed.
+  - Source bias: expecting certain agency-specific structures and penalizing submissions that use different conventions (cross-agency or international variations).
+  - Language/cultural bias: underperforming on non-standard dialects, non-English inputs, or culturally different document conventions.
+  - Recency/training bias: favoring genres seen frequently in training data and failing on rarer or emerging formats.
+  - Conservatism bias: defaulting to classifying ambiguous content as non-escalation to avoid false positives, potentially missing important items.
+  - Overconfidence bias: producing overly certain genre judgments without surfacing uncertainty or needing human review for borderline cases.
+- **Task Misalignment Risks:** 
+  - Axis ignores urgency/impact: documents that are non-standard in genre but contain urgent or high-impact policy input may be deprioritized by a pure genre filter.
+  - Content vs. form mismatch: the axis focuses on form rather than substance, so substantive comments embedded in headers, footers, or email threads can be missed.
+  - Loss of nuance about partial relevance: multi-part submissions (routing metadata + substantive comment) may be forced into a single genre label, losing escalation-relevant signal.
+  - Misaligns with stakeholder identity: the axis doesn’t capture who submitted the comment (e.g., subject-matter expert vs general public), which affects escalation decisions.
+  - Agency-process misfit: different agencies require different routing policies; a single genre rubric may not match each agency’s escalation rules.
+  - Attachment handling mismatch: classifying the primary message but ignoring attachments with substantive analysis creates misalignment with the true escalation need.
+  - Contextual dependency ignored: prior correspondence, docket numbers, or linked documents that change genre relevance are not considered by a narrow genre classifier.
+  - Evaluation threshold mismatch: the axis does not define a threshold for escalation (e.g., minimal substantive content required), so operational decisions may diverge from the rubric.
+- **Failure Cases:** 
+  - A short, high-value executive summary is labeled as 'non-substantive' because of length-based heuristics and not escalated.
+  - A long routing email that contains a pasted formal comment is labeled 'email/routing' and the embedded comment is ignored.
+  - A submission includes a mix of boilerplate and a single paragraph of policy recommendations; the model discards the whole item as boilerplate.
+  - An attached PDF with detailed analysis is not parsed and the plain-text email is classified as non-escalation.
+  - Templates with customized insertions are classified as boilerplate due to partial template-match, losing the unique substantive insertions.
+  - Non-English or code-switched comments are misclassified as headers/metadata because the judge lacks robust multilingual pattern recognition.
+  - Adversarial formatting (e.g., inserting substantive text inside a signature block) fools the classifier into skipping escalation.
+  - The model overreports confidence and provides no 'uncertain' flag for borderline documents that require human review.
+  - Inconsistent decisions across similar inputs because of sensitivity to punctuation/whitespace or minor formatting differences.
+  - Agency-specific header conventions (e.g., docket IDs placed in the body) are misinterpreted as non-substantive and dropped.
+  - The judge prioritizes keyword presence and escalates documents with policy terms used in an unrelated boilerplate context, causing false positives.
+  - A comment containing legal citations but no recommendations is escalated despite being informational only, increasing reviewer burden.</pre></div></li>
+<li><strong>Signal_to_noise_ratio_gpt-5-mini:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- **Biases:** 
+  - Format bias: favoring responses with clean structure, headings, or bullet lists even if those contain little substantive content.
+  - Length bias: equating longer text with higher signal, disadvantaging concise but important submissions.
+  - Template bias: discounting or ignoring content that resembles standard templates or legal boilerplate even when those templates contain critical legal claims.
+  - Language/style bias: penalizing nonstandard grammar, dialects, or translations that appear noisy though content is substantive.
+  - Header/signature bias: treating salutations, signatures, and address blocks as pure noise and discarding substantive information contained there.
+  - Duplication bias: automatically down-weighting repeated phrases or quoted threads that may nonetheless indicate emphasis or chronology important to escalation.
+  - OCR/artifact bias: misclassifying OCR errors, line breaks, or special characters as noise, losing true signal especially from scanned attachments.
+  - Cultural formatting bias: preferring Western-centric document conventions (subject lines, concise abstracts) over other valid formats.
+  - Citations-as-noise bias: counting dense legal citations or references as low signal because they disrupt prose or appear mechanical.
+  - Length-of-paragraph bias: treating long paragraphs with embedded nuance as noisy because they lack visual formatting cues.
+- **Task Misalignment Risks:** 
+  - Overemphasis on signal-to-noise may deprioritize highly relevant but brief submissions (e.g., urgent tip or legal complaint).
+  - Focusing on visible noise metrics can miss contextual signals needed for escalation, such as sender credibility, attachments, or prior correspondence.
+  - Ranking by SNR alone may escalate polished but low-impact feedback while ignoring messy but high-impact reports.
+  - The judge may fail to consider agency-specific thresholds (legal thresholds, statutory relevance) and thus mis-rank policy-critical content.
+  - Signal heuristics can be gamed (e.g., adversaries adding boilerplate to appear substantive or inserting noise to avoid detection), undermining triage integrity.
+  - Cross-lingual and translation issues may cause systemic underestimation of signal for non-primary languages, reducing equitable escalation.
+  - Treating repeated quoted threads as noise may break chronological context necessary to assess escalation urgency.
+  - Narrow axis use could encourage human reviewers to rely solely on automated SNR scores instead of reading for real-world relevance.
+- **Failure Cases:** 
+  - Substantive content hidden in an email thread's header (e.g., a one-line clarification) is removed as 'noise' and the draft is not escalated.
+  - A concise whistleblower tip (three sentences) is ranked very low because of short length despite high policy relevance.
+  - Scanned PDF with OCR errors yields garbled tokens and the judge marks it as low-signal even though the original contained detailed allegations.
+  - Legal complaint using boilerplate statutory language is marked as 'template noise' and deprioritized despite constituting a valid legal claim.
+  - Quotations and repeated content from multiple respondents are collapsed as duplication, losing evidence of widespread concern that should trigger escalation.
+  - Submissions in less-common languages or with translated structure are mis-scored due to formatting or punctuation differences, reducing their priority.
+  - Deliberately obfuscated malicious input (lots of headers, fake signatures) is scored as high-signal because of polished formatting, leading to false positives.
+  - Embedded attachments or links with substantive reports are ignored because the judge only evaluates visible inline text.
+  - Important numbered evidence embedded inside a signature block is discarded as non-substantive.
+  - Threshold miscalibration causes a cluster of mid-signal but important messages to be consistently ignored, creating blind spots in escalation coverage.</pre></div></li></ul></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Compute Requirements</h2>
+          <table class="table table-striped"><thead><tr><th>Metric</th><th>GPU RAM (MB)</th><th>CPU RAM (MB)</th></tr></thead>
+            <tbody><tr><td>Structure_and_organization_gpt-5-mini</td><td>--</td><td>--</td></tr><tr><td>FKGL</td><td>0.0</td><td>894.08203125</td></tr><tr><td>Document_genre_suitability_gpt-5-mini</td><td>--</td><td>--</td></tr><tr><td>Signal_to_noise_ratio_gpt-5-mini</td><td>--</td><td>--</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-5 card p-3">
+      <h3>Metric Summary</h3>
+      <p>This aggregate metric estimates how likely a public comment should be escalated by combining structure, genre suitability, readability, and signal-to-noise into a single continuous score. It favors well-organized documents and those classified as formal/substantive comments, and it penalizes text that is difficult to read, thereby nudging the ranking toward clear, accessible submissions. However, the current regression down-weights higher signal-to-noise scores, which is counterintuitive and suggests the component may be miscalibrated or collinear; this should be rechecked before deployment. Intended for high-throughput triage, the score is best used to rank candidates for human review, not to automate final decisions. Strengths include simplicity, transparency of contributions, and alignment with reviewer efficiency through organization and readability cues. Limitations are that all components are surface-form proxies that can be gamed, may disadvantage non-standard writing styles or OCR-corrupted inputs, and risk deprioritizing brief but urgent reports. Because the target is binary while outputs are continuous, decision thresholds and probability calibration must be validated against held-out data and tuned to recall priorities. Periodic retraining and drift monitoring are recommended, along with fairness and error analyses to ensure substantive, messy, or short-but-critical inputs are not systematically under-ranked.</p>
+    </div>
+
+    <div class="mt-4 card p-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h3 class="mb-0">Examples</h3>
+        <button id="clear-examples-filter" class="btn btn-sm btn-outline-secondary" type="button">Show All</button>
+      </div>
+      
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+  <script>
+    function getThemeLayout() {
+      const color = getComputedStyle(document.body).color;
+      return { paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color } };
+    }
+    document.getElementById('darkModeToggle').addEventListener('change',e=>{document.body.classList.toggle('dark-mode',e.target.checked); drawAll();});
+    // Enable tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (el) {
+      const tip = new bootstrap.Tooltip(el, {trigger: 'hover focus', delay: {show: 0, hide: 50}, placement: 'right'});
+      el.addEventListener('shown.bs.tooltip', function () {
+        try { if (window.MathJax && MathJax.typesetPromise) { MathJax.typesetPromise(); } } catch(_) {}
+      });
+      return tip;
+    });
+
+    // Initialize tooltips; use template content for robustness
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.robust-tip').forEach(function (el) {
+        const id = el.getAttribute('data-tip-id');
+        let titleHtml = '';
+        if (id) {
+          const tpl = document.getElementById(id);
+          if (tpl) titleHtml = tpl.innerHTML;
+        }
+        if (!titleHtml) {
+          titleHtml = '<div style="max-width: 320px">Robustness tooltip unavailable.</div>';
+        }
+        const tip = new bootstrap.Tooltip(el, {
+          trigger: 'hover focus',
+          delay: {show: 0, hide: 50},
+          placement: 'right',
+          html: true,
+          title: titleHtml
+        });
+      });
+    });
+
+    function drawCorrelation() {
+      const layout = Object.assign({xaxis:{title:'Metric Score (normalized to target scale)'}, yaxis:{title:'Ground Truth'}}, getThemeLayout());
+      layout.legend = layout.legend || {}; layout.legend.font = { size: 9 }; layout.margin = {l:40,r:10,t:30,b:40};
+      const traces = [];
+      if (RC_CORR.metrics) {
+        // Determine top 3 metrics by absolute coefficient if available
+        let topNames = [];
+        try {
+          const coeffPairs = ([["Structure_and_organization_gpt-5-mini", 0.13667638802421547], ["Document_genre_suitability_gpt-5-mini", 0.033589805848062745], ["FKGL", -0.06019421812132741], ["Signal_to_noise_ratio_gpt-5-mini", -0.08532208760908981], ["(intercept)", 0.5]]);
+          const sorted = coeffPairs.filter(p=>p[0] !== '(intercept)').sort((a,b)=>Math.abs(b[1]) - Math.abs(a[1]));
+          topNames = sorted.slice(0,3).map(p=>p[0]);
+        } catch (e) { topNames = []; }
+        for (const m of RC_CORR.metrics) {
+          const rlab = (m.r!=null ? (m.r.toFixed ? m.r.toFixed(2) : m.r) : 'NA');
+          const tlab = (m.tau!=null ? (m.tau.toFixed ? m.tau.toFixed(2) : m.tau) : 'NA');
+          const visible = (topNames.includes(m.name)) ? true : 'legendonly';
+          const ids = m.ids || [];
+          const text = ids.map(id => 'ID: ' + id);
+          traces.push({ x: m.x_norm || m.x || [], y: m.y || [], mode: 'markers', name: (m.name || '') + ' (r=' + rlab + ', τ=' + tlab + ')', visible, text: text, hovertemplate: '%{text}<br>x=%{x:.3f}<br>y=%{y:.3f}<extra></extra>' });
+        }
+      }
+      if (RC_CORR.regression) {
+        const rlab = (RC_CORR.regression.r!=null ? (RC_CORR.regression.r.toFixed ? RC_CORR.regression.r.toFixed(2) : RC_CORR.regression.r) : 'NA');
+        const tlab = (RC_CORR.regression.tau!=null ? (RC_CORR.regression.tau.toFixed ? RC_CORR.regression.tau.toFixed(2) : RC_CORR.regression.tau) : 'NA');
+        const ids = RC_CORR.regression.ids || [];
+        const text = ids.map(id => 'ID: ' + id);
+        traces.push({ x: RC_CORR.regression.x_norm || RC_CORR.regression.x || [], y: RC_CORR.regression.y || [], mode: 'markers', name: (RC_CORR.regression.name || 'Aggregate') + ' (r=' + rlab + ', τ=' + tlab + ')', marker: { size: 8, color: 'black' }, text: text, hovertemplate: '%{text}<br>x=%{x:.3f}<br>y=%{y:.3f}<extra></extra>' });
+        document.getElementById('correlation-stats').innerText = 'Aggregate metric: r=' + rlab + ', τ=' + tlab;
+      }
+      Plotly.newPlot('correlation-chart', traces, layout, {displayModeBar: false});
+      // Click-to-jump: when a point is clicked, locate its ID in the examples table and jump to it
+      const chart = document.getElementById('correlation-chart');
+      chart.on('plotly_click', function(data) {
+        try {
+          if (!data || !data.points || data.points.length === 0) return;
+          const pt = data.points[0];
+          const idText = (pt.text || '').toString(); // format: 'ID: <val>'
+          const id = idText.startsWith('ID: ') ? idText.slice(4) : idText;
+          const tblEl = document.getElementById('examples-table');
+          if (!tblEl) return;
+          // Try DataTables jQuery API first
+          if (window.jQuery && jQuery.fn && jQuery.fn.dataTable) {
+            const dt = jQuery(tblEl).DataTable();
+            // Search by exact match in first column (ID)
+            dt.search('');
+            dt.columns(0).search('^' + id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', true, false).draw();
+            // Scroll into view first visible row after draw completes
+            setTimeout(function(){
+              let rowNode = null;
+              try {
+                const idxs = dt.rows({ search: 'applied' }).indexes();
+                if (idxs && idxs.length) rowNode = dt.row(idxs[0]).node();
+              } catch(_){ }
+              if (!rowNode) {
+                try { rowNode = dt.row(0).node(); } catch(_) {}
+              }
+              if (rowNode && rowNode.scrollIntoView) {
+                rowNode.scrollIntoView({behavior:'smooth', block:'center'});
+                try { rowNode.classList.add('table-active'); setTimeout(()=>rowNode.classList.remove('table-active'), 1200); } catch(_) {}
+              }
+            }, 60);
+          } else if (typeof DataTable !== 'undefined') {
+            // Vanilla DataTables 2 API
+            const dt = DataTable.get(tblEl) || new DataTable(tblEl);
+            dt.search('');
+            // Filter to rows whose first cell (ID) matches
+            dt.columns().every(function(idx) {
+              if (idx === 0) {
+                this.search('^' + id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', true, false);
+              } else {
+                this.search('');
+              }
+            });
+            dt.draw();
+            setTimeout(function(){
+              let firstRow = null;
+              try {
+                const nodes = dt.rows({ search: 'applied' }).nodes();
+                if (nodes && nodes.length) firstRow = nodes[0];
+              } catch(_) {}
+              if (!firstRow) {
+                const body = tblEl.tBodies && tblEl.tBodies[0];
+                firstRow = body && body.rows && body.rows[0];
+              }
+              if (!firstRow) {
+                try {
+                  const rows = Array.from(tblEl.tBodies[0].rows || []);
+                  firstRow = rows.find(r => (r.cells && r.cells[0] && (r.cells[0].textContent||'').trim() === id));
+                } catch(_) {}
+              }
+              if (firstRow && firstRow.scrollIntoView) {
+                firstRow.scrollIntoView({behavior:'smooth', block:'center'});
+                try { firstRow.classList.add('table-active'); setTimeout(()=>firstRow.classList.remove('table-active'), 1200); } catch(_) {}
+              }
+            }, 60);
+          }
+        } catch(e) { try { console.error('[ReportCard] click-jump failed', e); } catch(_){} }
+      });
+    }
+
+    function drawRuntime() {
+      const layout = Object.assign({yaxis:{title:'Time per Sample (s)'}}, getThemeLayout());
+      const boxes = [];
+      if (RC_RUNTIME.per_metric) {
+        for (const [name, arr] of Object.entries(RC_RUNTIME.per_metric)) {
+          boxes.push({ y: arr, type: 'box', name });
+        }
+      }
+      Plotly.newPlot('runtime-chart', boxes, layout);
+      if (RC_RUNTIME.aggregate) {
+        const agg = RC_RUNTIME.aggregate;
+        var seq = (agg.sequence_mean||0);
+        if (typeof seq === 'number' && seq.toFixed) { seq = seq.toFixed(2); }
+        var par = (agg.parallel_mean||0);
+        if (typeof par === 'number' && par.toFixed) { par = par.toFixed(2); }
+        var seqCI = (agg.sequence_ci||0);
+        if (typeof seqCI === 'number' && seqCI.toFixed) { seqCI = seqCI.toFixed(2); }
+        var parCI = (agg.parallel_ci||0);
+        if (typeof parCI === 'number' && parCI.toFixed) { parCI = parCI.toFixed(2); }
+        document.getElementById('runtime-info').innerHTML = 'Avg time/sample (sequence): ' + seq + 's ± ' + seqCI + 's' + '<br/>' + 'Avg time/sample (parallel): ' + par + 's ± ' + parCI + 's (95% CI)';
+      }
+    }
+
+    function drawRobustness() {
+      if (!RC_ROB.available || !RC_ROB.scores) {
+        document.getElementById('robustness-sens').innerHTML = '<em>Robustness not available.</em>';
+        document.getElementById('robustness-stab').innerHTML = '';
+        return;
+      }
+      const names = Object.keys(RC_ROB.scores);
+      const sens = names.map(n => (RC_ROB.scores[n] && RC_ROB.scores[n].sensitivity) || 0);
+      const stab = names.map(n => (RC_ROB.scores[n] && RC_ROB.scores[n].stability) || 0);
+      Plotly.newPlot('robustness-sens', [{x: names, y: sens, type:'bar', name:'Sensitivity'}], Object.assign({yaxis:{title:'Sensitivity'}}, getThemeLayout()));
+      Plotly.newPlot('robustness-stab', [{x: names, y: stab, type:'bar', name:'Stability'}], Object.assign({yaxis:{title:'Stability'}}, getThemeLayout()));
+    }
+
+    function downloadPython() {
+      try {
+        const code = RC_PY_CODE || '';
+        if (!code) { return; }
+        const blob = new Blob([code], { type: 'text/x-python' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const name = (RC_PY_FILENAME && typeof RC_PY_FILENAME === 'string' && RC_PY_FILENAME.trim()) ? RC_PY_FILENAME : 'AutoMetricsRegression.py';
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function(){ URL.revokeObjectURL(url); try { a.remove(); } catch(_){} }, 0);
+      } catch(_) { }
+    }
+
+    function drawAll() { drawCorrelation(); drawRuntime(); drawRobustness(); }
+    drawAll();
+  </script>
+  <!-- Modal for Metric Card -->
+  <div class="modal fade" id="metricDocModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="metricDocTitle"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="metricDocBody" style="white-space: normal;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function() {
+      const tbl = document.getElementById('examples-table');
+      if (!tbl) return;
+      const clearBtn = document.getElementById('clear-examples-filter');
+      try {
+        if (window.jQuery && jQuery.fn && typeof jQuery.fn.dataTable !== 'undefined') {
+          jQuery(tbl).DataTable({
+            paging: true,
+            pageLength: 5,
+            ordering: true,
+            searching: true,
+            scrollX: true
+          });
+          if (clearBtn) {
+            clearBtn.addEventListener('click', function(){
+              try {
+                const dt = jQuery(tbl).DataTable();
+                dt.search('');
+                dt.columns().every(function(){ this.search(''); });
+                dt.draw();
+              } catch(_) {}
+            });
+          }
+        } else if (typeof DataTable !== 'undefined') {
+          new DataTable(tbl, {
+            paging: true,
+            pageLength: 5,
+            ordering: true,
+            searching: true,
+            scrollX: true
+          });
+          if (clearBtn) {
+            clearBtn.addEventListener('click', function(){
+              try {
+                const dt = DataTable.get(tbl);
+                dt.search('');
+                dt.columns().every(function(){ this.search(''); });
+                dt.draw();
+              } catch(_) {}
+            });
+          }
+        }
+      } catch (e) { try { console.error('[ReportCard] DataTables init error:', e); } catch(_){} }
+    })();
+  </script>
+  <script>
+    // Click handlers for regression coefficient metric links -> open modal with metric card
+    document.addEventListener('click', function(e) {
+      const a = e.target.closest && e.target.closest('a.coeff-link');
+      if (!a) return;
+      e.preventDefault();
+      try {
+        let metric = a.getAttribute('data-metric');
+        // Resolve submetric to parent metric if available
+        if (RC_DOCS && !(metric in RC_DOCS) && RC_DOCS_MAP && RC_DOCS_MAP[metric]) {
+          metric = RC_DOCS_MAP[metric];
+        }
+        const doc = (RC_DOCS && RC_DOCS[metric]) ? RC_DOCS[metric] : 'No metric card available.';
+        const titleNode = document.getElementById('metricDocTitle');
+        const bodyNode = document.getElementById('metricDocBody');
+        if (titleNode) titleNode.textContent = metric + ' — Metric Card';
+        if (bodyNode) {
+          try {
+            bodyNode.innerHTML = marked.parse(doc);
+          } catch(_) {
+            bodyNode.textContent = doc;
+          }
+        }
+        const modalEl = document.getElementById('metricDocModal');
+        if (modalEl && bootstrap && bootstrap.Modal) {
+          const modal = bootstrap.Modal.getOrCreateInstance(modalEl, {backdrop: true});
+          modal.show();
+        }
+      } catch(_) {}
+    });
+  </script>
+  <div id="robustness-tip-template" class="d-none">
+    <div style="max-width: 360px">
+      <strong>Sensitivity</strong> (worse_obvious): how much the metric tends to drop when the output is intentionally degraded. For each example, we measure the relative drop from the original to the average worse_obvious score, clip negative values to 0 (no drop), and then average across examples.
+      <br/><br/>
+      <strong>Stability</strong> (same_obvious): how consistent the metric stays under neutral edits that should not change meaning. For each example, we measure how close the original is to the average same_obvious score (scaled by the original magnitude), clip below 0, and then average across examples. Higher means more stable.
+    </div>
+  </div>
+</body>
+</html>

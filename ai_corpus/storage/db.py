@@ -152,6 +152,14 @@ class Database:
                 )
             session.commit()
 
+    def update_download_payload(self, doc_id: str, payload: Dict[str, object]) -> None:
+        with Session(self.engine) as session:
+            record = session.get(DownloadRecord, doc_id)
+            if not record:
+                return
+            record.payload = payload
+            session.commit()
+
     def iter_downloads(self, *, extracted: Optional[bool] = None) -> Iterable[Dict[str, object]]:
         with Session(self.engine) as session:
             query = session.query(DownloadRecord)

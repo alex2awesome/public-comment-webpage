@@ -66,18 +66,29 @@ def test_list_and_fetch(monkeypatch, tmp_path, regs_payload):
                                 "postedDate": "2024-01-01T00:00:00Z",
                                 "documentType": "Notice",
                                 "documentSubtype": "Request for Information",
-                                "fileFormats": [
-                                    {
-                                        "format": "PDF",
-                                        "fileUrl": "https://downloads.regulations.gov/DOC-0001/content.pdf",
-                                    }
-                                ],
+                                "fileFormats": [],
                                 "agencyId": "NTIA",
                             },
                             "relationships": {},
                         }
                     ],
                     "meta": {"page": {"hasNextPage": False, "totalPages": 1}},
+                }
+            )
+        if path == "documents/DOC-0001":
+            return FakeResponse(
+                json_data={
+                    "data": {
+                        "attributes": {
+                            "fileFormats": [
+                                {
+                                    "format": "PDF",
+                                    "fileUrl": "https://downloads.regulations.gov/DOC-0001/content.pdf",
+                                }
+                            ]
+                        }
+                    },
+                    "included": [],
                 }
             )
         return FakeResponse(json_data=regs_payload)
@@ -158,6 +169,10 @@ def test_discover_date_filtered(monkeypatch, regs_dockets_page):
         assert params.get("filter[lastModifiedDate][ge]") == "2023-01-01 00:00:00"
         assert params.get("filter[lastModifiedDate][le]") == "2023-12-31 23:59:59"
         payload = json.loads(json.dumps(regs_dockets_page))
+        for idx, entry in enumerate(payload.get("data", []), start=1):
+            attrs = entry.setdefault("attributes", {})
+            attrs["numberOfDocuments"] = idx
+            attrs["commentCount"] = idx * 10
         payload.setdefault("meta", {}).update({"hasNextPage": False, "totalPages": 1})
         return FakeResponse(json_data=payload)
 
@@ -176,6 +191,99 @@ def test_discover_date_filtered(monkeypatch, regs_dockets_page):
     first_attrs = regs_dockets_page["data"][0]["attributes"]
     assert collections[0].collection_id == regs_dockets_page["data"][0]["id"]
     assert collections[0].extra.get("last_modified") == first_attrs.get("lastModifiedDate")
+    assert collections[0].extra.get("document_count") == 1
+    assert collections[0].extra.get("comment_count") == 10
+
+
+def test_discover_applies_min_update_filter(monkeypatch, regs_dockets_page):
+    def fake_regs_call(path, **kwargs):  # noqa: ANN001
+        payload = json.loads(json.dumps(regs_dockets_page))
+        for idx, entry in enumerate(payload.get("data", [])):
+            entry.setdefault("attributes", {})["numberOfDocuments"] = idx
+        payload.setdefault("meta", {}).update({"hasNextPage": False, "totalPages": 1})
+        return FakeResponse(json_data=payload)
+
+    monkeypatch.setenv("REGS_GOV_API_KEY", "dummy")
+    monkeypatch.setattr("ai_corpus.connectors.regulations_gov.regs_backoff_get", fake_regs_call)
+
+    connector = RegulationsGovConnector(
+        config={},
+        global_config={"user_agent": "pytest-agent", "regulations_min_updates": 3},
+    )
+
+    collections = list(
+        connector.discover(start_date="2023-01-01", end_date="2023-12-31", page_size=25)
+    )
+    assert collections, "Expected some dockets to meet the min-update threshold"
+    for coll in collections:
+        assert coll.extra.get("document_count") is not None
+        assert coll.extra["document_count"] >= 3
+
+
+def test_discover_applies_min_comment_filter(monkeypatch, regs_dockets_page):
+    def fake_regs_call(path, **kwargs):  # noqa: ANN001
+        payload = json.loads(json.dumps(regs_dockets_page))
+        for idx, entry in enumerate(payload.get("data", [])):
+            entry.setdefault("attributes", {})["commentCount"] = idx
+        payload.setdefault("meta", {}).update({"hasNextPage": False, "totalPages": 1})
+        return FakeResponse(json_data=payload)
+
+    monkeypatch.setenv("REGS_GOV_API_KEY", "dummy")
+    monkeypatch.setattr("ai_corpus.connectors.regulations_gov.regs_backoff_get", fake_regs_call)
+
+    connector = RegulationsGovConnector(
+        config={},
+        global_config={"user_agent": "pytest-agent", "regulations_min_comments": 5},
+    )
+
+    collections = list(
+        connector.discover(start_date="2023-01-01", end_date="2023-12-31", page_size=25)
+    )
+    assert collections, "Expected some dockets to meet the min-comment threshold"
+    for coll in collections:
+        assert coll.extra.get("comment_count") is not None
+        assert coll.extra["comment_count"] >= 5
+
+
+def test_discover_drops_null_comment_counts(monkeypatch, regs_dockets_page):
+    def fake_regs_call(path, **kwargs):  # noqa: ANN001
+        payload = json.loads(json.dumps(regs_dockets_page))
+        payload.setdefault("meta", {}).update({"hasNextPage": False, "totalPages": 1})
+        return FakeResponse(json_data=payload)
+
+    monkeypatch.setenv("REGS_GOV_API_KEY", "dummy")
+    monkeypatch.setattr("ai_corpus.connectors.regulations_gov.regs_backoff_get", fake_regs_call)
+
+    connector = RegulationsGovConnector(
+        config={},
+        global_config={"user_agent": "pytest-agent", "regulations_drop_null_comments": True},
+    )
+
+    collections = list(
+        connector.discover(start_date="2023-01-01", end_date="2023-12-31", page_size=25)
+    )
+    assert collections == []
+
+
+def test_discover_drops_null_comment_counts_when_requested(monkeypatch, regs_dockets_page):
+    def fake_regs_call(path, **kwargs):  # noqa: ANN001
+        payload = json.loads(json.dumps(regs_dockets_page))
+        # Leave commentCount missing for all entries.
+        payload.setdefault("meta", {}).update({"hasNextPage": False, "totalPages": 1})
+        return FakeResponse(json_data=payload)
+
+    monkeypatch.setenv("REGS_GOV_API_KEY", "dummy")
+    monkeypatch.setattr("ai_corpus.connectors.regulations_gov.regs_backoff_get", fake_regs_call)
+
+    connector = RegulationsGovConnector(
+        config={},
+        global_config={"user_agent": "pytest-agent", "regulations_drop_null_comments": True},
+    )
+
+    collections = list(
+        connector.discover(start_date="2023-01-01", end_date="2023-12-31", page_size=25)
+    )
+    assert collections == []
 
 
 def test_get_call_document_prioritises_notices(monkeypatch):
@@ -199,12 +307,7 @@ def test_get_call_document_prioritises_notices(monkeypatch):
                     "postedDate": "2024-01-01T00:00:00Z",
                     "documentType": "Notice",
                     "documentSubtype": "Request for Information",
-                    "fileFormats": [
-                        {
-                            "format": "PDF",
-                            "fileUrl": "https://downloads.regulations.gov/DOC-2/content.pdf",
-                        }
-                    ],
+                    "fileFormats": [],
                 },
                 "relationships": {},
             },
@@ -213,8 +316,27 @@ def test_get_call_document_prioritises_notices(monkeypatch):
     }
 
     def fake_regs_call(path, **kwargs):  # noqa: ANN001
-        assert path == "documents"
-        return FakeResponse(json_data=documents_payload)
+        if path == "documents":
+            return FakeResponse(json_data=documents_payload)
+        if path == "documents/DOC-2":
+            return FakeResponse(
+                json_data={
+                    "data": {
+                        "attributes": {
+                            "fileFormats": [
+                                {
+                                    "format": "PDF",
+                                    "fileUrl": "https://downloads.regulations.gov/DOC-2/content.pdf",
+                                }
+                            ]
+                        }
+                    },
+                    "included": [],
+                }
+            )
+        if path == "documents/DOC-1":
+            return FakeResponse(json_data={"data": {"attributes": {}}, "included": []})
+        raise AssertionError(f"Unexpected path {path}")
 
     monkeypatch.setenv("REGS_GOV_API_KEY", "dummy")
     monkeypatch.setattr("ai_corpus.connectors.regulations_gov.regs_backoff_get", fake_regs_call)

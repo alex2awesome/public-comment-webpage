@@ -1,0 +1,12 @@
+accelerate
+bitsandbytes
+datasets
+fastapi
+numpy
+openenv-core
+python-dotenv
+requests
+torch
+transformers
+trl
+uvicorn
