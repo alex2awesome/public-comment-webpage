@@ -43,6 +43,39 @@ comments.csv
 federal_rulemaking_*.csv
 scratch/*.meta.jsonl
 
+# Large datasets & generated corpora
+**/data/**/*
+**/datasets/**/*
+**/cache/**/*
+**/outputs/**/*
+scripts/policy-deep-research-agent/data/
+scripts/policy-deep-research-agent/src/envs/policy_deep_research_env/data/
+*.parquet
+*.feather
+*.arrow
+*.npy
+*.npz
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.pb
+*.h5
+*.hdf5
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.7z
+*.xz
+*.zst
+*.lz4
+*.bz2
+*.jsonl
+*.jsonl.gz
+*.csv.gz
+*.tsv.gz
+
 # Browser automation assets
 .playwright/
 
