@@ -6,6 +6,14 @@ import { API_BASE_URL, normalizeEpisode, sendFeedback } from "./lib/api";
 import { RolloutResult, RolloutStreamEvent } from "./types";
 import "./App.css";
 
+const BACKEND_WAKE_MESSAGES = [
+  "Warming up the policy research agent…",
+  "Coaxing the backend awake. This usually takes a few seconds.",
+  "Still stretching… prepping LangGraph tools.",
+  "Almost there! Checking cache and LangSmith telemetry.",
+  "Thanks for your patience—we're pinging the backend again.",
+];
+
 export type RunState = "idle" | "running" | "error" | "complete";
 type FeedbackState = "idle" | "sending" | "sent" | "error";
 
@@ -20,7 +28,10 @@ function App() {
   const [feedbackError, setFeedbackError] = useState<string | null>(null);
   const [events, setEvents] = useState<RolloutStreamEvent[]>([]);
   const [showEvents, setShowEvents] = useState(true);
+  const [backendReady, setBackendReady] = useState(false);
+  const [backendStatusMessage, setBackendStatusMessage] = useState(BACKEND_WAKE_MESSAGES[0]);
   const eventSourceRef = useRef<EventSource | null>(null);
+  const warmupTimerRef = useRef<number | null>(null);
 
   const closeEventStream = () => {
     if (eventSourceRef.current) {
@@ -30,7 +41,39 @@ function App() {
   };
 
   useEffect(() => {
-    return () => closeEventStream();
+    let cancelled = false;
+    let attempt = 0;
+    const pollBackend = async () => {
+      attempt += 1;
+      setBackendStatusMessage(BACKEND_WAKE_MESSAGES[(attempt - 1) % BACKEND_WAKE_MESSAGES.length]);
+      try {
+        const response = await fetch(`${API_BASE_URL}/healthz`, {
+          method: "GET",
+          cache: "no-store",
+        });
+        if (!response.ok) {
+          throw new Error(`Healthcheck failed: ${response.status}`);
+        }
+        if (!cancelled) {
+          setBackendReady(true);
+          setBackendStatusMessage("");
+        }
+      } catch (err) {
+        if (cancelled) {
+          return;
+        }
+        const nextRun = window.setTimeout(pollBackend, 1000);
+        warmupTimerRef.current = nextRun;
+      }
+    };
+    pollBackend();
+    return () => {
+      cancelled = true;
+      closeEventStream();
+      if (warmupTimerRef.current) {
+        window.clearTimeout(warmupTimerRef.current);
+      }
+    };
   }, []);
 
   const attachEventHandler = (type: string, data: string) => {
@@ -71,6 +114,10 @@ function App() {
   };
 
   const handleStartQuery = () => {
+    if (!backendReady) {
+      setErrorMessage("Still waking the backend up—give it just another moment!");
+      return;
+    }
     if (!question.trim()) {
       setErrorMessage("Enter a policy research question to start the agent.");
       setRunState("error");
@@ -139,7 +186,19 @@ function App() {
   };
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell${backendReady ? "" : " app-shell--waiting"}`}>
+      {!backendReady && (
+        <div className="startup-veil" role="status" aria-live="polite">
+          <div className="startup-card">
+            <div className="spinner" aria-hidden="true" />
+            <div>
+              <p className="eyebrow">Waking backend</p>
+              <p className="startup-message">{backendStatusMessage}</p>
+              <p className="startup-subtle">We’ll start streaming events the moment the API responds.</p>
+            </div>
+          </div>
+        </div>
+      )}
       <header className="app-header">
         <div>
           <p className="eyebrow">Policy Deep Research Agent</p>
@@ -156,7 +215,7 @@ function App() {
           <QueryForm
             question={question}
             maxSteps={maxSteps}
-            disabled={runState === "running"}
+            disabled={runState === "running" || !backendReady}
             onQuestionChange={setQuestion}
             onMaxStepsChange={setMaxSteps}
             onSubmit={handleStartQuery}

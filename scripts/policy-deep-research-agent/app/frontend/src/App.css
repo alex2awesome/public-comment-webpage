@@ -4,6 +4,60 @@
   padding: 2.5rem 1.5rem 4rem;
 }
 
+.app-shell--waiting {
+  min-height: 100vh;
+}
+
+.startup-veil {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 6, 23, 0.94);
+  z-index: 1000;
+  padding: 2rem;
+  text-align: center;
+}
+
+.startup-card {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.9);
+  border-radius: 1.25rem;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  padding: 1.5rem 2rem;
+  box-shadow: 0 25px 45px rgba(2, 6, 23, 0.8);
+  max-width: 560px;
+}
+
+.spinner {
+  width: 46px;
+  height: 46px;
+  border: 4px solid rgba(148, 163, 184, 0.2);
+  border-top-color: #38bdf8;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+.startup-message {
+  font-size: 1.05rem;
+  margin: 0.35rem 0;
+}
+
+.startup-subtle {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .app-header {
   margin-bottom: 2rem;
 }
