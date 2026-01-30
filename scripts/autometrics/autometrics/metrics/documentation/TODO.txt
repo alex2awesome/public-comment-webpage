@@ -1,0 +1,1 @@
+Eventually I want a script that scrapes the docstrings from the metric files and automatically produces markdown of each of the metric cards.

@@ -1,0 +1,351 @@
+You are an expert in natural language processing and technical documentation, specializing in metrics for evaluating generative models. I am building a metric bank to recommend the best metrics for various generative tasks. Each metric in this bank will have a corresponding Metric Card, which provides standardized, detailed documentation about the metric. These Metric Cards will serve as a key resource for researchers and practitioners, helping them select the right metric for their task.
+
+## Your Task
+
+Using the provided materials, including the original paper, reference implementations, the Metric Card Template, and the BLEU Metric Card Example, your task is to draft a comprehensive Metric Card for the given metric. The documentation must:
+	1.	Follow the provided template closely, ensuring adherence to its format and required sections.
+	2.	Incorporate relevant details from the original paper and reference materials, ensuring technical accuracy and completeness.
+	3.	Match the style and quality of the BLEU example, which serves as an exemplar for clarity, structure, and precision.
+
+Specific Instructions
+	1.	Key Sections to Address: Ensure each required section of the template is filled out thoughtfully and thoroughly, including:
+		•	Metric Description
+		•	Inputs and Outputs
+		•	Formal Definition
+		•	Applicability and Limitations
+		•	Known Limitations and Related Metrics
+	2.	If Information is Unclear or Missing: Do not fabricate or make assumptions. If information is unavailable, unclear, or not included in the provided context, leave that section blank or mark it as "Needs more information."
+	3.	Markdown Formatting: Output the completed Metric Card as a markdown text block rather than rendering or printing the markdown directly.  This means you must surround your answer in ```.  Also start the block with "---" as shown in the examples.  Do not end the block with "---".
+	4.	Focus on Consistency: Use the provided categorical suggestions (see below) to ensure uniformity across all Metric Cards, particularly in fields like “Metric Type,” “Domain,” and “Tasks.”
+	5.	Mathematical Formatting:
+		•	Use $ for inline math expressions (e.g., $r$, not $ r $).
+		•	Use $$ for block math expressions and ensure a full line break before and after each block math expression. This formatting ensures proper rendering in markdown.
+		•	Example of proper usage for $$:  
+
+** Correct **
+```
+Where:
+- $CHRP$ is the average precision of character and word n-grams:
+
+$$
+CHRP = \frac{1}{N} \sum_{n=1}^N \frac{\text{n-grams in hypothesis and reference}}{\text{total n-grams in hypothesis}}
+$$
+
+- $CHRR$ is the average recall of character and word n-grams:
+
+$$
+CHRR = \frac{1}{N} \sum_{n=1}^N \frac{\text{n-grams in hypothesis and reference}}{\text{total n-grams in reference}}
+$$
+```
+
+** Incorrect **
+```
+Where:
+- $CHRP$ is the average precision of character and word n-grams:
+  $$
+  CHRP = \frac{1}{N} \sum_{n=1}^N \frac{\text{n-grams in hypothesis and reference}}{\text{total n-grams in hypothesis}}
+  $$
+- $CHRR$ is the average recall of character and word n-grams:
+  $$
+  CHRR = \frac{1}{N} \sum_{n=1}^N \frac{\text{n-grams in hypothesis and reference}}{\text{total n-grams in reference}}
+  $$
+```
+    
+    	•	Ensure all block math expressions are clearly separated from list items or inline text.
+		•	Add a space after operators like \sum, \max, or any LaTeX commands followed by an underscore (_) to prevent Markdown parsers from interpreting _ as italic markers.  Mainly it is critical to put a space before "_". For example:
+
+** Correct **
+```
+$$
+R _{\text{BERT}} = \frac{\sum _{x _{i} \in x} \text{idf}(x _{i}) \cdot \max _{\hat{x} _{j} \in \hat{x}} x _{i^\top} \hat{x} _{j}}{\sum _{x _{i} \in x} \text{idf}(x _{i})}
+$$
+```
+
+** Incorrect **
+```
+$$
+R_{\text{BERT}} = \frac{\sum_{x_i \in x} \text{idf}(x_i) \cdot \max_{\hat{x}_j \in \hat{x}} x_i^\top \hat{x}_j}{\sum_{x_i \in x} \text{idf}(x_i)}
+$$
+```
+
+	6. Citation: It is imperative that you do NOT make this up.  If the user does not explicitly provide the bibtex citation for the metric then you must say [More Information Needed].  If a citation is provided you must copy it EXACTLY.  Do NOT try to simplify any of the components such as the author list with an ellipsis.
+
+## Categorical Suggestions for Consistency
+
+Note: These suggestions are not exhaustive. While you should prioritize using the categories listed here for consistency, you may add new categories if the metric clearly warrants them.
+
+### Domains
+
+These represent broad areas of application for the metric. Choose one or more:
+	•	Text Generation
+	•	Speech Generation
+	•	Code Generation
+	•	Multimodal Generation
+	•	Image Captioning
+	•	Dialogue Systems
+	•	Storytelling
+
+### Tasks
+
+These are specific tasks or use cases where the metric applies. Choose one or more:
+	•	Machine Translation
+	•	Summarization
+	•	Paraphrasing
+	•	Data-to-Text Generation
+	•	Image-to-Text Generation
+	•	Dialogue Generation
+	•	Style Transfer
+	•	Creative Writing (e.g., poetry, storytelling)
+	•	Code Completion
+	•	Response Generation
+
+### Metric Type
+
+These classify the metric based on its design and purpose. Choose one:
+	•	Surface-Level Similarity (e.g., BLEU, ROUGE)
+	•	Semantic Similarity (e.g., BERTScore)
+	•	Fluency (e.g., perplexity-based metrics)
+	•	Diversity (e.g., distinct-n)
+	•	Robustness (e.g., adversarial robustness metrics)
+	•	Fairness
+	•	Faithfulness (e.g., factual consistency metrics)
+	•	Reference-Free (e.g., coherence or novelty scoring)
+	•	Explainability
+
+### Inputs
+
+These describe what the metric requires for evaluation:
+	•	Reference-Based
+	•	Reference-Free
+	•	Input-Required
+	•	Input-Optional
+
+## Materials You Will Be Provided
+	1.	Original Paper: The foundational paper introducing or defining the metric.
+	2.	Reference Implementations (when available): Documentation from popular implementations (e.g., SacreBLEU README for BLEU).
+	3.	Metric Card Template: The standardized structure for all Metric Cards (see below).
+	4.	BLEU Metric Card Example: A high-quality example for reference.
+
+=== TEMPLATE FOR METRIC CARDS ===
+---
+# Metric Card for {{ metric_name | default("Metric Name", true) }}
+
+{{ metric_summary | default("A brief description of the metric and its purpose.", true) }}
+
+## Metric Details
+
+### Metric Description
+
+{{ metric_description | default("Detailed explanation of the metric, including how it is calculated and what it measures.", true) }}
+
+- **Metric Type:** {{ metric_type | default("[More Information Needed]", true) }}
+- **Range:** {{ metric_range | default("[More Information Needed]", true) }}
+- **Higher is Better?:** {{ higher_is_better | default("[More Information Needed]", true) }}
+- **Reference-Based?:** {{ reference_based | default("[More Information Needed]", true) }}
+- **Input-Required?:** {{ input_required | default("[More Information Needed]", true) }}
+
+### Formal Definition
+
+{{ metric_definition | default("Mathematical formula or detailed algorithmic definition.", true) }}
+
+### Inputs and Outputs
+
+- **Inputs:**  
+  {{ metric_inputs | default("Description of required inputs (e.g., generated text, reference text, input prompt).", true) }}
+  
+- **Outputs:**  
+  {{ metric_outputs | default("Description of the metric output (e.g., scalar score, distribution).", true) }}
+
+## Intended Use
+
+### Domains and Tasks
+
+- **Domain:** {{ domain | default("[More Information Needed]", true) }}
+- **Tasks:** {{ tasks | default("[More Information Needed]", true) }}
+
+### Applicability and Limitations
+
+- **Best Suited For:** {{ best_suited_for | default("[More Information Needed]", true) }}
+- **Not Recommended For:** {{ not_recommended_for | default("[More Information Needed]", true) }}
+
+## Metric Implementation
+
+### Reference Implementations
+
+- **Libraries/Packages:** {{ libraries | default("[More Information Needed]", true) }}
+
+### Computational Complexity
+
+- **Efficiency:** {{ efficiency | default("[More Information Needed]", true) }}
+- **Scalability:** {{ scalability | default("[More Information Needed]", true) }}
+
+## Known Limitations
+
+{{ known_limitations | default("[More Information Needed]", true) }}
+
+- **Biases:** {{ biases | default("Potential biases inherent in the metric.", true) }}
+- **Task Misalignment Risks:** {{ task_misalignment | default("[More Information Needed]", true) }}
+- **Failure Cases:** {{ failure_cases | default("[More Information Needed]", true) }}
+
+## Related Metrics
+
+{{ related_metrics | default("[More Information Needed]", true) }}
+
+## Further Reading
+
+- **Papers:** {{ papers | default("[More Information Needed]", true) }}
+- **Blogs/Tutorials:** {{ blogs | default("[More Information Needed]", true) }}
+
+## Citation
+
+{{ bibtex_citation | default("[More Information Needed]", true) }}
+
+## Metric Card Authors
+
+- **Authors:** {{ metric_authors | default("[More Information Needed]", true) }}
+- **Acknowledgment of AI Assistance:**
+  {{ ai_assistance | default("Portions of this metric card were drafted with assistance from generative AI. All content has been reviewed and curated by the author to ensure accuracy.", true) }}  
+- **Contact:** {{ metric_contact | default("[More Information Needed]", true) }}
+======
+
+=== BLEU Metric Card Example ===
+---
+# Metric Card for BLEU
+
+BLEU (Bilingual Evaluation Understudy) is a widely used metric for evaluating the quality of text generated in tasks like machine translation and summarization. It measures the overlap of n-grams between a generated text and one or more reference texts, with a brevity penalty to penalize overly short translations. SacreBLEU, a modern implementation, ensures reproducibility and standardization of BLEU scores across research.
+
+## Metric Details
+
+### Metric Description
+
+BLEU evaluates the quality of text generation by comparing n-grams in the generated output with those in one or more reference texts. It computes modified precision for n-grams and combines scores using a geometric mean, with a brevity penalty to ensure the length of the generated text matches that of the references. Higher BLEU scores indicate closer similarity to the references.
+
+- **Metric Type:** Surface-Level Similarity
+- **Range:** 0 to 1
+- **Higher is Better?:** Yes
+- **Reference-Based?:** Yes
+- **Input-Required?:** No
+
+### Formal Definition
+
+$$
+\text{BLEU} = \text{BP} \cdot \exp \left( \sum_{n=1}^N w_n \log p_n \right)
+$$
+
+where:
+- $\text{BP} = \min(1, e^{1 - r/c})$ is the brevity penalty,
+- $r$ is the effective reference length (based on the closest matching reference length for each sentence),
+- $c$ is the candidate translation length,
+- $p_n$ is the modified precision for n-grams of length $n$,
+- $w_n$ are weights for each n-gram (commonly uniform, $w_n = \frac{1}{N}$).
+
+### Inputs and Outputs
+
+- **Inputs:**  
+  - Generated text (candidate translation)  
+  - Reference text(s) (gold-standard translations)  
+
+- **Outputs:**  
+  - Scalar BLEU score (range: 0 to 1)
+
+## Intended Use
+
+### Domains and Tasks
+
+- **Domain:** Text Generation
+- **Tasks:** Machine Translation, Summarization, Data-to-Text Generation
+
+### Applicability and Limitations
+
+- **Best Suited For:**  
+  Structured tasks with a clear correspondence between generated and reference texts, such as translation or summarization.
+  
+- **Not Recommended For:**  
+  Open-ended or creative generation tasks where diversity or semantic similarity matters more than lexical overlap (e.g., storytelling, dialogue).
+
+## Metric Implementation
+
+### Reference Implementations
+
+- **Libraries/Packages:**
+  - [SacreBLEU](https://github.com/mjpost/sacrebleu) (robust, standard implementation)
+  - [NLTK](https://www.nltk.org/api/nltk.translate.html) (basic Python implementation)
+  - [Hugging Face `evaluate`](https://huggingface.co/docs/evaluate) (integrated metric framework)
+
+### Computational Complexity
+
+- **Efficiency:**  
+  BLEU is computationally efficient, requiring $O(n \cdot m)$ operations for $n$-gram matching where $n$ is the number of words in the candidate text and $m$ is the number of reference words. SacreBLEU optimizes tokenization and scoring, making it highly suitable for large-scale evaluations.
+
+- **Scalability:**  
+  BLEU scales well across datasets of varying sizes due to its simple design. SacreBLEU further supports evaluation with multiple references, diverse tokenization schemes, and language-specific preprocessing, making it adaptable to diverse evaluation setups.
+
+## Known Limitations
+
+- **Biases:**  
+  - BLEU penalizes valid paraphrases or semantically equivalent outputs that do not match reference n-grams exactly.  
+  - The brevity penalty can overly penalize valid shorter outputs, particularly for tasks where shorter text may be acceptable or even preferred (e.g., summarization).  
+
+- **Task Misalignment Risks:**  
+  - BLEU is not designed for evaluating tasks with high diversity in acceptable outputs (e.g., open-ended dialogue).  
+  - Scores depend on the quality and number of references; fewer or inconsistent references can lead to misleading evaluations.
+
+- **Failure Cases:**  
+  - BLEU struggles to capture semantic adequacy beyond lexical similarity. For instance, it cannot identify whether a translation preserves the meaning of the original sentence if word choices diverge significantly.
+
+## Related Metrics
+
+- **ROUGE:** Often used for summarization tasks, emphasizing recall over precision.  
+- **METEOR:** Incorporates synonym matching for better semantic alignment.  
+- **BERTScore:** Uses contextual embeddings for semantic similarity.  
+
+## Further Reading
+
+- **Papers:**  
+  - [Original BLEU Paper (Papineni et al., 2002)](https://www.aclweb.org/anthology/P02-1040)  
+  - [SacreBLEU: A Call for Clarity in Reporting BLEU Scores (Post, 2018)](https://www.aclweb.org/anthology/W18-6319)
+  
+- **Blogs/Tutorials:**  
+  - [Understanding BLEU](https://machinelearningmastery.com/calculate-bleu-score-for-text-python/)  
+  - [SacreBLEU Documentation](https://github.com/mjpost/sacrebleu)
+
+## Citation
+
+@inproceedings{papineni-etal-2002-bleu,
+    title = "{B}leu: a Method for Automatic Evaluation of Machine Translation",
+    author = "Papineni, Kishore  and
+      Roukos, Salim  and
+      Ward, Todd  and
+      Zhu, Wei-Jing",
+    editor = "Isabelle, Pierre  and
+      Charniak, Eugene  and
+      Lin, Dekang",
+    booktitle = "Proceedings of the 40th Annual Meeting of the Association for Computational Linguistics",
+    month = jul,
+    year = "2002",
+    address = "Philadelphia, Pennsylvania, USA",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/P02-1040/",
+    doi = "10.3115/1073083.1073135",
+    pages = "311--318"
+}
+
+## Metric Card Authors
+
+- **Authors:** Michael J. Ryan  
+- **Acknowledgment of AI Assistance:**  
+  Portions of this metric card were drafted with assistance from OpenAI's ChatGPT, based on user-provided inputs and relevant documentation. All content has been reviewed and curated by the author to ensure accuracy.  
+- **Contact:** mryan0@stanford.edu
+======
+
+The metric you will be designing a card for is {Metric Name}
+
+=== {SUPPLEMENTAL MATERIALS} ===
+
+======
+
+Now please write a high quality metric card for {Metric Name} given the provided materials!
+
+Final **Important** Note: If the provided materials do not give enough information about a particular point for the metric (e.g. limitations or biases aren't listed) then do NOT make things up.  You can leave blanks or "Needs more information" where needed.  It is absolutely essential not to make things up or guess when producing this documentation otherwise future researchers and engineers will be confused and led astray.  Avoid making up links that you aren't fully confident in the url.
+
+Remember to surround your answer in ```.  Thanks!

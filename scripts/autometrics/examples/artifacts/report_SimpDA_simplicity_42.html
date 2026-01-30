@@ -1,0 +1,566 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simplicity AutoMetric Report Card</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  
+  <style>
+    body.dark-mode { background-color: #121212; color: #e0e0e0; }
+    body.dark-mode .card { background-color: #1e1e1e; border-color: #333; color: #e0e0e0; }
+    body.dark-mode .table, body-dark-mode .table td { background-color: #1e1e1e; color: #e0e0e0; border-color: #333; }
+  </style>
+  <script>const RC_CORR = {}; const RC_RUNTIME = {}; const RC_ROB = {"available": false}; const RC_DOCS = {"LENS": "---\n# Metric Card for LENS\n\nLENS (Learnable Evaluation Metric for Text Simplification) is a reference-based metric designed specifically to evaluate system outputs in the task of text simplification. It aligns with human judgments more closely than prior metrics by learning from human ratings using a mixture-of-experts (MoE) model, which captures multiple aspects of simplification quality, such as grammaticality, meaning preservation, and simplicity. LENS can be rescaled between 0 and 100 for interpretability.\n\n## Metric Details\n\n### Metric Description\n\nLENS evaluates text simplification quality by comparing a system-generated simplification against both the complex source sentence and one or more human-written simplifications (references). It is trained to regress toward average human judgments across three dimensions: grammaticality, meaning preservation, and simplicity. \n\nTo capture these aspects, LENS uses a mixture-of-experts model built atop sentence-level and word-level representations from a pre-trained encoder (T5 encoder). Each expert corresponds to a latent factor presumed to model a subset of simplification phenomena. LENS is trained on human-annotated ratings from multiple datasets, and the resulting model provides a scalar score aligned with holistic simplification quality.\n\n- **Metric Type:** Semantic Similarity\n- **Range:** $\\mathbb{R}$ (rescaled to [0, 100] for interpretability)\n- **Higher is Better?:** Yes\n- **Reference-Based?:** Yes\n- **Input-Required?:** Yes\n\n### Formal Definition\n\nGiven a source sentence $C$, a system output simplification $S$, and one or more reference simplifications $R = \\{r_1, \\dots, r_n\\}$, the LENS score is computed as follows:\n\n1. Encode the triplet $(C, S, R)$ using the T5 encoder to obtain sentence-level and word-level embeddings.\n2. Pass these embeddings through $K$ expert scoring heads, each of which outputs a scalar.\n3. Use a gating network to produce weights $w_1, \\dots, w_K$ over the experts based on the input.\n4. Compute the final score as the weighted combination of expert predictions:\n\n$$\n\text{LENS}(C, S, R) = \\sum _{k=1}^K w_k \\cdot f_k(C, S, R)\n$$\n\nwhere $f_k$ is the $k$-th expert head's output.\n\n### Inputs and Outputs\n\n- **Inputs:**  \n  - Complex sentence (source input)  \n  - Simplified sentence (system output)  \n  - Reference simplifications (1 or more)\n\n- **Outputs:**  \n  - Scalar LENS score, either in original form (unbounded real number) or rescaled between 0 and 100.\n\n## Intended Use\n\n### Domains and Tasks\n\n- **Domain:** Text Generation\n- **Tasks:** Text Simplification\n\n### Applicability and Limitations\n\n- **Best Suited For:**  \n  Evaluating English text simplification outputs, particularly when references are available and multiple quality dimensions (e.g., fluency, meaning, simplicity) are relevant.\n\n- **Not Recommended For:**  \n  Tasks that are not simplification-specific (e.g., translation, paraphrasing) or that lack appropriate reference simplifications. LENS is not designed for creative generation or tasks involving high lexical diversity.\n\n## Metric Implementation\n\n### Reference Implementations\n\n- **Libraries/Packages:**  \n  - [LENS GitHub](https://github.com/davidheineman/lens) (official implementation)  \n  - [Hugging Face Model Hub - davidheineman/lens](https://huggingface.co/davidheineman/lens)  \n\n### Computational Complexity\n\n- **Efficiency:**  \n  Moderate. Inference uses a pre-trained encoder and multiple expert heads, with computational cost comparable to standard encoder-forward passes in T5.\n\n- **Scalability:**  \n  Scales adequately with batching; suitable for GPU-based batched evaluation but may be slower than traditional lexical metrics.\n\n## Known Limitations\n\n- LENS was trained on English simplification datasets and may not generalize to other languages without retraining.\n- It requires both source and reference inputs, limiting its use in reference-free or source-free settings.\n\n- **Biases:**  \n  Needs more information.\n\n- **Task Misalignment Risks:**  \n  Not suitable for tasks like summarization or paraphrasing without retraining or adaptation.\n\n- **Failure Cases:**  \n  Needs more information.\n\n## Related Metrics\n\n- **SARI:** A lexical overlap-based metric for simplification, focusing on additions, deletions, and retention.\n- **BLEU/ROUGE:** Often used but poorly aligned with human judgments in simplification tasks.\n- **BERTScore:** Captures semantic similarity but is not simplification-specific.\n- **QuestEval:** General-purpose learned evaluation, not optimized for simplification.\n\n## Further Reading\n\n- **Papers:**  \n  - [LENS: A Learnable Evaluation Metric for Text Simplification (Maddela et al., 2023)](https://aclanthology.org/2023.acl-long.905)\n\n- **Blogs/Tutorials:**  \n  - [More Information Needed]\n\n## Citation\n\n```\n@inproceedings{maddela-etal-2023-lens,\n  title = \"{LENS}: A Learnable Evaluation Metric for Text Simplification\",\n  author = \"Maddela, Mounica  and\n    Dou, Yao  and\n    Heineman, David  and\n    Xu, Wei\",\n  booktitle = \"Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)\",\n  month = jul,\n  year = \"2023\",\n  address = \"Toronto, Canada\",\n  publisher = \"Association for Computational Linguistics\",\n  url = \"https://aclanthology.org/2023.acl-long.905\",\n  doi = \"10.18653/v1/2023.acl-long.905\",\n  pages = \"16383--16408\",\n}\n```\n\n## Metric Card Authors\n\n- **Authors:** Michael J. Ryan  \n- **Acknowledgment of AI Assistance:**  \n  Portions of this metric card were drafted with assistance from generative AI. All content has been reviewed and curated by the author to ensure accuracy.  \n- **Contact:** mryan0@stanford.edu", "BERTScore_roberta-large": "---\n# Metric Card for BERTScore\n\nBERTScore is a semantic similarity metric for evaluating generated text against reference text. It leverages pre-trained contextual embeddings (e.g., BERT, RoBERTa) to compute token-level cosine similarity, measuring precision, recall, and F1 scores. BERTScore is particularly effective in capturing semantic equivalence and correlates well with human judgments, making it a versatile metric for various text generation tasks.\n\n## Metric Details\n\n### Metric Description\n\nBERTScore evaluates the semantic similarity between a generated text and a reference text using contextual embeddings. Unlike traditional n-gram-based metrics (e.g., BLEU), which rely on surface-level token overlap, BERTScore uses pre-trained embeddings to capture the contextual meaning of tokens. \n\nThe metric computes cosine similarity for each token pair between the reference and generated text, with optional inverse document frequency (IDF) weighting to emphasize rare tokens. The precision, recall, and F1 scores are calculated by aggregating the maximum similarity scores for each token, and an optional baseline rescaling makes the scores more interpretable.\n\n- **Metric Type:** Semantic Similarity\n- **Range:** Typically [0, 1] after rescaling\n- **Higher is Better?:** Yes\n- **Reference-Based?:** Yes\n- **Input-Required?:** No\n\n### Formal Definition\n\nFor a reference sentence $x = \\langle x_1, \\dots, x_k \rangle$ and a candidate sentence $\\hat{x} = \\langle \\hat{x}_1, \\dots, \\hat{x}_l \rangle$, the BERTScore components are defined as:\n\n$$\nR_{\text{BERT}} = \frac{1}{|x|} \\sum_{x_i \\in x} \\max_{\\hat{x}_j \\in \\hat{x}} x_i^\top \\hat{x}_j\n$$\n\n$$\nP_{\text{BERT}} = \frac{1}{|x|} \\sum_{x_j \\in \\hat{x}_{j} } \\max _{x_i \\in x} x_i^\top \\hat{x}_j\n$$\n\n$$\nF_{\text{BERT}} = \frac{2 \\cdot P_{\text{BERT}} \\cdot R_{\text{BERT}}}{P_{\text{BERT}} + R_{\text{BERT}}}\n$$\n\nHere, $x_i$ and $\\hat{x}_j$ represent the contextual embeddings of the tokens, and the similarity is computed using cosine similarity.\n\nWith IDF weighting, recall is modified as:\n\nRecall Modified:\n\n$$\nR_{\text{BERT}} = \frac{\\sum _{x_i \\in x} \text{idf}(x_i) \\cdot \\max _{\\hat{x}_j \\in \\hat{x}} x_i^\top \\hat{x}_j}{\\sum _{x_i \\in x} \text{idf}(x_i)}\n$$\n\nBaseline rescaling adjusts scores to lie within [0, 1].\n\n### Inputs and Outputs\n\n- **Inputs:**  \n  - Generated text (candidate)  \n  - Reference text(s)  \n  - Optional: IDF weights for importance weighting  \n\n- **Outputs:**  \n  - Scalar precision, recall, and F1 scores  \n\n## Intended Use\n\n### Domains and Tasks\n\n- **Domain:** Text Generation, Dialogue Systems, Image Captioning\n- **Tasks:** Machine Translation, Summarization, Paraphrasing, Image-to-Text Generation\n\n### Applicability and Limitations\n\n- **Best Suited For:**  \n  - Tasks requiring semantic similarity evaluation between generated and reference texts.  \n  - Use cases where semantic correctness is prioritized over lexical overlap.  \n\n- **Not Recommended For:**  \n  - Open-ended or highly creative generation tasks with diverse acceptable outputs (e.g., storytelling).  \n  - Domains with very low-resource or out-of-domain embeddings.  \n\n## Metric Implementation\n\n### Reference Implementations\n\n- **Libraries/Packages:**\n  - [BERTScore GitHub Repository](https://github.com/Tiiiger/bert_score)  \n  - [Hugging Face `evaluate`](https://huggingface.co/docs/evaluate)  \n\n### Computational Complexity\n\n- **Efficiency:**  \n  BERTScore is computationally intensive due to the use of contextual embeddings. A GPU is recommended for large-scale evaluations.\n\n- **Scalability:**  \n  Supports multiple languages and embeddings. Processing speed varies based on embedding size and sentence length.\n\n## Known Limitations\n\n- **Biases:**  \n  - Performance may degrade for low-resource languages.  \n  - Contextual embeddings may reflect biases present in the pre-trained models.  \n\n- **Task Misalignment Risks:**  \n  - Poor performance on tasks emphasizing diversity or creativity.  \n\n- **Failure Cases:**  \n  - Struggles with very long sentences due to truncation in transformer models.  \n  - Sensitivity to embedding model choice and layer selection.  \n\n## Related Metrics\n\n- **BLEU:** Focuses on surface-level similarity using n-grams.  \n- **ROUGE:** Often used for summarization but lacks semantic understanding.  \n- **METEOR:** Incorporates synonyms but is limited in language coverage.  \n- **CHRF:** Uses character-level n-grams for lexical similarity.  \n\n## Further Reading\n\n- **Papers:**  \n  - [BERTScore: Evaluating Text Generation with BERT (Zhang et al., 2020)](https://arxiv.org/abs/1904.09675)  \n\n- **Blogs/Tutorials:**  \n  - [BERTScore GitHub Documentation](https://github.com/Tiiiger/bert_score) \n  \n## Citation\n\n```\n@inproceedings{Zhang2020BERTScore,\n   title={BERTScore: Evaluating Text Generation with BERT},\n   author={Tianyi Zhang* and Varsha Kishore* and Felix Wu* and Kilian Q. Weinberger and Yoav Artzi},\n   booktitle={International Conference on Learning Representations},\n   year={2020},\n   url={https://openreview.net/forum?id=SkeHuCVFDr}\n}\n```\n\n## Metric Card Authors\n\n- **Authors:** Michael J. Ryan  \n- **Acknowledgment of AI Assistance:**  \n  Portions of this metric card were drafted with assistance from OpenAI's ChatGPT, based on user-provided inputs and relevant documentation. All content has been reviewed and curated by the author to ensure accuracy.  \n- **Contact:** mryan0@stanford.edu", "BLEU": "---\n# Metric Card for BLEU\n\nBLEU (Bilingual Evaluation Understudy) is a widely used metric for evaluating the quality of text generated in tasks like machine translation and summarization. It measures the overlap of n-grams between a generated text and one or more reference texts, with a brevity penalty to penalize overly short translations. SacreBLEU, a modern implementation, ensures reproducibility and standardization of BLEU scores across research.\n\n## Metric Details\n\n### Metric Description\n\nBLEU evaluates the quality of text generation by comparing n-grams in the generated output with those in one or more reference texts. It computes modified precision for n-grams and combines scores using a geometric mean, with a brevity penalty to ensure the length of the generated text matches that of the references. Higher BLEU scores indicate closer similarity to the references.\n\n- **Metric Type:** Surface-Level Similarity\n- **Range:** 0 to 1\n- **Higher is Better?:** Yes\n- **Reference-Based?:** Yes\n- **Input-Required?:** No\n\n### Formal Definition\n\n$$\n\text{BLEU} = \text{BP} \times \\exp \\left( \\sum_{n=1}^N w_n \\log p_n \right)\n$$\n\nwhere:\n- $\text{BP} = \\min(1, e^{1 - r/c})$ is the brevity penalty,\n- $r$ is the effective reference length (based on the closest matching reference length for each sentence),\n- $c$ is the candidate translation length,\n- $p_n$ is the modified precision for n-grams of length $n$,\n- $w_n$ are weights for each n-gram (commonly uniform, $w_n = \frac{1}{N}$).\n\n### Inputs and Outputs\n\n- **Inputs:**  \n- Generated text (candidate translation)  \n- Reference text(s) (gold-standard translations)  \n\n- **Outputs:**  \n- Scalar BLEU score (range: 0 to 1)\n\n## Intended Use\n\n### Domains and Tasks\n\n- **Domain:** Text Generation\n- **Tasks:** Machine Translation, Summarization, Data-to-Text Generation\n\n### Applicability and Limitations\n\n- **Best Suited For:**  \nStructured tasks with a clear correspondence between generated and reference texts, such as translation or summarization.\n\n- **Not Recommended For:**  \nOpen-ended or creative generation tasks where diversity or semantic similarity matters more than lexical overlap (e.g., storytelling, dialogue).\n\n## Metric Implementation\n\n### Reference Implementations\n\n- **Libraries/Packages:**\n- [SacreBLEU](https://github.com/mjpost/sacrebleu) (robust, standard implementation)\n- [NLTK](https://www.nltk.org/api/nltk.translate.html) (basic Python implementation)\n- [Hugging Face `evaluate`](https://huggingface.co/docs/evaluate) (integrated metric framework)\n\n### Computational Complexity\n\n- **Efficiency:**  \nBLEU is computationally efficient, requiring $O(n \times m)$ operations for $n$-gram matching where $n$ is the number of words in the candidate text and $m$ is the number of reference words. SacreBLEU optimizes tokenization and scoring, making it highly suitable for large-scale evaluations.\n\n- **Scalability:**  \nBLEU scales well across datasets of varying sizes due to its simple design. SacreBLEU further supports evaluation with multiple references, diverse tokenization schemes, and language-specific preprocessing, making it adaptable to diverse evaluation setups.\n\n## Known Limitations\n\n- **Biases:**  \n- BLEU penalizes valid paraphrases or semantically equivalent outputs that do not match reference n-grams exactly.  \n- The brevity penalty can overly penalize valid shorter outputs, particularly for tasks where shorter text may be acceptable or even preferred (e.g., summarization).  \n\n- **Task Misalignment Risks:**  \n- BLEU is not designed for evaluating tasks with high diversity in acceptable outputs (e.g., open-ended dialogue).  \n- Scores depend on the quality and number of references; fewer or inconsistent references can lead to misleading evaluations.\n\n- **Failure Cases:**  \n- BLEU struggles to capture semantic adequacy beyond lexical similarity. For instance, it cannot identify whether a translation preserves the meaning of the original sentence if word choices diverge significantly.\n\n## Related Metrics\n\n- **ROUGE:** Often used for summarization tasks, emphasizing recall over precision.  \n- **METEOR:** Incorporates synonym matching for better semantic alignment.  \n- **BERTScore:** Uses contextual embeddings for semantic similarity.  \n\n## Further Reading\n\n- **Papers:**  \n- [Original BLEU Paper (Papineni et al., 2002)](https://www.aclweb.org/anthology/P02-1040)  \n- [SacreBLEU: A Call for Clarity in Reporting BLEU Scores (Post, 2018)](https://www.aclweb.org/anthology/W18-6319)\n\n- **Blogs/Tutorials:**  \n- [Understanding BLEU](https://machinelearningmastery.com/calculate-bleu-score-for-text-python/)  \n- [SacreBLEU Documentation](https://github.com/mjpost/sacrebleu)\n\n## Citation\n\n```\n@inproceedings{papineni-etal-2002-bleu,\n    title = \"{B}leu: a Method for Automatic Evaluation of Machine Translation\",\n    author = \"Papineni, Kishore  and\n      Roukos, Salim  and\n      Ward, Todd  and\n      Zhu, Wei-Jing\",\n    editor = \"Isabelle, Pierre  and\n      Charniak, Eugene  and\n      Lin, Dekang\",\n    booktitle = \"Proceedings of the 40th Annual Meeting of the Association for Computational Linguistics\",\n    month = jul,\n    year = \"2002\",\n    address = \"Philadelphia, Pennsylvania, USA\",\n    publisher = \"Association for Computational Linguistics\",\n    url = \"https://aclanthology.org/P02-1040/\",\n    doi = \"10.3115/1073083.1073135\",\n    pages = \"311--318\"\n}\n```\n\n## Metric Card Authors\n\n- **Authors:** Michael J. Ryan  \n- **Acknowledgment of AI Assistance:**  \nPortions of this metric card were drafted with assistance from OpenAI's ChatGPT, based on user-provided inputs and relevant documentation. All content has been reviewed and curated by the author to ensure accuracy.  \n- **Contact:** mryan0@stanford.edu\n    ", "ROUGE": "---\n# Metric Card for ROUGE (ROUGE-1, ROUGE-2, ROUGE-L, ROUGE-LSum)\n\nROUGE (Recall-Oriented Understudy for Gisting Evaluation) is a widely used evaluation metric for text summarization, machine translation, and text generation tasks. It measures the overlap between an automatically generated text and reference texts using various methods such as **n-gram overlap (ROUGE-1, ROUGE-2), longest common subsequence (ROUGE-L), and summary-level longest common subsequence (ROUGE-LSum)**.\n\nThe **rouge-score** Python package provides a native implementation that replicates results from the original Perl-based ROUGE package. It supports **text normalization, Porter stemming, and confidence interval calculation** while omitting stopword removal due to licensing restrictions.\n\n## Metric Details\n\n### Metric Description\n\nROUGE evaluates generated text by comparing it with human-written references. The key variants included in this implementation are:\n\n- **ROUGE-1**: Measures unigram (single-word) overlap between candidate and reference texts.\n- **ROUGE-2**: Measures bigram (two-word sequence) overlap.\n- **ROUGE-L**: Measures the longest common subsequence (LCS) between candidate and reference texts, capturing sentence-level structure similarity.\n- **ROUGE-LSum**: A summary-level variant of ROUGE-L, treating newlines as sentence boundaries and computing LCS across sentence pairs.\n\n- **Metric Type:** Surface-Level Similarity\n- **Range:** 0 to 1\n- **Higher is Better?:** Yes\n- **Reference-Based?:** Yes\n- **Input-Required?:** No\n\n### Formal Definition\n\n#### ROUGE-N (N-gram Overlap)\n\nFor an n-gram of length $n$:\n\n$$\n\text{ROUGE-N} = \frac{\\sum _{S \\in \text{Reference Summaries}} \\sum _{\text{gram} _{n} \\in S} \text{Count} _{\text{match}}(\text{gram} _{n})}\n{\\sum _{S \\in \text{Reference Summaries}} \\sum _{\text{gram} _{n} \\in S} \text{Count}(\text{gram} _{n})}\n$$\n\nwhere $\text{Count} _{\text{match}}(\text{gram} _{n})$ is the number of n-grams appearing in both the candidate and reference summaries.\n\n## **ROUGE-L (Longest Common Subsequence)**\n\nROUGE-L evaluates the longest common subsequence (LCS) between the candidate and reference texts. The LCS captures sentence structure similarity by considering word order while allowing gaps.\n\nGiven a candidate summary $X$ of length $m$ and a reference summary $Y$ of length $n$, let $LCS(X, Y)$ denote the length of their longest common subsequence.\n\n### **Recall ($R_{LCS}$):**\n\n$$\nR_{LCS} = \frac{LCS(X, Y)}{n}\n$$\n\nMeasures the proportion of the reference summary captured by the candidate summary.\n\n### **Precision ($P_{LCS}$):**\n\n$$\nP_{LCS} = \frac{LCS(X, Y)}{m}\n$$\n\nMeasures the proportion of the candidate summary that is part of the LCS.\n\n### **F-measure ($F_{LCS}$):**\n\n$$\nF_{LCS} = \frac{(1 + \beta^2) \\cdot R_{LCS} \\cdot P_{LCS}}{R_{LCS} + \beta^2 \\cdot P_{LCS}}\n$$\n\nWhere $\beta$ determines the relative weight of recall versus precision. A common choice is $\beta = 1$, giving equal weight to both.\n\n#### ROUGE-LSum (Summary-Level LCS)\n\nROUGE-LSum extends ROUGE-L to the summary level by treating newlines as sentence boundaries. Instead of computing a single LCS over the entire text, it:\n\n1. Splits the candidate and reference summaries into sentences.\n2. Computes LCS for each candidate-reference sentence pair.\n3. Aggregates results to produce an overall ROUGE-LSum score.\n\n### Inputs and Outputs\n\n- **Inputs:**  \n  - Generated text (candidate summary)  \n  - Reference text(s) (human-written summary)\n\n- **Outputs:**  \n  - Scalar ROUGE score (range: 0 to 1), providing recall, precision, and F1-score.\n\n## Intended Use\n\n### Domains and Tasks\n\n- **Domain:** Text Generation\n- **Tasks:** Summarization, Machine Translation, Paraphrasing, Data-to-Text Generation\n\n### Applicability and Limitations\n\n- **Best Suited For:**  \n  - Evaluating text generation tasks where lexical similarity is a reliable proxy for quality.\n  - Comparing multiple summarization systems against a reference standard.\n\n- **Not Recommended For:**  \n  - Evaluating abstractiveness, coherence, fluency, or factual consistency.\n  - Tasks where paraphrasing or rewording is expected, as ROUGE penalizes non-exact matches.\n\n## Metric Implementation\n\n### Reference Implementations\n\n- **Libraries/Packages:**\n  - [Google Research ROUGE](https://github.com/google-research/google-research/tree/master/rouge)\n  - [Hugging Face `evaluate`](https://huggingface.co/docs/evaluate)\n  - [Python `rouge_score` package](https://pypi.org/project/rouge-score/)\n\n### Computational Complexity\n\n- **Efficiency:**  \n  - ROUGE-N complexity is $O(n \\cdot m)$ for n-gram counting, where $n$ is the candidate text length and $m$ is the reference text length.\n  - ROUGE-L requires LCS computation, which is $O(n \\cdot m)$ using dynamic programming.\n\n- **Scalability:**  \n  - ROUGE scales well to large datasets but can be computationally intensive when multiple reference texts are used.\n\n## Known Limitations\n\n- **Biases:**  \n  - Prefers texts with high lexical overlap, penalizing valid paraphrases.\n  - Highly sensitive to the number and quality of reference summaries.\n\n- **Task Misalignment Risks:**  \n  - Cannot capture meaning beyond exact n-gram matches.\n  - Does not account for factual correctness or grammaticality.\n\n- **Failure Cases:**  \n  - Overestimates quality for summaries with high recall but poor readability.\n  - Struggles with abstractive summarization, which may use different wording.\n\n## Related Metrics\n\n- **BLEU:** A precision-based alternative used in machine translation.  \n- **METEOR:** Incorporates synonym matching and paraphrase detection.  \n- **BERTScore:** Uses contextual embeddings for semantic similarity.  \n\n## Further Reading\n\n- **Papers:**  \n  - [Lin, 2004: ROUGE: A Package for Automatic Evaluation of Summaries](https://aclanthology.org/W04-1013)  \n  - [Ganesan, 2018: ROUGE 2.0 - Improved Evaluation Measures](https://arxiv.org/abs/1803.01937)  \n\n- **Blogs/Tutorials:**  \n  - [ROUGE How-To](http://kavita-ganesan.com/rouge-howto)  \n  - [ROUGE in Hugging Face](https://huggingface.co/docs/evaluate)  \n\n## Metric Card Authors\n\n## Citation\n\n  ```\n  @inproceedings{lin-2004-rouge,\n      title = \"{ROUGE}: A Package for Automatic Evaluation of Summaries\",\n      author = \"Lin, Chin-Yew\",\n      booktitle = \"Text Summarization Branches Out\",\n      month = jul,\n      year = \"2004\",\n      address = \"Barcelona, Spain\",\n      publisher = \"Association for Computational Linguistics\",\n      url = \"https://aclanthology.org/W04-1013/\",\n      pages = \"74--81\"\n  }\n  ```\n\n- **Authors:** Michael J. Ryan  \n- **Acknowledgment of AI Assistance:**  \n  Portions of this metric card were drafted with assistance from generative AI. All content has been reviewed and curated by the author to ensure accuracy.  \n- **Contact:** mryan0@stanford.edu  ", "Perplexity_gpt2-large": "---\n# Metric Card for Perplexity\n\nPerplexity (PPL) is a widely used metric for evaluating the fluency of language models. It measures how well a probabilistic model predicts a sequence of tokens, with lower values indicating better predictions. Specifically, it computes the exponentiated average negative log-likelihood of a sequence. Perplexity is only applicable to autoregressive language models (e.g., GPT-2) and **cannot** be used with masked language models like BERT.\n\n## Metric Details\n\n### Metric Description\n\nPerplexity assesses the predictive capability of a language model by computing the exponentiated average negative log-likelihood of a given sequence. It quantifies how uncertain the model is when predicting the next token. A lower perplexity score indicates better model performance, as it suggests the model assigns higher probabilities to the correct tokens.\n\n- **Metric Type:** Fluency\n- **Range:** $(1, \\infty)$\n- **Higher is Better?:** No\n- **Reference-Based?:** No\n- **Input-Required?:** No (Perplexity can be computed on output tokens alone)\n\n### Formal Definition\n\nGiven a sequence of tokens $X = (x_1, x_2, ..., x_T)$, the perplexity of $X$ under a language model with parameters $\theta$ is defined as:\n\n$$\nPPL(X) = \\exp \\left( -\frac{1}{T} \\sum_{i=1}^{T} \\log p_{\theta}(x_i \\mid x_{\text{<}i}) \right)\n$$\n\nwhere:\n- $p_{\theta}(x_i \\mid x_{\text{<}i})$ is the probability assigned by the model to token $x_i$ given the preceding tokens.\n- $T$ is the length of the sequence.\n\nA lower perplexity value indicates that the model assigns higher probabilities to observed sequences, meaning it better predicts the given data.\n\n### Sliding-Window Perplexity\n\nFor models with a fixed context size (e.g., GPT-2, LLaMA), perplexity cannot be computed over arbitrarily long sequences directly. Instead, a **sliding-window** approach is used, as described in the [Hugging Face blog on perplexity](https://huggingface.co/docs/transformers/en/perplexity):\n\n- The input sequence is broken into overlapping **windows** of a fixed length.\n- Each window is passed through the model, and **only the log-likelihood of the newly introduced tokens** (not the entire window) is used in the perplexity calculation.\n- This approach better approximates full-sequence perplexity compared to na\u00efve chunking (which can overestimate perplexity due to loss of context).\n\nUsing this method, perplexity is calculated as:\n\n$$\nPPL(X) = \\exp \\left( -\frac{1}{T} \\sum_{i=1}^{T} \\log p_{\theta}(x_i \\mid x_{\\max(1, i-k):i-1}) \right)\n$$\n\nwhere:\n- $k$ is the model's fixed context size,\n- The probability of each token $x_i$ is conditioned on a **sliding context of at most $k$ tokens**.\n\nThis method provides a **more realistic** evaluation of model fluency while efficiently handling long sequences.\n\n### Inputs and Outputs\n\n- **Inputs:**  \n  - A sequence of text tokens (typically output from a model)\n  - A trained language model (e.g., GPT-2)\n  - Tokenizer for processing input text\n\n- **Outputs:**  \n  - A scalar value representing the perplexity score of the input text\n\n## Intended Use\n\n### Domains and Tasks\n\n- **Domain:** Text Generation\n- **Tasks:** Language Modeling, Dialogue Generation, Storytelling, Code Completion\n\n### Applicability and Limitations\n\n- **Best Suited For:**  \n  - Evaluating the fluency of language models, especially autoregressive models\n  - Comparing the relative performance of different language models on the same dataset\n  \n- **Not Recommended For:**  \n  - Evaluating masked language models (e.g., BERT) since perplexity is undefined for non-autoregressive architectures\n  - Assessing high-level semantic coherence, factual consistency, or diversity in generated text\n\n## Metric Implementation\n\n### Reference Implementations\n\n- **Libraries/Packages:**\n  - [Hugging Face Transformers](https://huggingface.co/docs/transformers/en/perplexity)\n\n### Computational Complexity\n\n- **Efficiency:**  \n  - Perplexity calculation involves computing log-likelihoods for each token, making it computationally intensive for large datasets.\n  \n- **Scalability:**  \n  - Efficient when used with GPU acceleration but may become expensive for long sequences due to the need for multiple forward passes.\n\n## Known Limitations\n\n- **Biases:**  \n  - Sensitive to tokenization choices; different tokenization schemes can yield different perplexity values.\n  - Models trained on specific domains may yield artificially low perplexity scores on similar datasets while failing on out-of-domain data.\n  \n- **Task Misalignment Risks:**  \n  - Perplexity measures token-level fluency but does not assess semantic correctness or factuality.\n  \n- **Failure Cases:**  \n  - Does not distinguish between grammatically correct but nonsensical text and genuinely coherent text.\n  - Perplexity values are not always comparable across different models due to differences in vocabulary and tokenization.\n\n## Related Metrics\n\n- **Cross-Entropy Loss:** Closely related to perplexity, as perplexity is the exponentiated cross-entropy loss.\n- **BERTScore:** Evaluates semantic similarity rather than fluency.\n- **ROUGE/BLEU:** Measure lexical overlap rather than model uncertainty.\n\n## Further Reading\n\n- **Papers:**  \n  - Jelinek et al. (1977) - [Perplexity: A Measure of the Difficulty of Speech Recognition Tasks](https://doi.org/10.1121/1.2016299)\n  - Hugging Face Documentation - [Perplexity of Fixed-Length Models](https://huggingface.co/docs/transformers/en/perplexity)\n\n- **Blogs/Tutorials:**  \n  - [Understanding Evaluation Metrics for Language Models](https://thegradient.pub/understanding-evaluation-metrics-for-language-models/)\n  - [Hugging Face's Guide to Perplexity](https://huggingface.co/docs/transformers/en/perplexity)\n\n## Citation\n\n```\n@article{10.1121/1.2016299,\n    author = {Jelinek, F. and Mercer, R. L. and Bahl, L. R. and Baker, J. K.},\n    title = {Perplexity\u2014a measure of the difficulty of speech recognition tasks},\n    journal = {The Journal of the Acoustical Society of America},\n    volume = {62},\n    number = {S1},\n    pages = {S63-S63},\n    year = {2005},\n    month = {08},\n    abstract = {Using counterexamples, we show that vocabulary size and static and dynamic branching factors are all inadequate as measures of speech recognition complexity of finite state grammars. Information theoretic arguments show that perplexity (the logarithm of which is the familiar entropy) is a more appropriate measure of equivalent choice. It too has certain weaknesses which we discuss. We show that perplexity can also be applied to languages having no obvious statistical description, since an entropy\u2010maximizing probability assignment can be found for any finite\u2010state grammar. Table I shows perplexity values for some well\u2010known speech recognition tasks. Perplexity Vocabulary Dynamic Phone Word size branching factorIBM\u2010Lasers 2.14 21.11 1000 1000IBM\u2010Raleigh 1.69 7.74 250 7.32CMU\u2010AIX05 1.52 6.41 1011 35},\n    issn = {0001-4966},\n    doi = {10.1121/1.2016299},\n    url = {https://doi.org/10.1121/1.2016299},\n    eprint = {https://pubs.aip.org/asa/jasa/article-pdf/62/S1/S63/11558910/s63\\_5\\_online.pdf},\n}\n```\n  \n## Metric Card Authors\n\n- **Authors:** Michael J. Ryan  \n- **Acknowledgment of AI Assistance:**  \n  Portions of this metric card were drafted with assistance from generative AI. All content has been reviewed and curated by the author to ensure accuracy.  \n- **Contact:** mryan0@stanford.edu\n    "}; const RC_DOCS_MAP = {"BERTScoreP_roberta-large": "BERTScore_roberta-large", "BERTScore_roberta-large_BERTScoreP_roberta-large": "BERTScore_roberta-large", "BERTScore_roberta-large-BERTScoreP_roberta-large": "BERTScore_roberta-large", "BERTScoreR_roberta-large": "BERTScore_roberta-large", "BERTScore_roberta-large_BERTScoreR_roberta-large": "BERTScore_roberta-large", "BERTScore_roberta-large-BERTScoreR_roberta-large": "BERTScore_roberta-large", "BERTScoreF_roberta-large": "BERTScore_roberta-large", "BERTScore_roberta-large_BERTScoreF_roberta-large": "BERTScore_roberta-large", "BERTScore_roberta-large-BERTScoreF_roberta-large": "BERTScore_roberta-large", "ROUGE-1-p": "ROUGE", "ROUGE_ROUGE-1-p": "ROUGE", "ROUGE-2-p": "ROUGE", "ROUGE_ROUGE-2-p": "ROUGE", "ROUGE-L-p": "ROUGE", "ROUGE_ROUGE-L-p": "ROUGE", "ROUGE-Lsum-p": "ROUGE", "ROUGE_ROUGE-Lsum-p": "ROUGE", "ROUGE-1-r": "ROUGE", "ROUGE_ROUGE-1-r": "ROUGE", "ROUGE-2-r": "ROUGE", "ROUGE_ROUGE-2-r": "ROUGE", "ROUGE-L-r": "ROUGE", "ROUGE_ROUGE-L-r": "ROUGE", "ROUGE-Lsum-r": "ROUGE", "ROUGE_ROUGE-Lsum-r": "ROUGE", "ROUGE-1-f1": "ROUGE", "ROUGE_ROUGE-1-f1": "ROUGE", "ROUGE-2-f1": "ROUGE", "ROUGE_ROUGE-2-f1": "ROUGE", "ROUGE-L-f1": "ROUGE", "ROUGE_ROUGE-L-f1": "ROUGE", "ROUGE-Lsum-f1": "ROUGE", "ROUGE_ROUGE-Lsum-f1": "ROUGE"}; const RC_PY_CODE = "# Auto-generated static regression for Autometrics_Regression_simplicity\nfrom typing import ClassVar\nimport numpy as np\nfrom autometrics.aggregator.generated.GeneratedRegressionMetric import GeneratedStaticRegressionAggregator\n\nfrom autometrics.metrics.reference_based.LENS import LENS\nfrom autometrics.metrics.reference_based.BERTScore import BERTScore\nfrom autometrics.metrics.reference_based.BLEU import BLEU\nfrom autometrics.metrics.reference_based.ROUGE import ROUGE\nfrom autometrics.metrics.reference_free.Perplexity import Perplexity\n\n\n\nINPUT_METRICS = [\n        LENS(),\n        BERTScore(),\n        BLEU(),\n        ROUGE(),\n        Perplexity()\n]\n\nclass Autometrics_Regression_simplicity_StaticRegression(GeneratedStaticRegressionAggregator):\n    \"\"\"Regression aggregator over component metrics with a linear model.\n\nComponents and weights:\n- LENS: 0.380707\n- BERTScoreP_roberta-large: 0.180530\n- BERTScoreR_roberta-large: 0.000000\n- BERTScoreF_roberta-large: -0.000000\n- BLEU: 0.090667\n- ROUGE-1-p: -0.018078\n- ROUGE-2-p: 0.000000\n- ROUGE-L-p: -0.031982\n- ROUGE-Lsum-p: 0.000000\n- ROUGE-1-r: 0.000000\n- ROUGE-2-r: 0.000000\n- ROUGE-L-r: -0.000000\n- ROUGE-Lsum-r: -0.000000\n- ROUGE-1-f1: -0.031517\n- ROUGE-2-f1: -0.000000\n- ROUGE-L-f1: -0.000000\n- ROUGE-Lsum-f1: -0.024396\n- Perplexity_gpt2-large: 0.042783\n\nIntercept: -0.000948\"\"\"\n\n    description: ClassVar[str] = 'Regression aggregator over component metrics with a linear model.\\n\\nComponents and weights:\\n- LENS: 0.380707\\n- BERTScoreP_roberta-large: 0.180530\\n- BERTScoreR_roberta-large: 0.000000\\n- BERTScoreF_roberta-large: -0.000000\\n- BLEU: 0.090667\\n- ROUGE-1-p: -0.018078\\n- ROUGE-2-p: 0.000000\\n- ROUGE-L-p: -0.031982\\n- ROUGE-Lsum-p: 0.000000\\n- ROUGE-1-r: 0.000000\\n- ROUGE-2-r: 0.000000\\n- ROUGE-L-r: -0.000000\\n- ROUGE-Lsum-r: -0.000000\\n- ROUGE-1-f1: -0.031517\\n- ROUGE-2-f1: -0.000000\\n- ROUGE-L-f1: -0.000000\\n- ROUGE-Lsum-f1: -0.024396\\n- Perplexity_gpt2-large: 0.042783\\n\\nIntercept: -0.000948'\n\n    def __init__(self):\n        super().__init__(\n            name='Autometrics_Regression_simplicity',\n            description='Regression aggregator over component metrics with a linear model.\\n\\nComponents and weights:\\n- LENS: 0.380707\\n- BERTScoreP_roberta-large: 0.180530\\n- BERTScoreR_roberta-large: 0.000000\\n- BERTScoreF_roberta-large: -0.000000\\n- BLEU: 0.090667\\n- ROUGE-1-p: -0.018078\\n- ROUGE-2-p: 0.000000\\n- ROUGE-L-p: -0.031982\\n- ROUGE-Lsum-p: 0.000000\\n- ROUGE-1-r: 0.000000\\n- ROUGE-2-r: 0.000000\\n- ROUGE-L-r: -0.000000\\n- ROUGE-Lsum-r: -0.000000\\n- ROUGE-1-f1: -0.031517\\n- ROUGE-2-f1: -0.000000\\n- ROUGE-L-f1: -0.000000\\n- ROUGE-Lsum-f1: -0.024396\\n- Perplexity_gpt2-large: 0.042783\\n\\nIntercept: -0.000948',\n            input_metrics=INPUT_METRICS,\n            feature_names=['LENS', 'BERTScoreP_roberta-large', 'BERTScoreR_roberta-large', 'BERTScoreF_roberta-large', 'BLEU', 'ROUGE-1-p', 'ROUGE-2-p', 'ROUGE-L-p', 'ROUGE-Lsum-p', 'ROUGE-1-r', 'ROUGE-2-r', 'ROUGE-L-r', 'ROUGE-Lsum-r', 'ROUGE-1-f1', 'ROUGE-2-f1', 'ROUGE-L-f1', 'ROUGE-Lsum-f1', 'Perplexity_gpt2-large'],\n            coefficients=[0.3807067838706811, 0.18052992267690696, 0.0, -0.0, 0.0906674883575241, -0.018077504048268817, 0.0, -0.031982474757411866, 0.0, 0.0, 0.0, -0.0, -0.0, -0.031517269800915036, -0.0, -0.0, -0.024396337737982617, 0.04278264550978905],\n            intercept=-0.0009479006336403039,\n            scaler_mean=[43.2665274139526, 0.9571104537232131, 0.9514983952869468, 0.9523045588198895, 63.83680281294687, 0.8495929813839889, 0.7962387367824674, 0.7828723612184775, 0.6713618905203523, 0.627044795070085, 0.622288370134958, 0.8179103846542114, 0.7696783962367791, 0.7581631859901702, 0.8179103846542114, 0.7696783962367791, 0.7581631859901702, 199.16035291126795],\n            scaler_scale=[25.71589048434793, 0.03109942744992134, 0.03619517578467915, 0.032459182244266103, 23.00016271015701, 0.13951322427360266, 0.18563891701266755, 0.13780578614747965, 0.20220650924116146, 0.2203556484831596, 0.1948358516369362, 0.15197957225124317, 0.19122109511569918, 0.15110938290550477, 0.15197957225124317, 0.19122109511569918, 0.15110938290550477, 575.2835780779488],\n        )\n\n    def __repr__(self):\n        return f\"ElasticNet(name={repr(self.name)})\"\n"; const RC_PY_FILENAME = "Autometrics_Regression_simplicity.py";</script>
+</head>
+<body>
+  <div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>Simplicity AutoMetric Report Card</h1>
+      <div class="d-flex align-items-center">
+        <div class="form-check form-switch me-3">
+          <input class="form-check-input" type="checkbox" id="darkModeToggle">
+          <label class="form-check-label" for="darkModeToggle">Dark Mode</label>
+        </div>
+        <button class="btn btn-primary" onclick="window.print()">Export to PDF</button>
+        <button class="btn btn-outline-primary ms-2" type="button" onclick="downloadPython()">Export to Python</button>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Regression Coefficients</h2>
+          <table class="table table-striped"><thead><tr><th>Metric</th><th>Coeff.</th></tr></thead>
+            <tbody><tr><td><a href="#" class="coeff-link" data-metric="LENS">LENS</a></td><td>0.3807</td></tr><tr><td><a href="#" class="coeff-link" data-metric="BERTScoreP_roberta-large">BERTScoreP_roberta-large</a></td><td>0.1805</td></tr><tr><td><a href="#" class="coeff-link" data-metric="BLEU">BLEU</a></td><td>0.0907</td></tr><tr><td><a href="#" class="coeff-link" data-metric="Perplexity_gpt2-large">Perplexity_gpt2-large</a></td><td>0.0428</td></tr><tr><td><a href="#" class="coeff-link" data-metric="BERTScoreR_roberta-large">BERTScoreR_roberta-large</a></td><td>0.0000</td></tr><tr><td><a href="#" class="coeff-link" data-metric="BERTScoreF_roberta-large">BERTScoreF_roberta-large</a></td><td>-0.0000</td></tr><tr><td><a href="#" class="coeff-link" data-metric="ROUGE-2-p">ROUGE-2-p</a></td><td>0.0000</td></tr><tr><td><a href="#" class="coeff-link" data-metric="ROUGE-Lsum-p">ROUGE-Lsum-p</a></td><td>0.0000</td></tr><tr><td><a href="#" class="coeff-link" data-metric="ROUGE-1-r">ROUGE-1-r</a></td><td>0.0000</td></tr><tr><td><a href="#" class="coeff-link" data-metric="ROUGE-2-r">ROUGE-2-r</a></td><td>0.0000</td></tr><tr><td><a href="#" class="coeff-link" data-metric="ROUGE-L-r">ROUGE-L-r</a></td><td>-0.0000</td></tr><tr><td><a href="#" class="coeff-link" data-metric="ROUGE-Lsum-r">ROUGE-Lsum-r</a></td><td>-0.0000</td></tr><tr><td><a href="#" class="coeff-link" data-metric="ROUGE-2-f1">ROUGE-2-f1</a></td><td>-0.0000</td></tr><tr><td><a href="#" class="coeff-link" data-metric="ROUGE-L-f1">ROUGE-L-f1</a></td><td>-0.0000</td></tr><tr><td><a href="#" class="coeff-link" data-metric="ROUGE-1-p">ROUGE-1-p</a></td><td>-0.0181</td></tr><tr><td><a href="#" class="coeff-link" data-metric="ROUGE-Lsum-f1">ROUGE-Lsum-f1</a></td><td>-0.0244</td></tr><tr><td><a href="#" class="coeff-link" data-metric="ROUGE-1-f1">ROUGE-1-f1</a></td><td>-0.0315</td></tr><tr><td><a href="#" class="coeff-link" data-metric="ROUGE-L-p">ROUGE-L-p</a></td><td>-0.0320</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Correlation</h2>
+          <div id="correlation-chart" style="height:420px;"></div>
+          <div id="correlation-stats" class="mt-2" style="text-align:center; font-size: 1rem; font-weight: 600;"></div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Robustness <sup><span class="robust-tip text-primary" data-tip-id="robustness-tip-template" style="cursor:pointer; text-decoration: underline; font-size: 0.9rem;">?</span></sup></h2>
+          <div id="robustness-sens" style="height:240px;"></div>
+          <div id="robustness-stab" style="height:240px;"></div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Run Time Distribution</h2>
+          <div id="runtime-chart" style="height:300px;"></div>
+          <p id="runtime-info" class="mt-2"></p>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Metric Details</h2>
+          <div class="accordion" id="metricDetails">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="descHeader"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#descPanel">Descriptions</button></h2>
+              <div id="descPanel" class="accordion-collapse collapse"><div class="accordion-body"><ul><li><strong>LENS:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">LENS evaluates text simplification quality by comparing a system-generated simplification against both the complex source sentence and one or more human-written simplifications (references). It is trained to regress toward average human judgments across three dimensions: grammaticality, meaning preservation, and simplicity. 
+
+To capture these aspects, LENS uses a mixture-of-experts model built atop sentence-level and word-level representations from a pre-trained encoder (T5 encoder). Each expert corresponds to a latent factor presumed to model a subset of simplification phenomena. LENS is trained on human-annotated ratings from multiple datasets, and the resulting model provides a scalar score aligned with holistic simplification quality.
+
+- **Metric Type:** Semantic Similarity
+- **Range:** $\mathbb{R}$ (rescaled to [0, 100] for interpretability)
+- **Higher is Better?:** Yes
+- **Reference-Based?:** Yes
+- **Input-Required?:** Yes</pre></div></li>
+<li><strong>BERTScore_roberta-large:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">BERTScore evaluates the semantic similarity between a generated text and a reference text using contextual embeddings. Unlike traditional n-gram-based metrics (e.g., BLEU), which rely on surface-level token overlap, BERTScore uses pre-trained embeddings to capture the contextual meaning of tokens. 
+
+The metric computes cosine similarity for each token pair between the reference and generated text, with optional inverse document frequency (IDF) weighting to emphasize rare tokens. The precision, recall, and F1 scores are calculated by aggregating the maximum similarity scores for each token, and an optional baseline rescaling makes the scores more interpretable.
+
+- **Metric Type:** Semantic Similarity
+- **Range:** Typically [0, 1] after rescaling
+- **Higher is Better?:** Yes
+- **Reference-Based?:** Yes
+- **Input-Required?:** No</pre></div></li>
+<li><strong>BLEU:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">BLEU evaluates the quality of text generation by comparing n-grams in the generated output with those in one or more reference texts. It computes modified precision for n-grams and combines scores using a geometric mean, with a brevity penalty to ensure the length of the generated text matches that of the references. Higher BLEU scores indicate closer similarity to the references.
+
+- **Metric Type:** Surface-Level Similarity
+- **Range:** 0 to 1
+- **Higher is Better?:** Yes
+- **Reference-Based?:** Yes
+- **Input-Required?:** No</pre></div></li>
+<li><strong>ROUGE:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">ROUGE evaluates generated text by comparing it with human-written references. The key variants included in this implementation are:
+
+- **ROUGE-1**: Measures unigram (single-word) overlap between candidate and reference texts.
+- **ROUGE-2**: Measures bigram (two-word sequence) overlap.
+- **ROUGE-L**: Measures the longest common subsequence (LCS) between candidate and reference texts, capturing sentence-level structure similarity.
+- **ROUGE-LSum**: A summary-level variant of ROUGE-L, treating newlines as sentence boundaries and computing LCS across sentence pairs.
+
+- **Metric Type:** Surface-Level Similarity
+- **Range:** 0 to 1
+- **Higher is Better?:** Yes
+- **Reference-Based?:** Yes
+- **Input-Required?:** No</pre></div></li>
+<li><strong>Perplexity_gpt2-large:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">Perplexity assesses the predictive capability of a language model by computing the exponentiated average negative log-likelihood of a given sequence. It quantifies how uncertain the model is when predicting the next token. A lower perplexity score indicates better model performance, as it suggests the model assigns higher probabilities to the correct tokens.
+
+- **Metric Type:** Fluency
+- **Range:** $(1, \infty)$
+- **Higher is Better?:** No
+- **Reference-Based?:** No
+- **Input-Required?:** No (Perplexity can be computed on output tokens alone)</pre></div></li></ul></div></div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="usageHeader"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#usagePanel">Usage</button></h2>
+              <div id="usagePanel" class="accordion-collapse collapse"><div class="accordion-body"><ul><li><strong>LENS:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">### Domains and Tasks
+
+- **Domain:** Text Generation
+- **Tasks:** Text Simplification
+
+### Applicability and Limitations
+
+- **Best Suited For:**  
+  Evaluating English text simplification outputs, particularly when references are available and multiple quality dimensions (e.g., fluency, meaning, simplicity) are relevant.
+
+- **Not Recommended For:**  
+  Tasks that are not simplification-specific (e.g., translation, paraphrasing) or that lack appropriate reference simplifications. LENS is not designed for creative generation or tasks involving high lexical diversity.</pre></div></li>
+<li><strong>BERTScore_roberta-large:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">### Domains and Tasks
+
+- **Domain:** Text Generation, Dialogue Systems, Image Captioning
+- **Tasks:** Machine Translation, Summarization, Paraphrasing, Image-to-Text Generation
+
+### Applicability and Limitations
+
+- **Best Suited For:**  
+  - Tasks requiring semantic similarity evaluation between generated and reference texts.  
+  - Use cases where semantic correctness is prioritized over lexical overlap.  
+
+- **Not Recommended For:**  
+  - Open-ended or highly creative generation tasks with diverse acceptable outputs (e.g., storytelling).  
+  - Domains with very low-resource or out-of-domain embeddings.</pre></div></li>
+<li><strong>BLEU:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">### Domains and Tasks
+
+- **Domain:** Text Generation
+- **Tasks:** Machine Translation, Summarization, Data-to-Text Generation
+
+### Applicability and Limitations
+
+- **Best Suited For:**  
+Structured tasks with a clear correspondence between generated and reference texts, such as translation or summarization.
+
+- **Not Recommended For:**  
+Open-ended or creative generation tasks where diversity or semantic similarity matters more than lexical overlap (e.g., storytelling, dialogue).</pre></div></li>
+<li><strong>ROUGE:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">### Domains and Tasks
+
+- **Domain:** Text Generation
+- **Tasks:** Summarization, Machine Translation, Paraphrasing, Data-to-Text Generation
+
+### Applicability and Limitations
+
+- **Best Suited For:**  
+  - Evaluating text generation tasks where lexical similarity is a reliable proxy for quality.
+  - Comparing multiple summarization systems against a reference standard.
+
+- **Not Recommended For:**  
+  - Evaluating abstractiveness, coherence, fluency, or factual consistency.
+  - Tasks where paraphrasing or rewording is expected, as ROUGE penalizes non-exact matches.</pre></div></li>
+<li><strong>Perplexity_gpt2-large:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">### Domains and Tasks
+
+- **Domain:** Text Generation
+- **Tasks:** Language Modeling, Dialogue Generation, Storytelling, Code Completion
+
+### Applicability and Limitations
+
+- **Best Suited For:**  
+  - Evaluating the fluency of language models, especially autoregressive models
+  - Comparing the relative performance of different language models on the same dataset
+  
+- **Not Recommended For:**  
+  - Evaluating masked language models (e.g., BERT) since perplexity is undefined for non-autoregressive architectures
+  - Assessing high-level semantic coherence, factual consistency, or diversity in generated text</pre></div></li></ul></div></div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="limitsHeader"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#limitsPanel">Limitations</button></h2>
+              <div id="limitsPanel" class="accordion-collapse collapse"><div class="accordion-body"><ul><li><strong>LENS:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- LENS was trained on English simplification datasets and may not generalize to other languages without retraining.
+- It requires both source and reference inputs, limiting its use in reference-free or source-free settings.
+
+- **Biases:**  
+  Needs more information.
+
+- **Task Misalignment Risks:**  
+  Not suitable for tasks like summarization or paraphrasing without retraining or adaptation.
+
+- **Failure Cases:**  
+  Needs more information.</pre></div></li>
+<li><strong>BERTScore_roberta-large:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- **Biases:**  
+  - Performance may degrade for low-resource languages.  
+  - Contextual embeddings may reflect biases present in the pre-trained models.  
+
+- **Task Misalignment Risks:**  
+  - Poor performance on tasks emphasizing diversity or creativity.  
+
+- **Failure Cases:**  
+  - Struggles with very long sentences due to truncation in transformer models.  
+  - Sensitivity to embedding model choice and layer selection.</pre></div></li>
+<li><strong>BLEU:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- **Biases:**  
+- BLEU penalizes valid paraphrases or semantically equivalent outputs that do not match reference n-grams exactly.  
+- The brevity penalty can overly penalize valid shorter outputs, particularly for tasks where shorter text may be acceptable or even preferred (e.g., summarization).  
+
+- **Task Misalignment Risks:**  
+- BLEU is not designed for evaluating tasks with high diversity in acceptable outputs (e.g., open-ended dialogue).  
+- Scores depend on the quality and number of references; fewer or inconsistent references can lead to misleading evaluations.
+
+- **Failure Cases:**  
+- BLEU struggles to capture semantic adequacy beyond lexical similarity. For instance, it cannot identify whether a translation preserves the meaning of the original sentence if word choices diverge significantly.</pre></div></li>
+<li><strong>ROUGE:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- **Biases:**  
+  - Prefers texts with high lexical overlap, penalizing valid paraphrases.
+  - Highly sensitive to the number and quality of reference summaries.
+
+- **Task Misalignment Risks:**  
+  - Cannot capture meaning beyond exact n-gram matches.
+  - Does not account for factual correctness or grammaticality.
+
+- **Failure Cases:**  
+  - Overestimates quality for summaries with high recall but poor readability.
+  - Struggles with abstractive summarization, which may use different wording.</pre></div></li>
+<li><strong>Perplexity_gpt2-large:</strong><div class="mt-2"><pre style="white-space: pre-wrap; background:#f8f9fa; padding:8px; border-radius:6px;">- **Biases:**  
+  - Sensitive to tokenization choices; different tokenization schemes can yield different perplexity values.
+  - Models trained on specific domains may yield artificially low perplexity scores on similar datasets while failing on out-of-domain data.
+  
+- **Task Misalignment Risks:**  
+  - Perplexity measures token-level fluency but does not assess semantic correctness or factuality.
+  
+- **Failure Cases:**  
+  - Does not distinguish between grammatically correct but nonsensical text and genuinely coherent text.
+  - Perplexity values are not always comparable across different models due to differences in vocabulary and tokenization.</pre></div></li></ul></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card p-3 h-100">
+          <h2>Compute Requirements</h2>
+          <table class="table table-striped"><thead><tr><th>Metric</th><th>GPU RAM (MB)</th><th>CPU RAM (MB)</th></tr></thead>
+            <tbody><tr><td>LENS</td><td>0.0</td><td>3330.29296875</td></tr><tr><td>BERTScore_roberta-large</td><td>8.125</td><td>1512.303487270343</td></tr><tr><td>BLEU</td><td>0.0</td><td>729.32514375</td></tr><tr><td>ROUGE</td><td>0.0</td><td>726.48828125</td></tr><tr><td>Perplexity_gpt2-large</td><td>3069.4375</td><td>1504.29296875</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-5 card p-3">
+      <h3>Metric Summary</h3>
+      <p>The aggregate regression metric for simplicity is designed to quantify how effectively complex sentences are simplified for broader audience understanding. It synthesizes contributions from metrics like LENS, which focuses on grammatical correctness and meaning preservation, and BLEU, which measures lexical overlap with reference texts. With coefficients reflecting their impact, LENS holds a significant weight, as it aligns closely with human judgments on simplification. However, the reliance on reference-based evaluations introduces limitations, such as overfitting and potential biases in measuring semantic adequacy. Perplexity provides a fluency check, revealing how well a generated sentence flows and adheres to natural language patterns. Despite these strengths, the metric's effectiveness may vary based on the complexity and diversity of the training data, necessitating careful calibration for reliable simplification assessments.</p>
+    </div>
+
+    <div class="mt-4 card p-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h3 class="mb-0">Examples</h3>
+        <button id="clear-examples-filter" class="btn btn-sm btn-outline-secondary" type="button">Show All</button>
+      </div>
+      
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+  <script>
+    function getThemeLayout() {
+      const color = getComputedStyle(document.body).color;
+      return { paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color } };
+    }
+    document.getElementById('darkModeToggle').addEventListener('change',e=>{document.body.classList.toggle('dark-mode',e.target.checked); drawAll();});
+    // Enable tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (el) {
+      const tip = new bootstrap.Tooltip(el, {trigger: 'hover focus', delay: {show: 0, hide: 50}, placement: 'right'});
+      el.addEventListener('shown.bs.tooltip', function () {
+        try { if (window.MathJax && MathJax.typesetPromise) { MathJax.typesetPromise(); } } catch(_) {}
+      });
+      return tip;
+    });
+
+    // Initialize tooltips; use template content for robustness
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.robust-tip').forEach(function (el) {
+        const id = el.getAttribute('data-tip-id');
+        let titleHtml = '';
+        if (id) {
+          const tpl = document.getElementById(id);
+          if (tpl) titleHtml = tpl.innerHTML;
+        }
+        if (!titleHtml) {
+          titleHtml = '<div style="max-width: 320px">Robustness tooltip unavailable.</div>';
+        }
+        const tip = new bootstrap.Tooltip(el, {
+          trigger: 'hover focus',
+          delay: {show: 0, hide: 50},
+          placement: 'right',
+          html: true,
+          title: titleHtml
+        });
+      });
+    });
+
+    function drawCorrelation() {
+      const layout = Object.assign({xaxis:{title:'Metric Score (normalized to target scale)'}, yaxis:{title:'Ground Truth'}}, getThemeLayout());
+      layout.legend = layout.legend || {}; layout.legend.font = { size: 9 }; layout.margin = {l:40,r:10,t:30,b:40};
+      const traces = [];
+      if (RC_CORR.metrics) {
+        // Determine top 3 metrics by absolute coefficient if available
+        let topNames = [];
+        try {
+          const coeffPairs = ([["LENS", 0.3807067838706811], ["BERTScoreP_roberta-large", 0.18052992267690696], ["BLEU", 0.0906674883575241], ["Perplexity_gpt2-large", 0.04278264550978905], ["BERTScoreR_roberta-large", 0.0], ["BERTScoreF_roberta-large", -0.0], ["ROUGE-2-p", 0.0], ["ROUGE-Lsum-p", 0.0], ["ROUGE-1-r", 0.0], ["ROUGE-2-r", 0.0], ["ROUGE-L-r", -0.0], ["ROUGE-Lsum-r", -0.0], ["ROUGE-2-f1", -0.0], ["ROUGE-L-f1", -0.0], ["ROUGE-1-p", -0.018077504048268817], ["ROUGE-Lsum-f1", -0.024396337737982617], ["ROUGE-1-f1", -0.031517269800915036], ["ROUGE-L-p", -0.031982474757411866], ["(intercept)", -0.0009479006336403039]]);
+          const sorted = coeffPairs.filter(p=>p[0] !== '(intercept)').sort((a,b)=>Math.abs(b[1]) - Math.abs(a[1]));
+          topNames = sorted.slice(0,3).map(p=>p[0]);
+        } catch (e) { topNames = []; }
+        for (const m of RC_CORR.metrics) {
+          const rlab = (m.r!=null ? (m.r.toFixed ? m.r.toFixed(2) : m.r) : 'NA');
+          const tlab = (m.tau!=null ? (m.tau.toFixed ? m.tau.toFixed(2) : m.tau) : 'NA');
+          const visible = (topNames.includes(m.name)) ? true : 'legendonly';
+          const ids = m.ids || [];
+          const text = ids.map(id => 'ID: ' + id);
+          traces.push({ x: m.x_norm || m.x || [], y: m.y || [], mode: 'markers', name: (m.name || '') + ' (r=' + rlab + ', τ=' + tlab + ')', visible, text: text, hovertemplate: '%{text}<br>x=%{x:.3f}<br>y=%{y:.3f}<extra></extra>' });
+        }
+      }
+      if (RC_CORR.regression) {
+        const rlab = (RC_CORR.regression.r!=null ? (RC_CORR.regression.r.toFixed ? RC_CORR.regression.r.toFixed(2) : RC_CORR.regression.r) : 'NA');
+        const tlab = (RC_CORR.regression.tau!=null ? (RC_CORR.regression.tau.toFixed ? RC_CORR.regression.tau.toFixed(2) : RC_CORR.regression.tau) : 'NA');
+        const ids = RC_CORR.regression.ids || [];
+        const text = ids.map(id => 'ID: ' + id);
+        traces.push({ x: RC_CORR.regression.x_norm || RC_CORR.regression.x || [], y: RC_CORR.regression.y || [], mode: 'markers', name: (RC_CORR.regression.name || 'Aggregate') + ' (r=' + rlab + ', τ=' + tlab + ')', marker: { size: 8, color: 'black' }, text: text, hovertemplate: '%{text}<br>x=%{x:.3f}<br>y=%{y:.3f}<extra></extra>' });
+        document.getElementById('correlation-stats').innerText = 'Aggregate metric: r=' + rlab + ', τ=' + tlab;
+      }
+      Plotly.newPlot('correlation-chart', traces, layout, {displayModeBar: false});
+      // Click-to-jump: when a point is clicked, locate its ID in the examples table and jump to it
+      const chart = document.getElementById('correlation-chart');
+      chart.on('plotly_click', function(data) {
+        try {
+          if (!data || !data.points || data.points.length === 0) return;
+          const pt = data.points[0];
+          const idText = (pt.text || '').toString(); // format: 'ID: <val>'
+          const id = idText.startsWith('ID: ') ? idText.slice(4) : idText;
+          const tblEl = document.getElementById('examples-table');
+          if (!tblEl) return;
+          // Try DataTables jQuery API first
+          if (window.jQuery && jQuery.fn && jQuery.fn.dataTable) {
+            const dt = jQuery(tblEl).DataTable();
+            // Search by exact match in first column (ID)
+            dt.search('');
+            dt.columns(0).search('^' + id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', true, false).draw();
+            // Scroll into view first visible row after draw completes
+            setTimeout(function(){
+              let rowNode = null;
+              try {
+                const idxs = dt.rows({ search: 'applied' }).indexes();
+                if (idxs && idxs.length) rowNode = dt.row(idxs[0]).node();
+              } catch(_){ }
+              if (!rowNode) {
+                try { rowNode = dt.row(0).node(); } catch(_) {}
+              }
+              if (rowNode && rowNode.scrollIntoView) {
+                rowNode.scrollIntoView({behavior:'smooth', block:'center'});
+                try { rowNode.classList.add('table-active'); setTimeout(()=>rowNode.classList.remove('table-active'), 1200); } catch(_) {}
+              }
+            }, 60);
+          } else if (typeof DataTable !== 'undefined') {
+            // Vanilla DataTables 2 API
+            const dt = DataTable.get(tblEl) || new DataTable(tblEl);
+            dt.search('');
+            // Filter to rows whose first cell (ID) matches
+            dt.columns().every(function(idx) {
+              if (idx === 0) {
+                this.search('^' + id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', true, false);
+              } else {
+                this.search('');
+              }
+            });
+            dt.draw();
+            setTimeout(function(){
+              let firstRow = null;
+              try {
+                const nodes = dt.rows({ search: 'applied' }).nodes();
+                if (nodes && nodes.length) firstRow = nodes[0];
+              } catch(_) {}
+              if (!firstRow) {
+                const body = tblEl.tBodies && tblEl.tBodies[0];
+                firstRow = body && body.rows && body.rows[0];
+              }
+              if (!firstRow) {
+                try {
+                  const rows = Array.from(tblEl.tBodies[0].rows || []);
+                  firstRow = rows.find(r => (r.cells && r.cells[0] && (r.cells[0].textContent||'').trim() === id));
+                } catch(_) {}
+              }
+              if (firstRow && firstRow.scrollIntoView) {
+                firstRow.scrollIntoView({behavior:'smooth', block:'center'});
+                try { firstRow.classList.add('table-active'); setTimeout(()=>firstRow.classList.remove('table-active'), 1200); } catch(_) {}
+              }
+            }, 60);
+          }
+        } catch(e) { try { console.error('[ReportCard] click-jump failed', e); } catch(_){} }
+      });
+    }
+
+    function drawRuntime() {
+      const layout = Object.assign({yaxis:{title:'Time per Sample (s)'}}, getThemeLayout());
+      const boxes = [];
+      if (RC_RUNTIME.per_metric) {
+        for (const [name, arr] of Object.entries(RC_RUNTIME.per_metric)) {
+          boxes.push({ y: arr, type: 'box', name });
+        }
+      }
+      Plotly.newPlot('runtime-chart', boxes, layout);
+      if (RC_RUNTIME.aggregate) {
+        const agg = RC_RUNTIME.aggregate;
+        var seq = (agg.sequence_mean||0);
+        if (typeof seq === 'number' && seq.toFixed) { seq = seq.toFixed(2); }
+        var par = (agg.parallel_mean||0);
+        if (typeof par === 'number' && par.toFixed) { par = par.toFixed(2); }
+        var seqCI = (agg.sequence_ci||0);
+        if (typeof seqCI === 'number' && seqCI.toFixed) { seqCI = seqCI.toFixed(2); }
+        var parCI = (agg.parallel_ci||0);
+        if (typeof parCI === 'number' && parCI.toFixed) { parCI = parCI.toFixed(2); }
+        document.getElementById('runtime-info').innerHTML = 'Avg time/sample (sequence): ' + seq + 's ± ' + seqCI + 's' + '<br/>' + 'Avg time/sample (parallel): ' + par + 's ± ' + parCI + 's (95% CI)';
+      }
+    }
+
+    function drawRobustness() {
+      if (!RC_ROB.available || !RC_ROB.scores) {
+        document.getElementById('robustness-sens').innerHTML = '<em>Robustness not available.</em>';
+        document.getElementById('robustness-stab').innerHTML = '';
+        return;
+      }
+      const names = Object.keys(RC_ROB.scores);
+      const sens = names.map(n => (RC_ROB.scores[n] && RC_ROB.scores[n].sensitivity) || 0);
+      const stab = names.map(n => (RC_ROB.scores[n] && RC_ROB.scores[n].stability) || 0);
+      Plotly.newPlot('robustness-sens', [{x: names, y: sens, type:'bar', name:'Sensitivity'}], Object.assign({yaxis:{title:'Sensitivity'}}, getThemeLayout()));
+      Plotly.newPlot('robustness-stab', [{x: names, y: stab, type:'bar', name:'Stability'}], Object.assign({yaxis:{title:'Stability'}}, getThemeLayout()));
+    }
+
+    function downloadPython() {
+      try {
+        const code = RC_PY_CODE || '';
+        if (!code) { return; }
+        const blob = new Blob([code], { type: 'text/x-python' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const name = (RC_PY_FILENAME && typeof RC_PY_FILENAME === 'string' && RC_PY_FILENAME.trim()) ? RC_PY_FILENAME : 'AutoMetricsRegression.py';
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function(){ URL.revokeObjectURL(url); try { a.remove(); } catch(_){} }, 0);
+      } catch(_) { }
+    }
+
+    function drawAll() { drawCorrelation(); drawRuntime(); drawRobustness(); }
+    drawAll();
+  </script>
+  <!-- Modal for Metric Card -->
+  <div class="modal fade" id="metricDocModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="metricDocTitle"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="metricDocBody" style="white-space: normal;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function() {
+      const tbl = document.getElementById('examples-table');
+      if (!tbl) return;
+      const clearBtn = document.getElementById('clear-examples-filter');
+      try {
+        if (window.jQuery && jQuery.fn && typeof jQuery.fn.dataTable !== 'undefined') {
+          jQuery(tbl).DataTable({
+            paging: true,
+            pageLength: 5,
+            ordering: true,
+            searching: true,
+            scrollX: true
+          });
+          if (clearBtn) {
+            clearBtn.addEventListener('click', function(){
+              try {
+                const dt = jQuery(tbl).DataTable();
+                dt.search('');
+                dt.columns().every(function(){ this.search(''); });
+                dt.draw();
+              } catch(_) {}
+            });
+          }
+        } else if (typeof DataTable !== 'undefined') {
+          new DataTable(tbl, {
+            paging: true,
+            pageLength: 5,
+            ordering: true,
+            searching: true,
+            scrollX: true
+          });
+          if (clearBtn) {
+            clearBtn.addEventListener('click', function(){
+              try {
+                const dt = DataTable.get(tbl);
+                dt.search('');
+                dt.columns().every(function(){ this.search(''); });
+                dt.draw();
+              } catch(_) {}
+            });
+          }
+        }
+      } catch (e) { try { console.error('[ReportCard] DataTables init error:', e); } catch(_){} }
+    })();
+  </script>
+  <script>
+    // Click handlers for regression coefficient metric links -> open modal with metric card
+    document.addEventListener('click', function(e) {
+      const a = e.target.closest && e.target.closest('a.coeff-link');
+      if (!a) return;
+      e.preventDefault();
+      try {
+        let metric = a.getAttribute('data-metric');
+        // Resolve submetric to parent metric if available
+        if (RC_DOCS && !(metric in RC_DOCS) && RC_DOCS_MAP && RC_DOCS_MAP[metric]) {
+          metric = RC_DOCS_MAP[metric];
+        }
+        const doc = (RC_DOCS && RC_DOCS[metric]) ? RC_DOCS[metric] : 'No metric card available.';
+        const titleNode = document.getElementById('metricDocTitle');
+        const bodyNode = document.getElementById('metricDocBody');
+        if (titleNode) titleNode.textContent = metric + ' — Metric Card';
+        if (bodyNode) {
+          try {
+            bodyNode.innerHTML = marked.parse(doc);
+          } catch(_) {
+            bodyNode.textContent = doc;
+          }
+        }
+        const modalEl = document.getElementById('metricDocModal');
+        if (modalEl && bootstrap && bootstrap.Modal) {
+          const modal = bootstrap.Modal.getOrCreateInstance(modalEl, {backdrop: true});
+          modal.show();
+        }
+      } catch(_) {}
+    });
+  </script>
+  <div id="robustness-tip-template" class="d-none">
+    <div style="max-width: 360px">
+      <strong>Sensitivity</strong> (worse_obvious): how much the metric tends to drop when the output is intentionally degraded. For each example, we measure the relative drop from the original to the average worse_obvious score, clip negative values to 0 (no drop), and then average across examples.
+      <br/><br/>
+      <strong>Stability</strong> (same_obvious): how consistent the metric stays under neutral edits that should not change meaning. For each example, we measure how close the original is to the average same_obvious score (scaled by the original magnitude), clip below 0, and then average across examples. Higher means more stable.
+    </div>
+  </div>
+</body>
+</html>

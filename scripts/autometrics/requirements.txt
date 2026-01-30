@@ -1,0 +1,38 @@
+dspy
+pandas==2.3.0
+sacrebleu
+scipy
+textstat
+bert-score==0.3.13
+accelerate
+rouge-score
+pyemd
+scikit-learn
+numpy==1.26.4
+levenshtein
+prometheus_eval
+parascore==1.0.5
+torch
+flash-attn
+fasttext
+platformdirs
+en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
+datasets==3.5.0
+evaluate
+faiss-cpu
+mauve-text
+beautifulsoup4
+bleurt-pytorch
+--no-deps lens-metric
+torchmetrics
+plotly
+# sqlite==3.43.0
+statsmodels
+diskcache
+pytest
+nvidia-ml-py
+pynvml
+protobuf
+pyserini
+pylate
+litellm>=1.64

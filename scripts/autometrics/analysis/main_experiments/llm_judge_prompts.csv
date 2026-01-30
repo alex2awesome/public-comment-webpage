@@ -1,0 +1,874 @@
+dataset,measure,prompt,score_range
+CoGymLessonOutcome,outcomeRating,"Overall rating to the final outcome (i.e., travel plan, analysis result) (1-5 scale)
+
+(1) “Extremely dissatisfied”, 
+(2) “Somewhat dissatisfied"",
+(3) “Neutral”,
+(4) “Somewhat satisfied"",
+(5) “Extremely satisfied""","[1,5]"
+CoGymLessonProcess,agentRating,"Rate the Agent Behavior on the following criteria.
+
+(1) Extremely dissatisfied: The agent communicates poorly all the time and is not helpful for the task at all.',
+(2) ’Somewhat dissatisfied: The agent communicates poorly and is not very helpful for the task.',
+(3) ’Neutral: The agent can have meaningful communication and is somewhat helpful for the task.',
+(4) ’Somewhat satisfied: The agent communicates effectively overall and is helpful for the task.',
+(5) ’Extremely satisfied: The agent communicates effectively all the time and is very helpful for the task.'","[1,5]"
+CoGymLessonProcess,communicationRating,"Overall Rating to the communication capability of the agent (1-5 scale)
+
+(1) “Extremely dissatisfied”, 
+(2) “Somewhat dissatisfied"",
+(3) “Neutral”,
+(4) “Somewhat satisfied"",
+(5) “Extremely satisfied”","[1,5]"
+CoGymTabularOutcome,outcomeRating,"Overall rating to the final outcome (i.e., travel plan, analysis result) (1-5 scale)
+
+(1) “Extremely dissatisfied”, 
+(2) “Somewhat dissatisfied"",
+(3) “Neutral”,
+(4) “Somewhat satisfied"",
+(5) “Extremely satisfied""","[1,5]"
+CoGymTabularProcess,agentRating,"Rate the Agent Behavior on the following criteria.
+
+(1) Extremely dissatisfied: The agent communicates poorly all the time and is not helpful for the task at all.',
+(2) ’Somewhat dissatisfied: The agent communicates poorly and is not very helpful for the task.',
+(3) ’Neutral: The agent can have meaningful communication and is somewhat helpful for the task.',
+(4) ’Somewhat satisfied: The agent communicates effectively overall and is helpful for the task.',
+(5) ’Extremely satisfied: The agent communicates effectively all the time and is very helpful for the task.'","[1,5]"
+CoGymTabularProcess,communicationRating,"Overall Rating to the communication capability of the agent (1-5 scale)
+
+(1) “Extremely dissatisfied”, 
+(2) “Somewhat dissatisfied"",
+(3) “Neutral”,
+(4) “Somewhat satisfied"",
+(5) “Extremely satisfied”","[1,5]"
+CoGymTravelOutcome,outcomeRating,"Overall rating to the final outcome (i.e., travel plan, analysis result) (1-5 scale)
+
+(1) “Extremely dissatisfied”, 
+(2) “Somewhat dissatisfied"",
+(3) “Neutral”,
+(4) “Somewhat satisfied"",
+(5) “Extremely satisfied""","[1,5]"
+CoGymTravelProcess,agentRating,"Rate the Agent Behavior on the following criteria.
+
+(1) Extremely dissatisfied: The agent communicates poorly all the time and is not helpful for the task at all.',
+(2) ’Somewhat dissatisfied: The agent communicates poorly and is not very helpful for the task.',
+(3) ’Neutral: The agent can have meaningful communication and is somewhat helpful for the task.',
+(4) ’Somewhat satisfied: The agent communicates effectively overall and is helpful for the task.',
+(5) ’Extremely satisfied: The agent communicates effectively all the time and is very helpful for the task.'","[1,5]"
+CoGymTravelProcess,communicationRating,"Overall Rating to the communication capability of the agent (1-5 scale)
+
+(1) “Extremely dissatisfied”, 
+(2) “Somewhat dissatisfied"",
+(3) “Neutral”,
+(4) “Somewhat satisfied"",
+(5) “Extremely satisfied”","[1,5]"
+EvalGenMedical,grade,Is this response good (1) or bad (0)?,"[0,1]"
+EvalGenProduct,grade,Is this response good (1) or bad (0)?,"[0,1]"
+HelpSteer,coherence,"**Coherence** With this attribute, we measure how
+lucid, cogent, and self-consistent the model’s response is. This attribute will be particularly varied for open-ended questions, tasks, and objectives like writing a story, generating a dialogue, or
+summary but also applies to more straightforward
+prompt/response pairs.
+0. (Completely Incoherent and/or Unclear) - The
+response is completely incomprehensible and
+no clear meaning or sensible message can be
+discerned from it.
+1. (Mostly Incoherent and/or Unclear) - The response is mostly hard to follow, with inconsistencies, contradictions, confusing logic flow,
+or unclear language used throughout, but there
+are some coherent/clear parts.
+2. (A Little Unclear and/or Incoherent) - The
+response is a little unclear. There are some inconsistencies or contradictions, run on sentences, confusing statements, or hard to follow
+sections of the response.
+3. (Mostly Coherent and Clear) - The response
+is mostly clear and coherent, but there may be
+one or two places where the wording is confusing or the flow of the response is a little hard
+to follow. Overall, the response can mostly be
+followed with a little room for improvement.
+4. (Perfectly Coherent and Clear) - The response
+is perfectly clear and self-consistent through-
+out. There are no contradictory assertions
+or statements, the writing flows logically, and
+following the train of thought/story is not challenging.
+
+## Example
+**Prompt** Blue light is a wavelength that’s natu-
+rally present in light, including light from the sun.
+Compared to other light types, blue light has a short
+wavelength. This is important because doctors as-
+sociate short-wavelength light with greater risk for eye damage. While many electronics (including
+lightbulbs) emit blue light, computer screens and
+televisions typically release more blue light than
+other electronics. This is because computers and
+televisions commonly use liquid crystal displays
+or LCDs. These screens may look super-clear and
+vibrant, but they also release more blue light than
+their non-LCD counterparts.
+Summarize the text into 2 sentences.
+
+**Response 1** Blue light is a wavelength that’s nat-
+urally present in light, including light from the sun.
+**Labels 1**
+1. Helpfulness: 0
+2. Correctness: 1
+3. Coherence: 4
+4. Complexity: 1
+5. Verbosity: 1
+**Response 2** Blue light is a wavelength that is
+naturally present in light, and it is associated with
+greater risk for eye damage. Computer screens and
+televisions typically release more blue light than
+other electronics because they use liquid crystal
+displays.
+**Labels 2**
+1. Helpfulness: 4
+2. Correctness: 4
+3. Coherence: 4
+4. Complexity: 3
+5. Verbosity: 2
+**Response 3** Blue light is a type of light with a
+short wavelength that is emitted from both natu-
+ral and artificial sources. Blue light exposure is
+associated with eye damage, especially from pro-
+longed exposure to artificial sources such as com-
+puter screens and televisions.
+**Labels 3**
+1. Helpfulness: 4
+2. Correctness: 4
+3. Coherence: 4
+4. Complexity: 2
+5. Verbosity: 2","[0,4]"
+HelpSteer,complexity,"**Complexity**
+0. (Basic) - The response uses very easy to understand language that is clear and completely
+interpretable by children, adults, and anyone
+with a functional command of the language.
+1. (Simple) - The response uses relatively
+straightforward language and wording, but
+some schooling through elementary or a middle school in the language might be required
+to understand the response.
+2. (Intermediate) - People who have completed
+up through a high school education will prob-
+ably be able to understand the vocabulary and
+sentence structure used, but those at the basic
+level or children might struggle to understand
+the response.
+3. (Advanced) - The response uses a fairly
+sophisticated vocabulary and terminology.
+Someone majoring in this subject at a college
+or university could have written it and would
+understand the response. An average adult
+who does not work or study in this area could
+not have written the response.
+4. (Expert) - An expert in the field or area could
+have written the response. It uses specific and
+technically relevant vocabulary. It contains
+elevated language that someone at the simple
+or basic level may not understand at all. The
+professional language of a lawyer, scientist,
+engineer, or doctor falls into this category.
+
+## Example
+**Prompt** Blue light is a wavelength that’s natu-
+rally present in light, including light from the sun.
+Compared to other light types, blue light has a short
+wavelength. This is important because doctors as-
+sociate short-wavelength light with greater risk for eye damage. While many electronics (including
+lightbulbs) emit blue light, computer screens and
+televisions typically release more blue light than
+other electronics. This is because computers and
+televisions commonly use liquid crystal displays
+or LCDs. These screens may look super-clear and
+vibrant, but they also release more blue light than
+their non-LCD counterparts.
+Summarize the text into 2 sentences.
+
+**Response 1** Blue light is a wavelength that’s nat-
+urally present in light, including light from the sun.
+**Labels 1**
+1. Helpfulness: 0
+2. Correctness: 1
+3. Coherence: 4
+4. Complexity: 1
+5. Verbosity: 1
+**Response 2** Blue light is a wavelength that is
+naturally present in light, and it is associated with
+greater risk for eye damage. Computer screens and
+televisions typically release more blue light than
+other electronics because they use liquid crystal
+displays.
+**Labels 2**
+1. Helpfulness: 4
+2. Correctness: 4
+3. Coherence: 4
+4. Complexity: 3
+5. Verbosity: 2
+**Response 3** Blue light is a type of light with a
+short wavelength that is emitted from both natu-
+ral and artificial sources. Blue light exposure is
+associated with eye damage, especially from pro-
+longed exposure to artificial sources such as com-
+puter screens and televisions.
+**Labels 3**
+1. Helpfulness: 4
+2. Correctness: 4
+3. Coherence: 4
+4. Complexity: 2
+5. Verbosity: 2","[0,4]"
+HelpSteer,correctness,"**Correctness**
+0. The response is completely incorrect. All in-
+formation provided is wrong, false or hallu-
+cinated. If the prompt asks the assistant to
+do a task, the task is not at all attempted, or
+the wrong task was attempted in the response.
+The response is completely irrelevant to the
+prompt.
+1. The response has some correct elements but
+is mostly wrong or incomplete. The response
+may contain multiple instances of hallucina-
+tions, false information, misleading informa-
+tion, or irrelevant information. If the prompt
+asks the assistant to do a task, the task was
+attempted with a small amount of success.
+2. The response contains a mix of correct and
+incorrect information. The response may miss
+some details, contain misleading information,
+or minor hallucinations, but is more or less
+aligned with what the prompt asks for. If the
+prompt asks the assistant to perform a task,
+the task is attempted with moderate success
+but still has clear room for improvement.
+3. The response is mostly accurate and correct
+with a small amount of missing information.
+It contains no misleading information or hal-
+lucinations. If the prompt asks the assistant to
+perform a task, the task is mostly successfully
+attempted.
+4. The response is completely correct and accu-
+rate to what is requested by the prompt with no
+necessary details missing and without false,
+misleading, or hallucinated information. If
+the prompt asks the assistant to do a task, the
+task is completely done and addressed in the
+response.
+
+## Example
+**Prompt** Blue light is a wavelength that’s natu-
+rally present in light, including light from the sun.
+Compared to other light types, blue light has a short
+wavelength. This is important because doctors as-
+sociate short-wavelength light with greater risk for eye damage. While many electronics (including
+lightbulbs) emit blue light, computer screens and
+televisions typically release more blue light than
+other electronics. This is because computers and
+televisions commonly use liquid crystal displays
+or LCDs. These screens may look super-clear and
+vibrant, but they also release more blue light than
+their non-LCD counterparts.
+Summarize the text into 2 sentences.
+
+**Response 1** Blue light is a wavelength that’s nat-
+urally present in light, including light from the sun.
+**Labels 1**
+1. Helpfulness: 0
+2. Correctness: 1
+3. Coherence: 4
+4. Complexity: 1
+5. Verbosity: 1
+**Response 2** Blue light is a wavelength that is
+naturally present in light, and it is associated with
+greater risk for eye damage. Computer screens and
+televisions typically release more blue light than
+other electronics because they use liquid crystal
+displays.
+**Labels 2**
+1. Helpfulness: 4
+2. Correctness: 4
+3. Coherence: 4
+4. Complexity: 3
+5. Verbosity: 2
+**Response 3** Blue light is a type of light with a
+short wavelength that is emitted from both natu-
+ral and artificial sources. Blue light exposure is
+associated with eye damage, especially from pro-
+longed exposure to artificial sources such as com-
+puter screens and televisions.
+**Labels 3**
+1. Helpfulness: 4
+2. Correctness: 4
+3. Coherence: 4
+4. Complexity: 2
+5. Verbosity: 2","[0,4]"
+HelpSteer,helpfulness,"**Helpfulness**
+0. The response is not useful or helpful at all.
+The response completely missed the essence
+of what the user wanted.
+1. The response is borderline unhelpful and
+mostly does not capture what the user was
+looking for, but is still usable and helpful in a
+small way.
+2. The response is partially helpful but misses
+the overall goal of the user’s query/input in
+some way. The response did not fully satisfy
+what the user was looking for.
+3. The response is mostly helpful and mainly
+aligned with what the user was looking for,
+but there is still some room for improvement.
+4. The response is extremely helpful and completely aligned with the spirit of what the
+prompt was asking for.
+
+## Example
+**Prompt** Blue light is a wavelength that’s natu-
+rally present in light, including light from the sun.
+Compared to other light types, blue light has a short
+wavelength. This is important because doctors as-
+sociate short-wavelength light with greater risk for eye damage. While many electronics (including
+lightbulbs) emit blue light, computer screens and
+televisions typically release more blue light than
+other electronics. This is because computers and
+televisions commonly use liquid crystal displays
+or LCDs. These screens may look super-clear and
+vibrant, but they also release more blue light than
+their non-LCD counterparts.
+Summarize the text into 2 sentences.
+
+**Response 1** Blue light is a wavelength that’s nat-
+urally present in light, including light from the sun.
+**Labels 1**
+1. Helpfulness: 0
+2. Correctness: 1
+3. Coherence: 4
+4. Complexity: 1
+5. Verbosity: 1
+**Response 2** Blue light is a wavelength that is
+naturally present in light, and it is associated with
+greater risk for eye damage. Computer screens and
+televisions typically release more blue light than
+other electronics because they use liquid crystal
+displays.
+**Labels 2**
+1. Helpfulness: 4
+2. Correctness: 4
+3. Coherence: 4
+4. Complexity: 3
+5. Verbosity: 2
+**Response 3** Blue light is a type of light with a
+short wavelength that is emitted from both natu-
+ral and artificial sources. Blue light exposure is
+associated with eye damage, especially from pro-
+longed exposure to artificial sources such as com-
+puter screens and televisions.
+**Labels 3**
+1. Helpfulness: 4
+2. Correctness: 4
+3. Coherence: 4
+4. Complexity: 2
+5. Verbosity: 2","[0,4]"
+HelpSteer,verbosity,"**Verbosity** The goal here is to place the response
+on a spectrum from the most short, crisp answers,
+to the most lengthy, detailed, and/or wordy answers
+under the context of what a user is expecting as a
+response to the prompt. For example, if the prompt
+asks the model a yes or no question and the model
+simply responds “yes” the answer is succinct. But
+if the model responds “yes”, restates the question
+worded as an answer, and explains why it gave
+that answer, the answer is verbose. Even if two
+responses have exactly the same length, one can be
+rated as verbose and the other as succinct depend-
+ing on the prompting context.
+0. (Succinct) - The response is short, to the point,
+and the most concise it can be. No additional
+information is provided outside of what is re-
+quested by the prompt.
+1. (Pretty Short) - The response is on the shorter
+side but could still have words, details, and/or
+text removed before it’s at a bare minimum of
+what the response is trying to convey.
+2. (Average Length) - The response isn’t espe-
+cially long or short given what the prompt is
+asking of the model. The length is adequate
+for conveying a full response but isn’t particu-
+larly wordy nor particularly concise.
+3. (Moderately Long) - The response is on the
+longer side but could still have more added
+to it before it is considered fully detailed or
+rambling.
+4. (Verbose) - The response is particularly
+lengthy, wordy, and/or extensive with extra
+details given what the prompt requested from
+the assistant model. The response can be ver-
+bose regardless of if the length is due to rep-
+etition and incoherency or if it is due to rich
+and insightful detail.
+
+## Example
+**Prompt** Blue light is a wavelength that’s natu-
+rally present in light, including light from the sun.
+Compared to other light types, blue light has a short
+wavelength. This is important because doctors as-
+sociate short-wavelength light with greater risk for eye damage. While many electronics (including
+lightbulbs) emit blue light, computer screens and
+televisions typically release more blue light than
+other electronics. This is because computers and
+televisions commonly use liquid crystal displays
+or LCDs. These screens may look super-clear and
+vibrant, but they also release more blue light than
+their non-LCD counterparts.
+Summarize the text into 2 sentences.
+
+**Response 1** Blue light is a wavelength that’s nat-
+urally present in light, including light from the sun.
+**Labels 1**
+1. Helpfulness: 0
+2. Correctness: 1
+3. Coherence: 4
+4. Complexity: 1
+5. Verbosity: 1
+**Response 2** Blue light is a wavelength that is
+naturally present in light, and it is associated with
+greater risk for eye damage. Computer screens and
+televisions typically release more blue light than
+other electronics because they use liquid crystal
+displays.
+**Labels 2**
+1. Helpfulness: 4
+2. Correctness: 4
+3. Coherence: 4
+4. Complexity: 3
+5. Verbosity: 2
+**Response 3** Blue light is a type of light with a
+short wavelength that is emitted from both natu-
+ral and artificial sources. Blue light exposure is
+associated with eye damage, especially from pro-
+longed exposure to artificial sources such as com-
+puter screens and televisions.
+**Labels 3**
+1. Helpfulness: 4
+2. Correctness: 4
+3. Coherence: 4
+4. Complexity: 2
+5. Verbosity: 2","[0,4]"
+HelpSteer2,coherence,"**Coherence/Clarity:**
+With this attribute we measure how lucid, cogent, and self-consistent the model’s response is. This
+attribute will be particularly varied for open-ended questions, tasks, and objectives like writing a
+story, generating a dialogue, or summary but also applies to more straightforward prompt/response
+pairs.
+• 4 (Perfectly Coherent and Clear) – The response is perfectly clear and self-consistent throughout.
+There are no contradictory assertions or statements, the writing flows logically and following
+the train of thought/story is not challenging.
+• 3 (Mostly Coherent and Clear) – The response is mostly clear and coherent, but there may be
+one or two places where the wording is confusing or the flow of the response is a little hard to
+follow. Over all, the response can mostly be followed with a little room for improvement.
+• 2 (A Little Unclear and/or Incoherent) – The response is a little unclear. There are some incon-
+sistencies or contradictions, run on sentences, confusing statements, or hard to follow sections
+of the response.
+• 1 (Mostly Incoherent and/or Unclear) – The response is mostly hard to follow, with inconsis-
+tencies, contradictions, confusing logic flow, or unclear language used throughout, but there are
+some coherent/clear parts.
+• 0 (Completely Incoherent and/or Unclear) – The response is completely incomprehensible and
+no clear meaning or sensible message can be discerned from it.","[0,4]"
+HelpSteer2,complexity,"**Simple/Complex Language:**
+• 4 (Expert) – An expert in the field or area could have written the response. It uses specific and
+technically relevant vocabulary. Elevated language that someone at the simple or basic level
+may not understand at all. The professional language of a lawyer, scientist, engineer, or doctor
+falls into this category.
+• 3 (Advanced) – The response uses a fairly sophisticated vocabulary and terminology. Someone
+majoring in this subject at a college or university could have written it and would understand
+the response. An average adult who does not work or study in this area could not have written
+the response.
+• 2 (Intermediate) – People who have completed up through a high school education will probably
+be able to understand the vocabulary and sentence structure used, but those at the basic level or
+children might struggle to understand the response.
+• 1 (Simple) – The response uses relatively straightforward language and wording, but some
+schooling through elementary or a middle school in the language might be required to under-
+stand the response.
+• 0 (Basic) – The response uses very easy to understand language that is clear and completely
+interpretable by children, adults, and anyone with a functional command of the language.","[0,4]"
+HelpSteer2,correctness,"**Correctness/Completeness:** 
+• 4 – The response is completely correct and accurate to what is requested by the prompt with
+no necessary details missing and without false, misleading, or hallucinated information. If the
+prompt asks the assistant to do a task, the task is completely done and addressed in the response.
+• 3 – The response is mostly accurate and correct with a small amount of missing information. It
+contains no misleading information or hallucinations. If the prompt asks the assistant to perform
+a task, the task is mostly successfully attempted.
+• 2 – The response contains a mix of correct and incorrect information. The response may
+miss some details, contain misleading information, or minor hallucinations, but is more or less
+aligned with what the prompt asks for. If the prompt asks the assistant to perform a task, the
+task is attempted with moderate success but still has clear room for improvement.
+• 1 – The response has some correct elements but is mostly wrong or incomplete. The response
+may contain multiple instances of hallucinations, false information, misleading information, or
+irrelevant information. If the prompt asks the assistant to do a task, the task was attempted with
+a small amount of success.
+• 0 – The response is completely incorrect. All information provided is wrong, false or hallucinated. If the prompt asks the assistant to do a task, the task is not at all attempted, or the wrong
+task was attempted in the response. The response is completely irrelevant to the prompt.","[0,4]"
+HelpSteer2,helpfulness,"**Helpfulness/Understanding:**
+• 4 – The response is extremely helpful and completely aligned with the spirit of what the prompt
+was asking for.
+• 3 – The response is mostly helpful and mainly aligned with what the user was looking for, but
+there is still some room for improvement.
+• 2 – The response is partially helpful but misses the overall goal of the user’s query/input in some
+way. The response did not fully satisfy what the user was looking for.
+• 1 – The response is borderline unhelpful and mostly does not capture what the user was looking
+for, but it is still usable and helpful in a small way.
+• 0 – The response is not useful or helpful at all. The response completely missed the essence of
+what the user wanted.","[0,4]"
+HelpSteer2,verbosity,"**Succinctness/Verbosity:**
+The goal here is to place the response on a spectrum from the most short, crisp answers, to the most
+lengthy, detailed, and/or wordy answers under the context of what a user is expecting as a response
+to the prompt. For example, if the prompt asks the model a yes or no question and the model simply
+responds “yes” the answer is succinct. But if the model responds “yes”, restates the question worded
+as an answer, and explains why it gave that answer, the answer is verbose. Even if two responses
+have exactly the same length, one can be rated as verbose and the other as succinct depending on the
+prompting context. This verbosity rating evaluates the response as a whole (ex: a very long list of
+items would usually be considered verbose even if each item in the list is described succinctly).
+• 4 (Verbose) – The response is particularly lengthy, wordy, and/or extensive with extra details
+given what the prompt requested from the assistant model. The response can be verbose regard-
+less of if the length is due to repetition and incoherency or if it is due to rich and insightful
+detail.
+• 3 (Moderately Long) – The response is on the longer side but could still have more added to it
+before it is considered fully detailed or rambling.
+• 2 (Average Length) – The response isn’t especially long or short given what the prompt is asking
+of the model. The length is adequate for conveying a full response but isn’t particularly wordy
+nor particularly concise.
+• 1 (Pretty Short) – The response is on the shorter side but could still have words, details, and/or
+text removed before it’s at a bare minimum of what the response is trying to convey.
+• 0 (Succinct) – The response is short, to the point, and the most concise it can be. No addi-
+tional information is provided outside of what is requested by the prompt (regardless of if the
+information or response itself is incorrect, hallucinated, or misleading. A response that gives an
+incorrect answer can still be succinct.).","[0,4]"
+Primock57,inc_plus_omi,"We define ‘incorrect statements’ as sentences in the generated notes which contain
+one or more factual errors (compared to the
+consultation audio).  Conversely, ‘omissions’
+are medical facts which should be recorded
+in a consultation note and were omitted by
+the model.
+
+| **Text** | **Incorrect&nbsp;Statements** | **Omissions** | **Explanation** | **Critical** |
+|---|---|---|---|---|
+| **Omissions** |  |  |  |  |
+| Lives with wife and children. |  | Lives with wife and children. | Omission | No |
+| **Simple incorrect statements** |  |  |  |  |
+| 3 43-day history of diarrhoea | 13 day history of headache |  | Simple incorrect statements can be corrected without labelling as an omission | Yes |
+| Opening bowels 6 × 16/day | × 16 /day |  | Simple incorrect statements can be corrected without labelling as an omission | Yes |
+| Takeaway 4/7 ago – Mexican restaurant. | Chinese restaurant. |  | Simple incorrect statements can be corrected without labelling as an omission | No |
+| **Complex incorrect statements** |  |  |  |  |
+| No blood in stool **some streaks of fresh blood on wiping only** | No blood in stool | some streaks of fresh blood on wiping only | One incorrect statement, one omission (complex incorrect statements require additional detail) | Yes |
+| Vomiting for 6–8 days, intermittent | 3 days | intermittent | One incorrect statement, one omission (complex incorrect statements require additional detail) | Yes |
+| Wife and 2 children had vomiting but no diarrhoea. **also have diarrhoea.** | also have diarrhoea. | had vomiting but no diarrhoea. | One incorrect statement, one omission (complex incorrect statements require additional detail) | Yes |
+| **Edits that do not require logging as incorrect or omission** |  |  |  |  |
+| Headache for 3 days. **Headache** |  |  | Repeated/redundant text is neither incorrect nor omitted | – |
+| sometimes when passes urine feels like it's hard **feels like it's hard to pass urine** |  |  | Grammatical issues do not enter in either “incorrect statements” or “omissions” | – |
+| PMH: asthma; |  |  | Stylistic additions (PMH, deleting the full stop) | – |","[0,inf)"
+Primock57,incorrect,"We define ‘incorrect statements’ as sentences in the generated notes which contain one or more factual errors (compared to the consultation audio)
+
+| **Text** | **Incorrect&nbsp;Statements** | **Omissions** | **Explanation** | **Critical** |
+|---|---|---|---|---|
+| **Omissions** |  |  |  |  |
+| Lives with wife and children. |  | Lives with wife and children. | Omission | No |
+| **Simple incorrect statements** |  |  |  |  |
+| 3 43-day history of diarrhoea | 13 day history of headache |  | Simple incorrect statements can be corrected without labelling as an omission | Yes |
+| Opening bowels 6 × 16/day | × 16 /day |  | Simple incorrect statements can be corrected without labelling as an omission | Yes |
+| Takeaway 4/7 ago – Mexican restaurant. | Chinese restaurant. |  | Simple incorrect statements can be corrected without labelling as an omission | No |
+| **Complex incorrect statements** |  |  |  |  |
+| No blood in stool **some streaks of fresh blood on wiping only** | No blood in stool | some streaks of fresh blood on wiping only | One incorrect statement, one omission (complex incorrect statements require additional detail) | Yes |
+| Vomiting for 6–8 days, intermittent | 3 days | intermittent | One incorrect statement, one omission (complex incorrect statements require additional detail) | Yes |
+| Wife and 2 children had vomiting but no diarrhoea. **also have diarrhoea.** | also have diarrhoea. | had vomiting but no diarrhoea. | One incorrect statement, one omission (complex incorrect statements require additional detail) | Yes |
+| **Edits that do not require logging as incorrect or omission** |  |  |  |  |
+| Headache for 3 days. **Headache** |  |  | Repeated/redundant text is neither incorrect nor omitted | – |
+| sometimes when passes urine feels like it's hard **feels like it's hard to pass urine** |  |  | Grammatical issues do not enter in either “incorrect statements” or “omissions” | – |
+| PMH: asthma; |  |  | Stylistic additions (PMH, deleting the full stop) | – |","[0,inf)"
+Primock57,omissions,"omissions’ are medical facts which should be recorded in a consultation note and were omitted by the model
+
+| **Text** | **Incorrect&nbsp;Statements** | **Omissions** | **Explanation** | **Critical** |
+|---|---|---|---|---|
+| **Omissions** |  |  |  |  |
+| Lives with wife and children. |  | Lives with wife and children. | Omission | No |
+| **Simple incorrect statements** |  |  |  |  |
+| 3 43-day history of diarrhoea | 13 day history of headache |  | Simple incorrect statements can be corrected without labelling as an omission | Yes |
+| Opening bowels 6 × 16/day | × 16 /day |  | Simple incorrect statements can be corrected without labelling as an omission | Yes |
+| Takeaway 4/7 ago – Mexican restaurant. | Chinese restaurant. |  | Simple incorrect statements can be corrected without labelling as an omission | No |
+| **Complex incorrect statements** |  |  |  |  |
+| No blood in stool **some streaks of fresh blood on wiping only** | No blood in stool | some streaks of fresh blood on wiping only | One incorrect statement, one omission (complex incorrect statements require additional detail) | Yes |
+| Vomiting for 6–8 days, intermittent | 3 days | intermittent | One incorrect statement, one omission (complex incorrect statements require additional detail) | Yes |
+| Wife and 2 children had vomiting but no diarrhoea. **also have diarrhoea.** | also have diarrhoea. | had vomiting but no diarrhoea. | One incorrect statement, one omission (complex incorrect statements require additional detail) | Yes |
+| **Edits that do not require logging as incorrect or omission** |  |  |  |  |
+| Headache for 3 days. **Headache** |  |  | Repeated/redundant text is neither incorrect nor omitted | – |
+| sometimes when passes urine feels like it's hard **feels like it's hard to pass urine** |  |  | Grammatical issues do not enter in either “incorrect statements” or “omissions” | – |
+| PMH: asthma; |  |  | Stylistic additions (PMH, deleting the full stop) | – |","[0,inf)"
+Primock57,time_sec,the time (in seconds) it takes a human to post-edit a model generated note,"[0,inf)"
+RealHumanEval,accepted,Would you accept this code edit/addition (1) or reject it (0)?,"[0,1]"
+SimpDA,fluency,"# Judge the quality of similar sentences — **Grammar Rating**
+
+Please read each group of sentences.  
+Each group contains an **original sentence** and several **variations**.  
+Your task: **rate each variation on a 4-point Grammar scale**.
+
+---
+
+## Grammar Scale
+
+| Score | Description |
+|-------|-------------|
+| **4 – grammatical (may be awkward)** | The sentence is grammatical, though it might sound slightly awkward. |
+| **3 – one or two errors** | One or two grammatical errors (e.g., subject–verb agreement, wrong verb form). |
+| **2 – many errors** | Multiple errors or missing words needed for grammaticality. |
+| **1 – ungrammatical** | The sentence is totally ungrammatical. |
+
+---
+
+## Example
+
+**Original**  
+> they are culturally akin to the coastal peoples of papua new guinea .
+
+| Variation | Grammar |
+|---|:---:|
+| it’s culture similar to the people of port of papua . | **4** |
+
+**Why?** The sentence is grammatical but slightly awkward; no major errors beyond stylistic issues.","[0,4]"
+SimpDA,meaning,"# Judge the quality of similar sentences — **Meaning Rating**
+
+Please read each group of sentences.  
+Each group contains an **original sentence** and several **variations**.  
+Your task: **rate each variation on a 4-point Meaning scale**.
+
+---
+
+## Meaning Scale
+
+| Score | Description |
+|-------|-------------|
+| **4 – identical** | All meaning from the original is retained; nothing added or missing. |
+| **3 – minor differences** | Meaning is largely retained, but minor info may be altered, deleted, or added without greatly changing the sense. |
+| **2 – moderate differences** | Some meaning is retained, but a non-trivial amount of info is deleted or added. |
+| **1 – substantially different** | A substantial amount of meaning differs from the original. |
+
+---
+
+## Example
+
+**Original**  
+> they are culturally akin to the coastal peoples of papua new guinea .
+
+| Variation | Meaning |
+|---|:---:|
+| it’s culture similar to the people of port of papua . | **3** |
+
+**Why?** Most of the original sense remains, but details like *coastal* and *papua new guinea* are altered or omitted.","[0,4]"
+SimpDA,simplicity,"# Judge the quality of sentence rewriting that tries to use simpler words
+
+Please read the groups of sentences below.  
+Each group contains an **original sentence** along with several **variations** produced by automatic sentence-simplification systems.  
+Your job is to grade the quality of each variation by:
+
+1. **Identifying the words/phrases that were altered**, and  
+2. **Counting how many of those alterations are good simplifications**  
+   (i.e., they retain the original meaning *and* use simpler words/phrases).
+
+Focus on **word choices** and **ignore** grammar errors or word deletions.
+
+---
+
+## Example 1
+
+**Original sentence**  
+> they are culturally akin to the coastal peoples of papua new guinea .
+
+| Variation                                                          | Number of Good Rewordings |
+|--------------------------------------------------------------------|:-------------------------:|
+| it 's culture similar to the people of port of papua .             | **2** |
+| they are culturally akin to the coastal peoples of png .           | **0** |
+
+**Why?**
+
+* *culturally akin* → *culture similar* counts as two good (simpler) rewordings.  
+* *png* is correct in meaning but **not** simpler than “papua new guinea”, so it counts as 0.
+
+---
+
+## Example 2
+
+**Original sentence**  
+> on 16 june 2009 , the official release date of the resistance was announced on the band ’s website .
+
+| Variation                                                                                                            | Number of Good Rewordings |
+|----------------------------------------------------------------------------------------------------------------------|:-------------------------:|
+| on june 16 , 2009 , the band ’s website said that the album would be released on september 14 , 2009 .               | **2** |
+| on 16 june 2009 , the official release date of the resistance was said on the band ’s web site .                     | **0** |
+
+**Why?**
+
+* *announced* → *said* (1 good change)  
+* *the official release date* → *would be released* (treated as 1 good phrase-level change)  
+  *This also converts passive voice to simpler active voice.*  
+* In the second variation, *said* is awkwardly used (“the release date … was said”),  
+  and *website* → *web site* does **not** simplify the phrase, so the score is 0.
+
+---
+
+### Choosing a score
+
+Your task is to assign a score **between 0 and 4** for each variation, indicating how many good word/phrase substitutions it contains.  
+Rarely will a sentence have more than four good simplifications.","[0,4]"
+SimpEval,score,"## Rating Sentences
+
+The goal is to **rate sentences** by how well they **simplify the original sentence**.
+
+### Scoring Guidelines
+
+| Score | When to assign it |
+|-------|------------------|
+| **100** | The sentence is **fully simplified**, entirely fluent, and **preserves the core meaning** of the original. |
+| **75**  | The sentence is **somewhat simpler**, mostly fluent, and the meaning is **close** to the original. |
+| **50**  | The sentence is simpler, **somewhat fluent**, and the meaning is **similar** to the original. |
+| **25**  | The sentence is equivalently simple, still has some fluency, but **loses the meaning**. |
+| **0**   | The sentence is **completely unreadable**. |
+
+> **Most scores will lie somewhere in this range – feel free to give specific scores (e.g., 83, 67) rather than only the five anchors.**
+
+---
+
+### Examples
+
+| Score | Example Simplified Sentence | Why this score? |
+|-------|-----------------------------|-----------------|
+| **100** | *It will then **move away from the river bed** and sink back to the bottom to digest its food.* | Reads fluently **and** keeps the original meaning (“it” gets unstuck, moves down, digests food). |
+| **75** | *Due to this, **a lot of mosques don’t enforce these rules** but both men and women should follow them.* | Minor fluency issue, but meaning matches the original. |
+| **0** | *A gadget javascript a is and / checking wikipedia an snippet that can be enabled simply by , or css option in your wikipedia preferences.* | Sentence is **unreadable**. |","[0,100]"
+SummEval,coherence,"# Summary Evaluation — **Coherence**
+
+## Instructions
+1. Carefully read the news article and note the information it contains.  
+2. Read the six proposed summaries (A–F).  
+3. Rate **each** summary on a scale from **1 (worst) to 5 (best)** for **Coherence**.
+
+## Coherence (1–5)
+*Do the sentences fit together and form a natural, logical whole?*  
+- Assess logical flow, paragraph structure, and overall readability of the summary **as a whole**.
+
+| Score | Guideline |
+|-------|-----------|
+| **5** | Flows logically; ideas connect seamlessly. |
+| **4** | Generally coherent; minor jumps or redundancies. |
+| **3** | Noticeable lapses in flow or organization. |
+| **2** | Disjointed; ideas poorly connected. |
+| **1** | No discernible structure or logical flow. |","[1,5]"
+SummEval,consistency,"# Summary Evaluation — **Consistency**
+
+## Instructions
+1. Carefully read the news article and note the information it contains.  
+2. Read the six proposed summaries (A–F).  
+3. Rate **each** summary on a scale from **1 (worst) to 5 (best)** for **Consistency**.
+
+## Consistency (1–5)
+*Are the facts in the summary consistent with those in the original article?*  
+- Verify that every stated fact matches the article.  
+- Ensure the summary **does not invent** untrue information.
+
+| Score | Guideline |
+|-------|-----------|
+| **5** | All facts accurate; no fabricated or distorted info. |
+| **4** | One minor factual slip or ambiguity. |
+| **3** | Multiple minor inaccuracies or one moderate error. |
+| **2** | Several factual errors; reliability doubtful. |
+| **1** | Largely or entirely inconsistent with the article. |","[1,5]"
+SummEval,fluency,"# Summary Evaluation — **Fluency**
+
+## Instructions
+1. Carefully read the news article and note the information it contains.  
+2. Read the six proposed summaries (A–F).  
+3. Rate **each** summary on a scale from **1 (worst) to 5 (best)** for **Fluency**.
+
+## Fluency (1–5)
+*Are the individual sentences well-written and grammatically correct?*  
+- Judge spelling, punctuation, grammar, and wording of each sentence—**ignore global flow** (that’s Coherence).
+
+| Score | Guideline |
+|-------|-----------|
+| **5** | All sentences are clear, natural, and error-free. |
+| **4** | Few minor errors; still reads smoothly. |
+| **3** | One or two noticeable errors per paragraph. |
+| **2** | Many errors or awkward phrasing. |
+| **1** | Sentences largely ungrammatical or hard to read. |","[1,5]"
+SummEval,relevance,"# Summary Evaluation — **Relevance**
+
+## Instructions
+1. Carefully read the news article and note the information it contains.  
+2. Read the six proposed summaries (A–F).  
+3. Rate **each** summary on a scale from **1 (worst) to 5 (best)** for **Relevance**.
+
+## Relevance (1–5)
+*How well does the summary capture the key points of the article?*  
+- Check that **all** important aspects are included.  
+- Ensure **only** important aspects are included (no off-topic content).
+
+| Score | Guideline |
+|-------|-----------|
+| **5** | Captures every key point—no extra or missing info. |
+| **4** | Captures most key points; minor omissions/additions. |
+| **3** | Covers some key points but misses or adds noticeable info. |
+| **2** | Covers few key points; many omissions/additions. |
+| **1** | Fails to capture the article’s main content. |","[1,5]"
+ICLR,recommendation,"Follow these guidelines in order to assign the attached paper a score between 1-10
+
+# Reviewing a submission: step-by-step
+
+Summarized in one sentence, a review aims to determine whether a submission will bring sufficient value to the community and contribute new knowledge. The process can be broken down into the following main reviewer tasks:
+
+---
+
+### 1. Read the paper
+It’s important to carefully read through the entire paper, and to look up any related work and citations that will help you comprehensively evaluate it. Be sure to give yourself sufficient time for this step.
+
+---
+
+### 2. While reading, consider the following:
+1. **Objective of the work:** What is the goal of the paper? Is it to better address a known application or problem, draw attention to a new application or problem, or to introduce and/or explain a new theoretical finding? A combination of these? Different objectives will require different considerations as to potential value and impact.  
+2. **Strong points:** Is the submission clear, technically correct, experimentally rigorous, reproducible, does it present novel findings (e.g. theoretically, algorithmically, etc.)?  
+3. **Weak points:** Is it weak in any of the aspects listed in b.?  
+4. **Be mindful of potential biases** and try to be open-minded about the value and interest a paper can hold for the entire ICLR community, even if it may not be very interesting for you.  
+
+---
+
+### 3. Answer four key questions for yourself, to make a recommendation to Accept or Reject:
+1. What is the specific question and/or problem tackled by the paper?  
+2. Is the approach well motivated, including being well-placed in the literature?  
+3. Does the paper support the claims? This includes determining if results, whether theoretical or empirical, are correct and if they are scientifically rigorous.  
+4. What is the significance of the work? Does it contribute new knowledge and sufficient value to the community?  
+   - *Note: This does not necessarily require state-of-the-art results. Submissions bring value to the ICLR community when they convincingly demonstrate new, relevant, impactful knowledge (incl. empirical, theoretical, for practitioners, etc).*
+
+---
+
+### 4. Write and submit your initial review, organizing it as follows:
+1. Summarize what the paper claims to contribute. Be positive and constructive.  
+2. List strong and weak points of the paper. Be as comprehensive as possible.  
+3. Clearly state your initial recommendation (accept or reject) with one or two key reasons for this choice.  
+4. Provide supporting arguments for your recommendation.  
+5. Ask questions you would like answered by the authors to help you clarify your understanding of the paper and provide the additional evidence you need to be confident in your assessment.  
+6. Provide additional feedback with the aim to improve the paper. Make it clear that these points are here to help, and not necessarily part of your decision assessment.  
+
+---
+
+### 5. Complete the CoE report
+ICLR has adopted the following **Code of Ethics (CoE).** When submitting your review, you’ll be asked to complete a CoE report for the paper. The report is a simple form with two questions.  
+- The first asks whether there is a potential violation of the CoE.  
+- The second is relevant only if there is a potential violation and asks the reviewer to explain why there may be a potential violation.  
+
+In order to answer these questions, it is therefore important that you read the CoE before starting your reviews.
+
+---
+
+### 6. Engage in discussion
+The discussion phase at ICLR is different from most conferences in the AI/ML community. During this phase, reviewers, authors and area chairs engage in asynchronous discussion and authors are allowed to revise their submissions to address concerns that arise.  
+It is crucial that you are actively engaged during this phase. Maintain a spirit of openness to changing your initial recommendation (either to a more positive or more negative rating).
+
+---
+
+### 7. Borderline paper meeting
+Similarly to last year, the ACs are encouraged to (virtually) meet and discuss with reviewers **only for borderline cases.** ACs will reach out to schedule this meeting. This is to ensure active discussions among reviewers, and well-thought-out decisions. ACs will schedule the meeting and facilitate the discussion. For a productive discussion, it is important to familiarize yourself with other reviewers’ feedback prior to the meeting.  
+
+*Please note that we will be leveraging information for reviewers who failed to attend this meeting (excluding emergencies).*
+
+---
+
+### 8. Provide final recommendation
+Update your review, taking into account the new information collected during the discussion phase, and any revisions to the submission.  
+*(Note that reviewers can change their review after the author response period.)* State your reasoning and what did/didn’t change your recommendation throughout the discussion phase.","[1,10]"

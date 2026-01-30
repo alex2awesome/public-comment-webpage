@@ -1,0 +1,10 @@
+path,run1,run2,run3,run4,run5,avg,ci95_halfwidth,avg_ci_95,rollout
+baseline,0.680000,0.600000,0.720000,0.400000,0.600000,0.600000,0.153083,0.600 ± 0.153
+/nlp/scr2/nlp/personal-rm/tau-bench/gepa_logs/optimized_programs_intermediate/metric2_1.json,0.480000,0.520000,0.600000,0.440000,0.480000,0.504000,0.075323,0.504 ± 0.075,0
+/nlp/scr2/nlp/personal-rm/tau-bench/gepa_logs/optimized_programs_intermediate/metric2_8.json,0.600000,0.440000,0.680000,0.600000,0.680000,0.600000,0.121658,0.600 ± 0.122,600
+/nlp/scr2/nlp/personal-rm/tau-bench/gepa_logs/optimized_programs_intermediate/metric2_11.json,0.400000,0.520000,0.800000,0.600000,0.440000,0.552000,0.196795,0.552 ± 0.197,1100
+/nlp/scr2/nlp/personal-rm/tau-bench/gepa_logs/optimized_programs_intermediate/metric2_human_0.json,0.680000,0.560000,0.440000,0.760000,0.640000,0.616000,0.151463,0.616 ± 0.151,0
+/nlp/scr2/nlp/personal-rm/tau-bench/gepa_logs/optimized_programs_intermediate/metric2_human_10.json,0.680000,0.640000,0.760000,0.560000,0.760000,0.680000,0.105359,0.680 ± 0.105,900
+/nlp/scr2/nlp/personal-rm/tau-bench/gepa_logs/optimized_programs_intermediate/metric2_human_12.json,0.720000,0.640000,0.720000,0.760000,0.760000,0.720000,0.060829,0.720 ± 0.061,1000
+/nlp/scr2/nlp/personal-rm/tau-bench/gepa_logs/optimized_programs_intermediate/standard_1.json,0.760000,0.680000,0.680000,0.720000,0.840000,0.736000,0.083108,0.736 ± 0.083,0
+/nlp/scr2/nlp/personal-rm/tau-bench/gepa_logs/optimized_programs_intermediate/standard_14.json,0.640000,0.800000,0.680000,0.560000,0.720000,0.680000,0.111058,0.680 ± 0.111,1450

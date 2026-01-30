@@ -1,0 +1,8 @@
+category,metric_name,count
+llm_judge,,67
+rubric,,16
+examples_judge,,10
+optimized_judge,,10
+named_metric,GRMRewardModel,10
+named_metric,INFORMRewardModel,10
+named_metric,ParaScoreFree,2
