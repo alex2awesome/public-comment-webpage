@@ -91,7 +91,7 @@ def run_one_rollout(
     llm = ChatOpenAI(
         model=model_name,
         temperature=temperature,
-        timeout=40,
+        timeout=300,
         max_retries=2,
         parallel_tool_calls=False,
         api_key=openai_api_key,
