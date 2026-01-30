@@ -311,6 +311,39 @@ button.primary:not(:disabled):hover {
 
 .event-log {
   margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.event-log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.event-progress {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  background: rgba(51, 65, 85, 0.7);
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+}
+
+.event-log-body {
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 0.4rem;
+}
+
+.event-log-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.event-log-body::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 999px;
 }
 
 .event-log ul {
@@ -339,8 +372,6 @@ button.primary:not(:disabled):hover {
 .event-type {
   font-weight: 600;
   color: #38bdf8;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 
 .event-meta {

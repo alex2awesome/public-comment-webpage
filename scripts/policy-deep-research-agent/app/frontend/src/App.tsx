@@ -19,7 +19,7 @@ type FeedbackState = "idle" | "sending" | "sent" | "error";
 
 function App() {
   const [question, setQuestion] = useState("");
-  const [maxSteps, setMaxSteps] = useState(10);
+  const [maxSteps, setMaxSteps] = useState(4);
   const enableBibliography = false;
   const [runState, setRunState] = useState<RunState>("idle");
   const [result, setResult] = useState<RolloutResult | null>(null);
@@ -229,6 +229,7 @@ function App() {
             error={errorMessage}
             events={events}
             showEvents={showEvents}
+            maxSteps={maxSteps}
             onToggleEvents={handleToggleEvents}
           />
           {runState === "complete" && result && (

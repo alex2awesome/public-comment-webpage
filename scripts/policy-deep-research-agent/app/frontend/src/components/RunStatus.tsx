@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useMemo, useRef } from "react";
 import { RunState } from "../App";
 import { RolloutResult, RolloutStreamEvent } from "../types";
 
@@ -8,6 +8,7 @@ interface RunStatusProps {
   error?: string | null;
   events: RolloutStreamEvent[];
   showEvents: boolean;
+  maxSteps: number;
   onToggleEvents: () => void;
 }
 
@@ -20,6 +21,18 @@ const formatEventMeta = (event: RolloutStreamEvent) => {
     meta.push(event.tool);
   }
   return meta.join(" • ");
+};
+
+const friendlyType = (type: string) => {
+  const lookup: Record<string, string> = {
+    run_started: "Run started",
+    run_completed: "Run completed",
+    complete: "Run completed",
+    tool_call: "Tool call",
+    tool_result: "Tool result",
+    error: "Error",
+  };
+  return lookup[type] ?? type.replace(/[_-]+/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
 };
 
 const describeEvent = (event: RolloutStreamEvent) => {
@@ -93,48 +106,69 @@ const renderMemoWithCitations = (memo: string, bib: RolloutResult["bib"]) => {
   return segments;
 };
 
-const RunStatus = ({ status, result, error, events, showEvents, onToggleEvents }: RunStatusProps) => {
+const RunStatus = ({ status, result, error, events, showEvents, maxSteps, onToggleEvents }: RunStatusProps) => {
   const hasEvents = events.length > 0;
+  const logBodyRef = useRef<HTMLDivElement | null>(null);
+  const toolCallCount = useMemo(() => events.filter((event) => event.type === "tool_call").length, [events]);
+  const completedSteps = Math.min(result?.steps ?? toolCallCount, maxSteps);
+
+  useEffect(() => {
+    if (!showEvents) {
+      return;
+    }
+    const body = logBodyRef.current;
+    if (body) {
+      body.scrollTop = body.scrollHeight;
+    }
+  }, [events, showEvents]);
+
   const eventLog =
     hasEvents && showEvents ? (
       <div className="event-log">
-        <h3>Live events</h3>
-        <ul>
-          {events.map((event, idx) => (
-            <li key={`${event.type}-${idx}`}>
-              <div className="event-header">
-                <span className="event-type">{event.type}</span>
-                {formatEventMeta(event) && <span className="event-meta">{formatEventMeta(event)}</span>}
-              </div>
-              {(() => {
-                const body = describeEvent(event);
-                return body ? <p className="event-body">{body}</p> : null;
-              })()}
-              {!event.message && event.result && (
-                (() => {
-                  const resultStr = JSON.stringify(event.result);
-                  return (
-                    <p className="event-body result-json">
-                      {resultStr.slice(0, 220)}
-                      {resultStr.length > 220 ? "…" : ""}
-                    </p>
-                  );
-                })()
-              )}
-              {event.args && (
-                (() => {
-                  const argsStr = JSON.stringify(event.args);
-                  return (
-                    <p className="event-body result-json">
-                      Args: {argsStr.slice(0, 220)}
-                      {argsStr.length > 220 ? "…" : ""}
-                    </p>
-                  );
-                })()
-              )}
-            </li>
-          ))}
-        </ul>
+        <div className="event-log-header">
+          <h3>Live events</h3>
+          <span className="event-progress">
+            Step {completedSteps}/{maxSteps}
+          </span>
+        </div>
+        <div className="event-log-body" ref={logBodyRef}>
+          <ul>
+            {events.map((event, idx) => (
+              <li key={`${event.type}-${idx}`}>
+                <div className="event-header">
+                  <span className="event-type">{friendlyType(event.type)}</span>
+                  {formatEventMeta(event) && <span className="event-meta">{formatEventMeta(event)}</span>}
+                </div>
+                {(() => {
+                  const body = describeEvent(event);
+                  return body ? <p className="event-body">{body}</p> : null;
+                })()}
+                {!event.message && event.result && (
+                  (() => {
+                    const resultStr = JSON.stringify(event.result);
+                    return (
+                      <p className="event-body result-json">
+                        {resultStr.slice(0, 220)}
+                        {resultStr.length > 220 ? "…" : ""}
+                      </p>
+                    );
+                  })()
+                )}
+                {event.args && (
+                  (() => {
+                    const argsStr = JSON.stringify(event.args);
+                    return (
+                      <p className="event-body result-json">
+                        Args: {argsStr.slice(0, 220)}
+                        {argsStr.length > 220 ? "…" : ""}
+                      </p>
+                    );
+                  })()
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     ) : null;
   const eventToggle =

@@ -6,6 +6,7 @@ import asyncio
 import json
 import logging
 import os
+import time
 from typing import Any, Dict, Optional
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, status
@@ -182,7 +183,12 @@ async def stream_rollout(
 
     async def event_generator():
         while True:
-            event = await queue.get()
+            try:
+                event = await asyncio.wait_for(queue.get(), timeout=10.0)
+            except asyncio.TimeoutError:
+                heartbeat = {"type": "heartbeat", "ts": time.time()}
+                yield f"event: heartbeat\ndata: {json.dumps(heartbeat)}\n\n"
+                continue
             if event is None:
                 break
             event_name = event.get("type", "message")
