@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: policy-agent-backend
+    rootDir: scripts/policy-deep-research-agent/app/backend
+    env: python
+    plan: free
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn app.backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: LANGSMITH_API_KEY
+        sync: false
+      - key: LANGSMITH_PROJECT
+        value: Policy LangGraph Rollout
+      - key: LANGCHAIN_API_KEY
+        sync: false
+      - key: LANGCHAIN_TRACING_V2
+        value: "true"
+      - key: LANGCHAIN_ENDPOINT
+        value: https://api.smith.langchain.com
+      - key: POLICY_AGENT_USE_CACHED
+        value: "false"
+      - key: POLICY_AGENT_CACHE_PATH
+        value: /tmp/policy-cache.sqlite
