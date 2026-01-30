@@ -5,3 +5,4 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  VITE_AGENT_API_URL = "https://public-comment-webpage.onrender.com"
