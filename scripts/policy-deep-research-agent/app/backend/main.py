@@ -32,6 +32,16 @@ app.add_middleware(
 )
 
 
+@app.get("/", tags=["meta"])
+def root() -> Dict[str, str]:
+    return {"message": "Policy agent is awake and ready to research 🚀"}
+
+
+@app.get("/healthz", tags=["meta"])
+def healthcheck() -> Dict[str, str]:
+    return {"status": "ok"}
+
+
 def resolve_api_key(authorization: Optional[str], settings: Settings) -> Optional[str]:
     if authorization and authorization.lower().startswith("bearer "):
         return authorization.split(" ", 1)[1].strip() or None
