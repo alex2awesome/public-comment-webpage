@@ -20,6 +20,14 @@ from policy_src.policy_agent_lc.rollout import run_one_rollout
 from .config import Settings, get_settings
 from .schemas import FeedbackRequest, RolloutRequest, RolloutResponse
 
+LOG_FORMAT = "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+LOG_LEVEL = os.getenv("POLICY_BACKEND_LOG_LEVEL", "INFO").upper()
+root_logger = logging.getLogger()
+if not root_logger.handlers:
+    logging.basicConfig(format=LOG_FORMAT, level=getattr(logging, LOG_LEVEL, logging.INFO))
+else:
+    root_logger.setLevel(getattr(logging, LOG_LEVEL, logging.INFO))
+
 logger = logging.getLogger(__name__)
 app = FastAPI(title="Policy Rollout API", version="0.1.0")
 
@@ -105,6 +113,13 @@ async def create_rollout(
 
     temperature = payload.temperature if payload.temperature is not None else settings.temperature
 
+    logger.info(
+        "Rollout request accepted | steps=%s | temperature=%s | bibliography=%s",
+        payload.max_steps,
+        temperature,
+        payload.enable_bibliography,
+    )
+
     episode = await run_in_threadpool(
         run_one_rollout,
         settings.model_name,
@@ -118,6 +133,7 @@ async def create_rollout(
         api_key,
     )
     attach_langsmith_run_id(episode, settings.langsmith_project)
+    logger.info("Rollout complete | run_id=%s | task_id=%s | reward=%s", episode["run_id"], episode["task_id"], episode.get("reward"))
 
     return RolloutResponse(
         run_id=episode["run_id"],
@@ -155,6 +171,9 @@ async def stream_rollout(
     loop = asyncio.get_running_loop()
 
     def emit_event(event: Dict[str, Any]) -> None:
+        event_type = event.get("type")
+        if event_type in {"run_started", "complete", "run_completed", "error"}:
+            logger.info("Rollout event | type=%s | payload_keys=%s", event_type, list(event.keys()))
         loop.call_soon_threadsafe(queue.put_nowait, event)
 
     async def rollout_task() -> None:
@@ -187,6 +206,7 @@ async def stream_rollout(
                 event = await asyncio.wait_for(queue.get(), timeout=10.0)
             except asyncio.TimeoutError:
                 heartbeat = {"type": "heartbeat", "ts": time.time()}
+                logger.debug("Emitting heartbeat keepalive")
                 yield f"event: heartbeat\ndata: {json.dumps(heartbeat)}\n\n"
                 continue
             if event is None:
@@ -197,6 +217,12 @@ async def stream_rollout(
             yield f"event: {event_name}\ndata: {payload}\n\n"
 
     asyncio.create_task(rollout_task())
+    logger.info(
+        "Streaming rollout started | question_len=%s | steps=%s | bibliography=%s",
+        len(question_text),
+        max_steps,
+        enable_bibliography,
+    )
     return StreamingResponse(
         event_generator(),
         media_type="text/event-stream",
@@ -235,6 +261,7 @@ async def submit_feedback(
             comment=comment,
             source="policy-rollout-app",
         )
+        logger.info("Feedback submitted | run_id=%s | sentiment=%s", target_run_id, payload.sentiment)
     except Exception as exc:  # pylint: disable=broad-except
         logger.exception("Failed to send LangSmith feedback", exc_info=exc)
         raise HTTPException(status_code=502, detail="Failed to send feedback to LangSmith.") from exc

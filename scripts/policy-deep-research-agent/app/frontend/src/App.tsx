@@ -115,7 +115,9 @@ function App() {
 
   const handleStartQuery = () => {
     if (!backendReady) {
-      setErrorMessage("Still waking the backend up—give it just another moment!");
+      setErrorMessage(
+        "Still waking the backend up—give it just another moment! (This can take 20-30 seconds because we're cheap and are hosting this on free architecture.)"
+      );
       return;
     }
     if (!question.trim()) {
@@ -197,24 +199,33 @@ function App() {
             <div>
               <p className="eyebrow">Waking backend</p>
               <p className="startup-message">{backendStatusMessage}</p>
-              <p className="startup-subtle">We’ll start streaming events the moment the API responds.</p>
+              <p className="startup-subtle">
+                We’ll start streaming events the moment the API responds. (This can take 20-30 seconds because we're
+                cheap and are hosting this on free architecture.)
+              </p>
             </div>
           </div>
         </div>
       )}
-      <header className="app-header">
-        <div>
-          <p className="eyebrow">Policy Deep Research Agent</p>
-          <h1>LangGraph Rollout Console</h1>
-          <p className="intro">
-            Submit a policy question, cap the number of LangGraph tool calls, and watch the research agent
-            produce a memo. When you finish reviewing the answer, send structured feedback back to LangSmith.
-          </p>
+      <header className="app-hero">
+        <div className="hero-card">
+          <div className="hero-copy">
+            <p className="eyebrow">Policy Analyzer</p>
+            <h1>Policy Analyzer</h1>
+            <p className="intro">
+              Guide a LangGraph research agent through complex policy questions, watch every tool invocation, and review
+              the synthesized memo before sharing structured feedback.
+            </p>
+          </div>
         </div>
       </header>
       <main className="app-layout">
-        <section className="panel">
-          <h2>Configure Query</h2>
+        <section className="surface surface-query">
+          <div className="section-heading">
+            <p className="section-eyebrow">Define your inquiry</p>
+            <h2>Compose a research brief</h2>
+            <p className="section-copy">Set the question and guardrails the agent should respect before it begins.</p>
+          </div>
           <QueryForm
             question={question}
             maxSteps={maxSteps}
@@ -224,8 +235,12 @@ function App() {
             onSubmit={handleStartQuery}
           />
         </section>
-        <section className="panel">
-          <h2>Run Output</h2>
+        <section className="surface surface-output">
+          <div className="section-heading">
+            <p className="section-eyebrow">Live briefing</p>
+            <h2>Research output</h2>
+            <p className="section-copy">Track tool calls in real time and review the final memo with citations.</p>
+          </div>
           <RunStatus
             status={runState}
             result={result}
@@ -236,12 +251,14 @@ function App() {
             onToggleEvents={handleToggleEvents}
           />
           {runState === "complete" && result && (
-            <FeedbackPanel
-              status={feedbackState}
-              error={feedbackError}
-              disabled={feedbackState === "sending"}
-              onSubmit={handleFeedbackSubmit}
-            />
+            <div className="section-divider">
+              <FeedbackPanel
+                status={feedbackState}
+                error={feedbackError}
+                disabled={feedbackState === "sending"}
+                onSubmit={handleFeedbackSubmit}
+              />
+            </div>
           )}
         </section>
       </main>
