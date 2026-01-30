@@ -52,7 +52,7 @@ const QueryForm = ({
             onMaxStepsChange(Number.isNaN(next) ? 4 : next);
           }}
         />
-        <span className="helper">The agent will auto-submit on the last step.</span>
+        <span className="helper">The agent will generate a memo on the last step based on the research it has collected so far.</span>
       </div>
 
       <button className="primary" type="submit" disabled={disabled}>

@@ -200,8 +200,8 @@ function App() {
               <p className="eyebrow">Waking backend</p>
               <p className="startup-message">{backendStatusMessage}</p>
               <p className="startup-subtle">
-                We’ll start streaming events the moment the API responds. (This can take 20-30 seconds because we're
-                cheap and are hosting this on free architecture.)
+                We’ll start streaming events the moment the API responds. (This can take 20-30 seconds because... we're
+                cheap and are hosting this on free architecture...)
               </p>
             </div>
           </div>
@@ -210,11 +210,12 @@ function App() {
       <header className="app-hero">
         <div className="hero-card">
           <div className="hero-copy">
-            <p className="eyebrow">Policy Analyzer</p>
-            <h1>Policy Analyzer</h1>
+            <p className="eyebrow">Policy Research Agent</p>
+            <h1>Policy Research Agent</h1>
             <p className="intro">
-              Guide a LangGraph research agent through complex policy questions, watch every tool invocation, and review
-              the synthesized memo before sharing structured feedback.
+              A research agent that guides you through complex policy questions. 
+              Review the synthesized memo before sharing structured feedback.
+              Any thoughts on how to improve this process would be greatly appreciated!
             </p>
           </div>
         </div>
@@ -224,7 +225,7 @@ function App() {
           <div className="section-heading">
             <p className="section-eyebrow">Define your inquiry</p>
             <h2>Compose a research brief</h2>
-            <p className="section-copy">Set the question and guardrails the agent should respect before it begins.</p>
+            <p className="section-copy">Set question and guardrails for the agent to follow before it begins.</p>
           </div>
           <QueryForm
             question={question}
@@ -239,7 +240,7 @@ function App() {
           <div className="section-heading">
             <p className="section-eyebrow">Live briefing</p>
             <h2>Research output</h2>
-            <p className="section-copy">Track tool calls in real time and review the final memo with citations.</p>
+            <p className="section-copy">Tool calls in real time will show here, then final memo with citations will be displayed below.</p>
           </div>
           <RunStatus
             status={runState}
