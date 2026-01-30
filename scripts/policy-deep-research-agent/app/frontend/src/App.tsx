@@ -152,9 +152,12 @@ function App() {
         });
       });
       source.onerror = () => {
-        setRunState("error");
-        setErrorMessage("Connection lost while streaming rollout.");
-        closeEventStream();
+        // EventSource automatically retries transient failures; only surface an error if it closes.
+        if (source.readyState === EventSource.CLOSED) {
+          setRunState("error");
+          setErrorMessage("Connection lost while streaming rollout.");
+          closeEventStream();
+        }
       };
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unable to start the rollout.";
