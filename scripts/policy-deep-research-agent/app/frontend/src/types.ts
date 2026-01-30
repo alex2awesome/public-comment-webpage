@@ -42,6 +42,7 @@ export type FeedbackSentiment = "positive" | "negative";
 
 export interface FeedbackRequest {
   runId: string;
+  langsmithRunId?: string;
   sentiment: FeedbackSentiment;
   note?: string;
 }

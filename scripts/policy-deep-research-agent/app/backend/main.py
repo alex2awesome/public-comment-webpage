@@ -61,10 +61,9 @@ def configure_langsmith_env(settings: Settings) -> None:
         os.environ["LANGCHAIN_TRACING_V2"] = "true"
 
 
-def attach_langsmith_run_id(episode: Dict[str, Any], project_name: Optional[str]) -> None:
-    external_run_id = episode.get("run_id")
+def _find_langsmith_run_id(external_run_id: Optional[str], project_name: Optional[str]) -> Optional[str]:
     if not project_name or not external_run_id:
-        return
+        return None
     try:
         client = LangSmithClient()
         runs = client.list_runs(
@@ -75,10 +74,17 @@ def attach_langsmith_run_id(episode: Dict[str, Any], project_name: Optional[str]
         for run in runs:
             metadata = getattr(run, "metadata", {}) or {}
             if metadata.get("episode_run_id") == external_run_id:
-                episode["langsmith_run_id"] = str(getattr(run, "id", "") or getattr(run, "run_id", ""))
-                break
+                langsmith_id = getattr(run, "id", None) or getattr(run, "run_id", None)
+                return str(langsmith_id) if langsmith_id else None
     except Exception as exc:  # pylint: disable=broad-except
         logger.warning("Unable to map LangSmith run id", exc_info=exc)
+    return None
+
+
+def attach_langsmith_run_id(episode: Dict[str, Any], project_name: Optional[str]) -> None:
+    langsmith_run_id = _find_langsmith_run_id(episode.get("run_id"), project_name)
+    if langsmith_run_id:
+        episode["langsmith_run_id"] = langsmith_run_id
 
 
 @app.post("/rollouts", response_model=RolloutResponse)
@@ -179,10 +185,10 @@ async def stream_rollout(
             event = await queue.get()
             if event is None:
                 break
-            yield {
-                "event": event.get("type", "message"),
-                "data": json.dumps(event),
-            }
+            event_name = event.get("type", "message")
+            payload = json.dumps(event)
+            # Server-Sent Events expect newline-delimited fields.
+            yield f"event: {event_name}\ndata: {payload}\n\n"
 
     asyncio.create_task(rollout_task())
     return StreamingResponse(
@@ -208,9 +214,15 @@ async def submit_feedback(
 
     score = 1.0 if payload.sentiment == "positive" else 0.0
     comment = payload.note.strip() if payload.note else None
+    target_run_id = payload.langsmith_run_id or _find_langsmith_run_id(payload.run_id, settings.langsmith_project)
+    if not target_run_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Unable to locate LangSmith run for this rollout. Refresh the page and try again.",
+        )
     try:
         client.create_feedback(
-            run_id=payload.run_id,
+            run_id=target_run_id,
             key="user_sentiment",
             score=score,
             value={"sentiment": payload.sentiment},

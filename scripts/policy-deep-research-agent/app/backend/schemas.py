@@ -44,5 +44,6 @@ class RolloutResponse(BaseModel):
 
 class FeedbackRequest(BaseModel):
     run_id: str = Field(..., min_length=4)
+    langsmith_run_id: Optional[str] = Field(None, min_length=4)
     sentiment: Literal["positive", "negative"]
     note: Optional[str] = Field(None, max_length=2000)

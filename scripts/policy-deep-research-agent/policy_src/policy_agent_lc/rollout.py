@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import uuid
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional
@@ -18,9 +19,23 @@ from .session import ResearchSession
 from .tools import build_tools
 
 
+logger = logging.getLogger(__name__)
+FALLBACK_TASK = {
+    "task_id": "default-policy-question",
+    "question": (
+        "Summarize notable recent developments in U.S. federal policy related to AI governance, "
+        "highlighting key agencies and actions."
+    ),
+}
+
+
 def select_task(task_index: Optional[int] = None) -> Dict[str, Any]:
     """Return a task description by index (wraps around if needed)."""
-    tasks = load_tasks()
+    try:
+        tasks = load_tasks()
+    except FileNotFoundError:
+        logger.warning("Policy task file missing; using fallback question.")
+        tasks = [FALLBACK_TASK]
     if task_index is None:
         task_index = 0
     task = tasks[task_index % len(tasks)]

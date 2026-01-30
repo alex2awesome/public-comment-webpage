@@ -126,6 +126,7 @@ function App() {
     try {
       await sendFeedback({
         runId: result.langsmithRunId ?? result.runId,
+        langsmithRunId: result.langsmithRunId,
         sentiment: values.sentiment,
         note: values.note,
       });

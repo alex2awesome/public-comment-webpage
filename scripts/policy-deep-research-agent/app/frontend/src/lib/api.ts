@@ -50,6 +50,7 @@ export async function sendFeedback(request: FeedbackRequest): Promise<void> {
     headers: buildHeaders(),
     body: JSON.stringify({
       run_id: request.runId,
+      langsmith_run_id: request.langsmithRunId,
       sentiment: request.sentiment,
       note: request.note,
     }),
