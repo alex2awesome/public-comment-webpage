@@ -1,0 +1,3 @@
+[submodule "scripts/autometrics"]
+	path = scripts/autometrics
+	url = https://github.com/XenonMolecule/autometrics.git
