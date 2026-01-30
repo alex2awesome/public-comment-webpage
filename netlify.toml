@@ -1,6 +1,6 @@
 [build]
   base = "scripts/policy-deep-research-agent/app/frontend"
-  publish = "scripts/policy-deep-research-agent/app/frontend/dist"
+  publish = "dist"
   command = "npm run build"
 
 [build.environment]
