@@ -10,9 +10,9 @@ from typing import Any, Dict, Optional
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from fastapi.concurrency import run_in_threadpool
 from langsmith import Client as LangSmithClient
-from sse_starlette.sse import EventSourceResponse
 
 from policy_src.policy_agent_lc.rollout import run_one_rollout
 
@@ -185,7 +185,14 @@ async def stream_rollout(
             }
 
     asyncio.create_task(rollout_task())
-    return EventSourceResponse(event_generator())
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+        },
+    )
 
 
 @app.post("/feedback", status_code=status.HTTP_204_NO_CONTENT)
