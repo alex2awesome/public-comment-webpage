@@ -23,3 +23,5 @@ services:
         value: "false"
       - key: POLICY_AGENT_CACHE_PATH
         value: /tmp/policy-cache.sqlite
+      - key: VITE_AGENT_API_URL
+        value: https://public-comment-webpage.onrender.com
