@@ -17,12 +17,14 @@ venv/
 .venv/
 .env
 .env.*
+app/frontend/.env
+app/backend/.env
 
 # Node / Vite (app)
-app/node_modules/
-app/dist/
-app/.vite/
-app/.eslintcache
+app/frontend/node_modules/
+app/frontend/dist/
+app/frontend/.vite/
+app/frontend/.eslintcache
 
 # Coverage / Reports
 coverage/

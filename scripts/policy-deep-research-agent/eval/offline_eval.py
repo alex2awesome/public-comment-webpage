@@ -12,7 +12,7 @@ TRAINING_DIR = Path(__file__).resolve().parents[1]
 if str(TRAINING_DIR) not in sys.path:
     sys.path.insert(0, str(TRAINING_DIR))
 
-from src.envs.policy_deep_research_env.server.reward import compute_reward
+from policy_src.policy_research_core.reward import compute_reward
 
 
 def parse_args() -> argparse.Namespace:

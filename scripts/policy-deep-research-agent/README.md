@@ -6,8 +6,9 @@ This repository packages a "Deep Research" style OpenEnv environment plus a ligh
 ```
 policy-deep-research-agent/
 ├─ data/                         # tasks + optional cache volume
-├─ src/envs/policy_deep_research_env/  # OpenEnv environment (server + client)
-├─ training/                     # prompts + GRPO harness
+├─ policy_src/                   # LangGraph agent, prompts, core reward/cache helpers, tests
+├─ utils/envs/policy_deep_research_env/  # OpenEnv environment (server + client)
+├─ training/                     # GRPO + AgentLightning scripts
 └─ eval/                         # offline scoring utilities
 ```
 
@@ -24,7 +25,7 @@ policy-deep-research-agent/
    ```
 2. Build and validate the env image:
    ```bash
-   cd src/envs/policy_deep_research_env
+   cd utils/envs/policy_deep_research_env
    openenv build                      # builds docker image openenv-policy-deep-research-env:latest
    openenv validate --verbose
    ```
@@ -47,7 +48,7 @@ The environment exposes reset/step/state endpoints, serves FastAPI docs at `/doc
    ```
 
 `run_grpo.py` will:
-- Load the prompts in `training/prompts/`
+- Load the prompts in `policy_src/policy_prompts/`
 - Spin up the OpenEnv Docker image (or reuse `--env-url`)
 - Generate `rollouts_per_batch` episodes via `rollout_openenv.py`
 - Feed the cached (prompt, transcript, reward) tuples into `trl.GRPOTrainer`
@@ -65,8 +66,8 @@ The script recomputes the deterministic environment reward so you can compare ch
 ## Key environment features
 - Typed `ResearchAction/Observation/State` models
 - FastAPI server via `create_fastapi_app`
-- Semantic Scholar connector with resilient backoff and SQLite caching (see `server/cache_db.py`)
-- Deterministic task loader + reward shaping in `server/reward.py`
+- Semantic Scholar connector with resilient backoff and SQLite caching (see `policy_src/policy_research_core/cache_db.py`)
+- Deterministic task loader + reward shaping in `policy_src/policy_research_core/reward.py`
 - HTTP client (`PolicyDeepResearchEnv`) for training + eval loops
 
-See individual READMEs under `src/envs/`, `training/`, and `eval/` for more detail.
+See individual READMEs under `utils/envs/`, `training/`, and `eval/` for more detail.

@@ -4,7 +4,7 @@ This folder wires the policy deep research OpenEnv environment into a TRL GRPO l
 
 1. Build the environment Docker image (from repo root):
    ```bash
-   cd src/envs/policy_deep_research_env
+   cd utils/envs/policy_deep_research_env
    openenv build
    ```
 2. Start GRPO (defaults assume a locally tagged `openenv-policy-deep-research-env:latest`):

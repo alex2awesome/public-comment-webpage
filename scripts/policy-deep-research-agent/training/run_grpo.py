@@ -22,7 +22,7 @@ for path in (TRAINING_DIR, REPO_ROOT):
         sys.path.insert(0, str(path))
 
 from rollout_openenv import rollout_openenv
-from src.envs.policy_deep_research_env.client import PolicyDeepResearchEnv
+from utils.envs.policy_deep_research_env.client import PolicyDeepResearchEnv
 
 
 def parse_args() -> argparse.Namespace:
@@ -44,8 +44,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--training-steps", type=int, default=1)
     parser.add_argument("--learning-rate", type=float, default=5e-6)
     parser.add_argument("--output-dir", type=str, default="../data/checkpoints")
-    parser.add_argument("--system-prompt", type=str, default="prompts/system.txt")
-    parser.add_argument("--action-schema", type=str, default="prompts/action_schema.md")
+    parser.add_argument("--system-prompt", type=str, default="../policy_src/policy_prompts/system.txt")
+    parser.add_argument("--action-schema", type=str, default="../policy_src/policy_prompts/action_schema.md")
     parser.add_argument("--record-rollouts", type=str, default="../data/cache/rollouts.jsonl")
     return parser.parse_args()
 
@@ -55,11 +55,17 @@ def main() -> None:
     load_dotenv()
 
     training_dir = Path(__file__).resolve().parent
-    system_prompt = (training_dir / args.system_prompt).read_text()
-    example_path = training_dir / "prompts" / "example_1.txt"
+    system_prompt_path = Path(args.system_prompt)
+    if not system_prompt_path.is_absolute():
+        system_prompt_path = training_dir / system_prompt_path
+    system_prompt = system_prompt_path.read_text()
+    example_path = system_prompt_path.parent / "example_1.txt"
     if example_path.exists():
         system_prompt = f"{system_prompt.strip()}\n\n{example_path.read_text().strip()}"
-    action_schema = (training_dir / args.action_schema).read_text()
+    action_schema_path = Path(args.action_schema)
+    if not action_schema_path.is_absolute():
+        action_schema_path = training_dir / action_schema_path
+    action_schema = action_schema_path.read_text()
 
     env_client = build_env_client(args)
 
