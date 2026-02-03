@@ -7,18 +7,27 @@ import json
 import logging
 import os
 import time
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from fastapi.concurrency import run_in_threadpool
 from langsmith import Client as LangSmithClient
+from langchain_core.messages import HumanMessage, SystemMessage
 
-from policy_src.policy_agent_lc.rollout import run_one_rollout
+from policy_src.policy_research_core.cache_db import CacheDB
+from policy_src.policy_research_core.semanticscholar_api import SemanticScholarClient
 
 from .config import Settings, get_settings
-from .schemas import FeedbackRequest, RolloutRequest, RolloutResponse
+from .schemas import (
+    FeedbackRequest,
+    FindingsSummary,
+    ResubmitRequest,
+    ResubmitResponse,
+    RolloutRequest,
+    RolloutResponse,
+)
 
 LOG_FORMAT = "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 LOG_LEVEL = os.getenv("POLICY_BACKEND_LOG_LEVEL", "INFO").upper()
@@ -30,6 +39,7 @@ else:
 
 logger = logging.getLogger(__name__)
 app = FastAPI(title="Policy Rollout API", version="0.1.0")
+S2_CLIENT = SemanticScholarClient()
 
 app.add_middleware(
     CORSMiddleware,
@@ -96,6 +106,121 @@ def attach_langsmith_run_id(episode: Dict[str, Any], project_name: Optional[str]
         episode["langsmith_run_id"] = langsmith_run_id
 
 
+def _run_rollout(*args, **kwargs):
+    from policy_src.policy_agent_lc.rollout import run_one_rollout
+
+    return run_one_rollout(*args, **kwargs)
+
+
+def _semantic_scholar_paper_lookup(paper_id: str, settings: Settings) -> Dict[str, Any]:
+    fields = "paperId,title,year,venue,url,abstract,citationCount,authors,openAccessPdf"
+    db = CacheDB(settings.cache_path)
+    payload = db.cached_or_fetch_semantic_scholar_paper(
+        use_cached=settings.use_cached,
+        paper_id=paper_id,
+        fields=fields,
+        fetch_fn=lambda: S2_CLIENT.paper_details(paper_id, fields=fields),
+    )
+    raw = payload.get("raw") or {}
+    if "authors" not in payload and "authors" in raw:
+        payload["authors"] = raw["authors"]
+    if not payload.get("url"):
+        payload["url"] = raw.get("url") or raw.get("openAccessPdf", {}).get("url")
+    return payload
+
+
+def _summary_to_json(summary: FindingsSummary) -> str:
+    payload = summary.model_dump(mode="python", by_alias=True)
+    return json.dumps(payload, indent=2, ensure_ascii=False)
+
+
+def _notes_block(notes: List[str]) -> str:
+    cleaned = [note.strip() for note in notes if isinstance(note, str) and note.strip()]
+    if not cleaned:
+        return "No persistent researcher notes were recorded."
+    return "\n".join(f"- {note}" for note in cleaned)
+
+
+def _tool_events_block(events: List[Dict[str, Any]], limit: int = 12) -> str:
+    if not events:
+        return "No recent tool call context was provided."
+    lines: List[str] = []
+    for event in events[:limit]:
+        step = event.get("step")
+        tool = event.get("tool") or event.get("type")
+        result = event.get("result")
+        message = event.get("message")
+        if isinstance(result, dict):
+            snippet = json.dumps(result)
+        else:
+            snippet = str(result or message or event.get("args") or "")
+        snippet = snippet.replace("\n", " ")
+        if len(snippet) > 280:
+            snippet = f"{snippet[:277]}..."
+        prefix = f"Step {step}: {tool}" if step is not None else f"{tool}"
+        lines.append(f"- {prefix} -> {snippet}")
+    return "\n".join(lines)
+
+
+def _render_memo_from_summary(
+    question: str,
+    summary: FindingsSummary,
+    notes: List[str],
+    directives: Optional[str],
+    model_name: str,
+    temperature: float,
+    api_key: str,
+    tool_events: List[Dict[str, Any]],
+    prior_memo: Optional[str],
+) -> str:
+    from langchain_openai import ChatOpenAI
+
+    llm = ChatOpenAI(
+        model=model_name,
+        temperature=temperature,
+        timeout=180,
+        max_retries=2,
+        api_key=api_key,
+    )
+
+    directives_text = directives.strip() if directives else "Follow the agent's default memo style."
+    summary_blob = _summary_to_json(summary)
+    notes_blob = _notes_block(notes)
+    events_blob = _tool_events_block(tool_events)
+    prior_memo_section = ""
+    if prior_memo:
+        prior_memo_section = f"Previous memo submitted:\n---\n{prior_memo.strip()}\n---\n"
+    human_prompt = (
+        "Draft a formal response to a policy Request for Information (RFI) using the updated findings summary and prior agent context.\n\n"
+        f"Research question:\n{question.strip()}\n\n"
+        f"Finding summary JSON (preserve article ordering when possible):\n{summary_blob}\n\n"
+        f"Researcher notes:\n{notes_blob}\n\n"
+        f"Recent tool interactions:\n{events_blob}\n\n"
+        f"{prior_memo_section}"
+        f"Additional directives from the user:\n{directives_text}\n\n"
+        "Requirements:\n"
+        "- Treat this as a polished RFI response with salutation/introduction, numbered recommendations, and clear calls to action.\n"
+        "- Weave the listed top arguments into the memo structure and cite articles inline using <cite id=\"PAPER_ID\">Title</cite>.\n"
+        "- Cite each referenced article using <cite id=\"PAPER_ID\">Title</cite> with the provided paperId when available.\n"
+        "- Mention recommended contributors (top people) in a final section if the list is not empty.\n"
+        "- Reference previous memo learnings if helpful, but the new memo should supersede it.\n"
+        "- Keep tone professional and targeted for policy stakeholders."
+    )
+    response = llm.invoke(
+        [
+            SystemMessage(
+                content="You are an expert policy researcher who produces clear, defensible memos grounded in cited evidence."
+            ),
+            HumanMessage(content=human_prompt),
+        ]
+    )
+    if isinstance(response.content, str):
+        return response.content
+    if isinstance(response.content, list):
+        return "\n".join(part.get("text", "") for part in response.content if isinstance(part, dict))
+    return str(response.content)
+
+
 @app.post("/rollouts", response_model=RolloutResponse)
 async def create_rollout(
     payload: RolloutRequest,
@@ -121,7 +246,7 @@ async def create_rollout(
     )
 
     episode = await run_in_threadpool(
-        run_one_rollout,
+        _run_rollout,
         settings.model_name,
         0,
         settings.use_cached,
@@ -147,6 +272,7 @@ async def create_rollout(
         steps=episode.get("steps", 0),
         tool_calls=episode.get("tool_calls", []),
         langsmith_run_id=episode.get("langsmith_run_id"),
+        summary=episode.get("summary"),
     )
 
 
@@ -180,7 +306,7 @@ async def stream_rollout(
         try:
             rollout_temperature = temperature if temperature is not None else settings.temperature
             episode = await run_in_threadpool(
-                run_one_rollout,
+                _run_rollout,
                 settings.model_name,
                 0,
                 settings.use_cached,
@@ -231,6 +357,74 @@ async def stream_rollout(
             "Connection": "keep-alive",
         },
     )
+
+
+@app.post("/rollouts/resubmit", response_model=ResubmitResponse)
+async def regenerate_memo_from_summary(
+    payload: ResubmitRequest,
+    authorization: Optional[str] = Header(default=None, alias="Authorization"),
+    settings: Settings = Depends(get_settings),
+) -> ResubmitResponse:
+    api_key = resolve_api_key(authorization, settings)
+    if not api_key:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Missing OpenAI API key.")
+    if not payload.summary.top_arguments and not payload.summary.top_articles:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Provide at least one top argument or article before regenerating the memo.",
+        )
+    configure_langsmith_env(settings)
+    try:
+        memo = await run_in_threadpool(
+            _render_memo_from_summary,
+            payload.question,
+            payload.summary,
+            payload.notes,
+            payload.directives,
+            settings.model_name,
+            settings.temperature,
+            api_key,
+            payload.tool_events,
+            payload.prior_memo,
+        )
+    except Exception as exc:  # pylint: disable=broad-except
+        logger.exception("Memo regeneration failed", exc_info=exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Unable to regenerate memo from summary. Please try again.",
+        ) from exc
+    return ResubmitResponse(memo=memo)
+
+
+@app.get("/semantic-scholar/paper/{paper_id}")
+async def get_semantic_scholar_paper(
+    paper_id: str,
+    settings: Settings = Depends(get_settings),
+):
+    try:
+        payload = await run_in_threadpool(_semantic_scholar_paper_lookup, paper_id, settings)
+    except Exception as exc:  # pylint: disable=broad-except
+        logger.exception("Semantic Scholar paper lookup failed | paper_id=%s", paper_id)
+        raise HTTPException(status_code=502, detail="Unable to fetch Semantic Scholar paper metadata.") from exc
+    return payload
+
+
+@app.get("/semantic-scholar/authors")
+async def search_semantic_scholar_authors(
+    query: str = Query(..., min_length=2),
+    limit: int = Query(5, ge=1, le=10),
+):
+    try:
+        response = await run_in_threadpool(
+            S2_CLIENT.author_search,
+            query,
+            "name,authorId,url,paperCount,hIndex",
+            limit,
+        )
+    except Exception as exc:  # pylint: disable=broad-except
+        logger.exception("Semantic Scholar author search failed | query=%s", query)
+        raise HTTPException(status_code=502, detail="Unable to search Semantic Scholar authors.") from exc
+    return response
 
 
 @app.post("/feedback", status_code=status.HTTP_204_NO_CONTENT)

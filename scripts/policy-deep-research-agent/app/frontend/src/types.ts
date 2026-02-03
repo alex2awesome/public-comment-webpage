@@ -6,6 +6,21 @@ export interface BibliographyEntry {
   reason?: string;
 }
 
+export interface FindingsSummaryArticle {
+  id?: string;
+  paperId?: string;
+  title?: string;
+  url?: string;
+  authors?: string[];
+  reason_chosen?: string;
+}
+
+export interface FindingsSummary {
+  topArguments: string[];
+  topArticles: FindingsSummaryArticle[];
+  topPeople: string[];
+}
+
 export interface ToolCallSummary {
   step: number;
   tool: string;
@@ -24,6 +39,7 @@ export interface RolloutResult {
   rewardBreakdown: Record<string, number>;
   toolCalls: ToolCallSummary[];
   langsmithRunId?: string;
+  summary?: FindingsSummary | null;
 }
 
 export interface RolloutStreamEvent {
@@ -35,6 +51,7 @@ export interface RolloutStreamEvent {
   message?: string;
   question?: string;
   episode?: RolloutResult;
+  summary?: FindingsSummary;
   [key: string]: unknown;
 }
 
@@ -45,4 +62,14 @@ export interface FeedbackRequest {
   langsmithRunId?: string;
   sentiment: FeedbackSentiment;
   note?: string;
+}
+
+export interface RegenerateMemoRequest {
+  runId: string;
+  question: string;
+  summary: FindingsSummary;
+  notes: string[];
+  directives?: string;
+  toolEvents: Record<string, unknown>[];
+  priorMemo?: string;
 }

@@ -43,8 +43,8 @@ def build_tools(
         """Search Semantic Scholar. Keep queries short (3–6 terms)."""
         _bump_step("search_semantic_scholar", {"query": query, "top_k": top_k, "year": year})
         fields = "paperId,title,year,venue,url,abstract,citationCount"
-        desired = max(int(top_k or 0), 1)
-        fetch_limit = min(100, max(20, desired))
+        desired = min(max(int(top_k or 0), 1), 5)
+        fetch_limit = max(5, desired)
         try:
             result = db.cached_or_fetch_semantic_scholar_search(
                 use_cached=session.use_cached,
@@ -214,10 +214,100 @@ def build_tools(
         _emit_event("tool_result", {"step": session.step_count, "tool": "wait", "result": session.last_tool_result})
         return session.last_tool_result
 
+    @tool
+    def summarize_findings(summary: Optional[Any] = None) -> Dict[str, Any]:
+        """Summarize planned arguments, sources, and people before submitting."""
+        parsed_summary: Optional[Dict[str, Any]] = None
+        if isinstance(summary, str):
+            import json
+
+            try:
+                parsed_summary = json.loads(summary)
+            except json.JSONDecodeError as exc:
+                raise ValueError(
+                    "summarize_findings(summary=...) must receive a JSON object. "
+                    "Provide {...} with `top arguments`, `top articles`, and `top people`."
+                ) from exc
+        elif isinstance(summary, dict):
+            parsed_summary = summary
+        _bump_step("summarize_findings", {"summary": parsed_summary})
+        if not parsed_summary:
+            raise ValueError(
+                "You must provide a JSON object in the `summary` argument with keys "
+                "`top arguments`, `top articles`, and `top people`."
+            )
+
+        def _coerce_list(value: Any) -> List[Any]:
+            if isinstance(value, list):
+                return value
+            if value is None:
+                return []
+            return [value]
+
+        def _extract_field(obj: Dict[str, Any], *names: str):
+            for name in names:
+                if name in obj:
+                    return obj[name]
+            return None
+
+        normalized: Dict[str, Any] = {
+            "top_arguments": [],
+            "top_articles": [],
+            "top_people": [],
+        }
+        top_args = parsed_summary.get("top arguments") or parsed_summary.get("top_arguments") or []
+        cleaned_args: List[str] = []
+        for arg in _coerce_list(top_args):
+            if arg is None:
+                continue
+            text = str(arg).strip()
+            if text:
+                cleaned_args.append(text)
+        normalized["top_arguments"] = cleaned_args
+
+        raw_articles = parsed_summary.get("top articles") or parsed_summary.get("top_articles") or []
+        articles: List[Dict[str, Any]] = []
+        for entry in _coerce_list(raw_articles):
+            if not isinstance(entry, dict):
+                continue
+            raw_url = _extract_field(entry, "url", "link")
+            paper_id = _extract_field(entry, "paperId", "paper_id", "id")
+            article = {
+                "title": _extract_field(entry, "title") or "",
+                "authors": _coerce_list(_extract_field(entry, "authors", "author_list")),
+                "url": raw_url,
+                "paperId": paper_id,
+                "reason_chosen": _extract_field(entry, "reason_chosen", "reason", "summary"),
+            }
+            if not article["url"] and article["paperId"]:
+                article["url"] = f"https://www.semanticscholar.org/paper/{article['paperId']}"
+            if article["title"] or article["url"] or article["paperId"]:
+                articles.append(article)
+        normalized["top_articles"] = articles
+
+        raw_people = parsed_summary.get("top people") or parsed_summary.get("top_people") or []
+        cleaned_people: List[str] = []
+        for person in _coerce_list(raw_people):
+            if person is None:
+                continue
+            text = str(person).strip()
+            if text:
+                cleaned_people.append(text)
+        normalized["top_people"] = cleaned_people
+
+        session.summary = normalized
+        session.last_tool_result = {"type": "summary", "summary": normalized}
+        _emit_event(
+            "tool_result",
+            {"step": session.step_count, "tool": "summarize_findings", "result": session.last_tool_result},
+        )
+        return session.last_tool_result
+
     tools: List[Any] = [
         search_semantic_scholar,
         write_note,
         wait,
+        summarize_findings,
         submit,
     ]
     if enable_bibliography:

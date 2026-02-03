@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, List, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -20,6 +20,26 @@ class BibliographyEntry(BaseModel):
     year: Optional[int] = None
     url: Optional[str] = None
     reason: Optional[str] = None
+
+
+class SummaryArticle(BaseModel):
+    paperId: Optional[str] = Field(default=None, alias="paper_id")
+    title: Optional[str] = None
+    url: Optional[str] = None
+    authors: List[str] = Field(default_factory=list)
+    reason_chosen: Optional[str] = None
+
+    class Config:
+        populate_by_name = True
+
+
+class FindingsSummary(BaseModel):
+    top_arguments: List[str] = Field(default_factory=list, alias="top_arguments")
+    top_articles: List[SummaryArticle] = Field(default_factory=list, alias="top_articles")
+    top_people: List[str] = Field(default_factory=list, alias="top_people")
+
+    class Config:
+        populate_by_name = True
 
 
 class ToolCall(BaseModel):
@@ -40,6 +60,7 @@ class RolloutResponse(BaseModel):
     steps: int
     tool_calls: List[ToolCall]
     langsmith_run_id: Optional[str] = None
+    summary: Optional[FindingsSummary] = None
 
 
 class FeedbackRequest(BaseModel):
@@ -47,3 +68,19 @@ class FeedbackRequest(BaseModel):
     langsmith_run_id: Optional[str] = Field(None, min_length=4)
     sentiment: Literal["positive", "negative"]
     note: Optional[str] = Field(None, max_length=2000)
+
+
+class ResubmitRequest(BaseModel):
+    run_id: str = Field(..., min_length=4)
+    question: str = Field(..., min_length=5)
+    summary: FindingsSummary
+    notes: List[str] = Field(default_factory=list)
+    directives: Optional[str] = Field(
+        default=None, description="Optional editing guidance or structure instructions supplied by the user."
+    )
+    tool_events: List[Dict[str, Any]] = Field(default_factory=list, description="Recent tool call/result payloads.")
+    prior_memo: Optional[str] = Field(default=None, description="Most recent memo text before regeneration.")
+
+
+class ResubmitResponse(BaseModel):
+    memo: str

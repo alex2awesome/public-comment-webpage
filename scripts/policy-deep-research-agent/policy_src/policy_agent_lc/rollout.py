@@ -67,10 +67,17 @@ def run_one_rollout(
 
     instructions = (
         "Use the tools to search Semantic Scholar, fetch papers, build a bibliography with reasons, "
-        "take notes, then submit a final memo."
+        "take notes, summarize findings, then submit a final memo. Treat the final memo as a professional response to an RFI—"
+        "include a greeting, numbered recommendations backed by citations, and a closing that explains next steps. "
+        "When you call summarize_findings(summary={...}), lock in your plan: supply 3–5 concise argument statements, "
+        "a `top articles` array where each entry has title, paperId (or url), authors, and a short reason explaining how it supports your argument, "
+        "and a `top people` list noting experts you intend to feature."
     )
     if max_steps:
-        instructions += f" You may issue at most {max_steps} tool calls; plan to use the final step for `submit`."
+        instructions += (
+            f" You may issue at most {max_steps} tool calls; reserve the penultimate step for "
+            "`summarize_findings(summary={...})` so you articulate the final arguments + sources, and the final step for `submit`."
+        )
     if not enable_bibliography:
         instructions += " Bibliography tools are disabled for this run; rely on search results, notes, and your final memo."
 
@@ -127,6 +134,10 @@ def run_one_rollout(
         "force_submit_mode": bool(max_steps),
         "force_submit_active": False,
         "force_submit_prompted": False,
+        "summary_ready": False,
+        "force_summary_active": False,
+        "force_summary_prompted": False,
+        "summary_prompted": False,
     }
 
     invoke_config = {"metadata": {"episode_run_id": run_id}}
@@ -158,6 +169,7 @@ def run_one_rollout(
         "steps": session.step_count,
         "tool_calls": session.tool_calls,
         "messages": session.messages,
+        "summary": session.summary,
     }
     if event_callback:
         try:

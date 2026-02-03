@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import QueryForm from "./components/QueryForm";
 import RunStatus from "./components/RunStatus";
 import FeedbackPanel, { FeedbackFormValues } from "./components/FeedbackPanel";
-import { API_BASE_URL, normalizeEpisode, sendFeedback } from "./lib/api";
-import { RolloutResult, RolloutStreamEvent } from "./types";
+import { API_BASE_URL, normalizeEpisode, normalizeSummary, regenerateMemo, sendFeedback } from "./lib/api";
+import { FindingsSummary, RolloutResult, RolloutStreamEvent } from "./types";
 import "./App.css";
 
 const BACKEND_WAKE_MESSAGES = [
@@ -30,6 +30,12 @@ function App() {
   const [showEvents, setShowEvents] = useState(true);
   const [backendReady, setBackendReady] = useState(false);
   const [backendStatusMessage, setBackendStatusMessage] = useState(BACKEND_WAKE_MESSAGES[0]);
+  const [latestSummary, setLatestSummary] = useState<FindingsSummary | null>(null);
+  const [memoUpdateStatus, setMemoUpdateStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
+  const [memoUpdateError, setMemoUpdateError] = useState<string | null>(null);
+  const [memoHistory, setMemoHistory] = useState<string[]>([]);
+  const [summaryHistory, setSummaryHistory] = useState<(FindingsSummary | null)[]>([]);
+  const [revisionIndex, setRevisionIndex] = useState(0);
   const eventSourceRef = useRef<EventSource | null>(null);
   const warmupTimerRef = useRef<number | null>(null);
 
@@ -86,11 +92,29 @@ function App() {
     if (!payload.type) {
       payload.type = type;
     }
+    if (payload.type === "tool_result" && payload.tool === "summarize_findings" && payload.result?.summary) {
+      const summary = normalizeSummary(payload.result.summary);
+      if (summary) {
+        setLatestSummary(summary);
+      }
+    }
     if (payload.type === "complete" || payload.type === "run_completed") {
       if (payload.episode) {
         const normalized = normalizeEpisode(payload.episode);
         payload.episode = normalized;
         setResult(normalized);
+        if (normalized.summary) {
+          setLatestSummary(normalized.summary);
+        }
+        setSummaryHistory([normalized.summary ?? null]);
+        const memoText = normalized.finalMemo || "";
+        if (memoText) {
+          setMemoHistory([memoText]);
+          setRevisionIndex(0);
+        } else {
+          setMemoHistory([]);
+          setRevisionIndex(0);
+        }
       }
       setRunState("complete");
       setShowEvents(false);
@@ -134,6 +158,12 @@ function App() {
     setFeedbackError(null);
     setEvents([]);
     setShowEvents(true);
+    setLatestSummary(null);
+    setMemoUpdateStatus("idle");
+    setMemoUpdateError(null);
+    setMemoHistory([]);
+    setSummaryHistory([]);
+    setRevisionIndex(0);
 
     try {
       const url = new URL("/rollouts/stream", API_BASE_URL);
@@ -189,6 +219,68 @@ function App() {
       setFeedbackError(message);
     }
   };
+
+  const handleMemoRegenerate = async (editedSummary: FindingsSummary, directives: string) => {
+    if (!result) {
+      return;
+    }
+    const memoForContext = memoHistory[revisionIndex] ?? result.finalMemo ?? "";
+    const toolEventsPayload = events
+      .filter((event) => event.type === "tool_result" || event.type === "tool_call")
+      .slice(-20)
+      .map((event) => ({
+        type: event.type,
+        step: event.step,
+        tool: event.tool,
+        message: event.message,
+        args: event.args,
+        result: event.result,
+      }));
+    setMemoUpdateStatus("saving");
+    setMemoUpdateError(null);
+    try {
+      const memo = await regenerateMemo({
+        runId: result.runId,
+        question: result.question,
+        summary: editedSummary,
+        notes: result.notes ?? [],
+        directives,
+        toolEvents: toolEventsPayload,
+        priorMemo: memoForContext || undefined,
+      });
+      setResult((prev) => (prev ? { ...prev, finalMemo: memo } : prev));
+      setLatestSummary(editedSummary);
+      setSummaryHistory((prev) => {
+        const next = [...prev, editedSummary];
+        setRevisionIndex(next.length - 1);
+        return next;
+      });
+      setMemoHistory((prev) => [...prev, memo]);
+      setMemoUpdateStatus("success");
+      window.setTimeout(() => setMemoUpdateStatus("idle"), 2500);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unable to update memo.";
+      setMemoUpdateError(message);
+      setMemoUpdateStatus("error");
+    }
+  };
+
+  const handleRevisionNavigate = (direction: "prev" | "next") => {
+    setRevisionIndex((prev) => {
+      const maxIndex = Math.max(memoHistory.length, summaryHistory.length) - 1;
+      const cappedMax = Math.max(maxIndex, 0);
+      if (direction === "prev") {
+        return Math.max(prev - 1, 0);
+      }
+      if (direction === "next") {
+        return Math.min(prev + 1, cappedMax);
+      }
+      return prev;
+    });
+  };
+
+  const revisionCount = Math.max(memoHistory.length, summaryHistory.length);
+  const currentPlanSummary = summaryHistory[revisionIndex] ?? latestSummary;
 
   return (
     <div className={`app-shell${backendReady ? "" : " app-shell--waiting"}`}>
@@ -250,6 +342,14 @@ function App() {
             showEvents={showEvents}
             maxSteps={maxSteps}
             onToggleEvents={handleToggleEvents}
+            planSummary={currentPlanSummary ?? null}
+            onSummaryUpdate={handleMemoRegenerate}
+            memoUpdateStatus={memoUpdateStatus}
+            memoUpdateError={memoUpdateError}
+            memoHistory={memoHistory}
+            revisionIndex={revisionIndex}
+            revisionCount={revisionCount || (currentPlanSummary || memoHistory.length ? 1 : 0)}
+            onRevisionNavigate={handleRevisionNavigate}
           />
           {runState === "complete" && result && (
             <div className="section-divider">

@@ -86,3 +86,8 @@ class SemanticScholarClient:
     def paper_details(self, paper_id: str, fields: str) -> Dict[str, Any]:
         """Fetch metadata for a single paper."""
         return self._get(f"/paper/{paper_id}", {"fields": fields})
+
+    def author_search(self, query: str, fields: str, limit: int = 5) -> Dict[str, Any]:
+        """Search for authors."""
+        params: Dict[str, Any] = {"query": query, "fields": fields, "limit": limit}
+        return self._get("/author/search", params)

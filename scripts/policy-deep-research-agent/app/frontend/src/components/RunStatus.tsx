@@ -1,6 +1,9 @@
 import { ReactNode, useEffect, useMemo, useRef } from "react";
 import { RunState } from "../App";
-import { RolloutResult, RolloutStreamEvent } from "../types";
+import { FindingsSummary, RolloutResult, RolloutStreamEvent } from "../types";
+import SummaryPanel from "./SummaryPanel";
+
+export type MemoUpdateStatus = "idle" | "saving" | "success" | "error";
 
 interface RunStatusProps {
   status: RunState;
@@ -10,6 +13,14 @@ interface RunStatusProps {
   showEvents: boolean;
   maxSteps: number;
   onToggleEvents: () => void;
+  planSummary: FindingsSummary | null;
+  onSummaryUpdate: (summary: FindingsSummary, directives: string) => Promise<void>;
+  memoUpdateStatus: MemoUpdateStatus;
+  memoUpdateError?: string | null;
+  memoHistory: string[];
+  revisionIndex: number;
+  revisionCount: number;
+  onRevisionNavigate: (direction: "prev" | "next") => void;
 }
 
 const formatEventMeta = (event: RolloutStreamEvent) => {
@@ -106,11 +117,30 @@ const renderMemoWithCitations = (memo: string, bib: RolloutResult["bib"]) => {
   return segments;
 };
 
-const RunStatus = ({ status, result, error, events, showEvents, maxSteps, onToggleEvents }: RunStatusProps) => {
+const RunStatus = ({
+  status,
+  result,
+  error,
+  events,
+  showEvents,
+  maxSteps,
+  onToggleEvents,
+  planSummary,
+  onSummaryUpdate,
+  memoUpdateStatus,
+  memoUpdateError,
+  memoHistory,
+  revisionIndex,
+  revisionCount,
+  onRevisionNavigate,
+}: RunStatusProps) => {
   const hasEvents = events.length > 0;
   const logBodyRef = useRef<HTMLDivElement | null>(null);
   const toolCallCount = useMemo(() => events.filter((event) => event.type === "tool_call").length, [events]);
   const completedSteps = Math.min(result?.steps ?? toolCallCount, maxSteps);
+  const hasRevisions = revisionCount > 0;
+  const displayRevisionCount = hasRevisions ? revisionCount : memoHistory.length || 1;
+  const isLatestRevision = hasRevisions ? revisionIndex === revisionCount - 1 : true;
 
   useEffect(() => {
     if (!showEvents) {
@@ -229,9 +259,42 @@ const RunStatus = ({ status, result, error, events, showEvents, maxSteps, onTogg
         <span>Task: {result.taskId}</span>
         <span>Tool calls: {result.toolCalls.length}</span>
       </div>
+      <SummaryPanel
+        summary={planSummary}
+        disabled={status !== "complete"}
+        status={memoUpdateStatus}
+        error={memoUpdateError}
+        onSubmit={onSummaryUpdate}
+        revisionIndex={revisionIndex}
+        revisionCount={displayRevisionCount}
+        onNavigate={onRevisionNavigate}
+        isLatestRevision={isLatestRevision}
+      />
       <article className="memo-card">
-        <h3>Final memo</h3>
-        {result.finalMemo ? (
+        <div className="memo-card__header">
+          <h3>Final memo</h3>
+          {displayRevisionCount > 1 ? (
+            <div className="memo-nav">
+              <button type="button" className="secondary" onClick={() => onRevisionNavigate("prev")} disabled={revisionIndex === 0}>
+                ←
+              </button>
+              <span>
+                Version {revisionIndex + 1} / {displayRevisionCount}
+              </span>
+              <button
+                type="button"
+                className="secondary"
+                onClick={() => onRevisionNavigate("next")}
+                disabled={revisionIndex >= displayRevisionCount - 1}
+              >
+                →
+              </button>
+            </div>
+          ) : null}
+        </div>
+        {memoHistory.length > 0 ? (
+          <div className="memo-body">{renderMemoWithCitations(memoHistory[Math.min(revisionIndex, memoHistory.length - 1)], result.bib)}</div>
+        ) : result.finalMemo ? (
           <div className="memo-body">{renderMemoWithCitations(result.finalMemo, result.bib)}</div>
         ) : (
           <p>No memo submitted.</p>

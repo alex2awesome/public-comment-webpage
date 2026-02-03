@@ -29,6 +29,7 @@ class ResearchSession:
 
     messages: List[Dict[str, Any]] = field(default_factory=list)
     tool_calls: List[Dict[str, Any]] = field(default_factory=list)
+    summary: Dict[str, Any] = field(default_factory=dict)
 
     @property
     def done(self) -> bool:

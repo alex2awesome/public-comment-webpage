@@ -21,6 +21,10 @@ class GraphState(TypedDict):
     force_submit_mode: bool
     force_submit_active: bool
     force_submit_prompted: bool
+    summary_ready: bool
+    force_summary_active: bool
+    force_summary_prompted: bool
+    summary_prompted: bool
 
 
 TOOL_NODE_LABELS = {
@@ -30,32 +34,37 @@ TOOL_NODE_LABELS = {
     "review_bibliography": "review_bibliography",
     "fetch_bibliography_paper": "inspect_saved_paper",
     "wait": "wait",
+    "summarize_findings": "summarize_findings",
     "submit": "submit_memo",
 }
 
 PHASE_TRANSITIONS: Dict[str, Sequence[str]] = {
-    "start_phase": ("review_bibliography", "search_semantic_scholar", "wait", "write_note"),
+    "start_phase": ("review_bibliography", "search_semantic_scholar", "wait", "write_note", "summarize_findings"),
     "review_bibliography": (
         "review_bibliography",
         "fetch_bibliography_paper",
         "search_semantic_scholar",
         "write_note",
         "wait",
+        "summarize_findings",
     ),
-    "fetch_bibliography_paper": ("write_note", "review_bibliography", "submit", "wait"),
-    "search_semantic_scholar": ("fetch_paper", "write_note", "review_bibliography", "wait"),
-    "fetch_paper": ("write_note", "review_bibliography", "wait"),
+    "fetch_bibliography_paper": ("write_note", "review_bibliography", "summarize_findings", "submit", "wait"),
+    "search_semantic_scholar": ("fetch_paper", "write_note", "review_bibliography", "wait", "summarize_findings"),
+    "fetch_paper": ("write_note", "review_bibliography", "wait", "summarize_findings"),
     "write_note": (
         "write_note",
         "review_bibliography",
         "search_semantic_scholar",
         "fetch_paper",
         "fetch_bibliography_paper",
+        "summarize_findings",
         "submit",
         "wait",
     ),
-    "wait": ("review_bibliography", "search_semantic_scholar", "write_note"),
+    "wait": ("review_bibliography", "search_semantic_scholar", "write_note", "summarize_findings"),
+    "force_summary_phase": ("summarize_findings",),
     "force_submit_phase": ("submit",),
+    "summarize_findings": ("submit", "write_note", "review_bibliography", "search_semantic_scholar"),
     "submit": (),
 }
 INITIAL_PHASE = "start_phase"
@@ -147,11 +156,29 @@ def build_graph(llm, tools, max_steps: int):
             state["pending_tool_call"] = None
             return state
 
+        if name == "submit" and not state.get("summary_ready"):
+            state["messages"].append(
+                ToolMessage(
+                    content="Tool call rejected: summarize_findings must run immediately before submit.",
+                    tool_call_id=call.get("id", name),
+                )
+            )
+            state["messages"].append(
+                HumanMessage(
+                    content=(
+                        "Call summarize_findings with JSON outlining top arguments, sources, and people. "
+                        "Then call submit(memo=...)."
+                    )
+                )
+            )
+            state["pending_tool_call"] = None
+            return state
+
         state["pending_tool_call"] = {
             "tool_name": name,
             "tool_call": call,
         }
-        if name == "write_note":
+        if name in ("write_note", "summarize_findings"):
             state["note_pending"] = False
         elif name == "wait":
             state["note_pending"] = state.get("note_pending", False)
@@ -181,16 +208,57 @@ def build_graph(llm, tools, max_steps: int):
                 state["phase"] = tool_name
             if tool_name == "submit":
                 state["submitted"] = True
+            if tool_name == "summarize_findings":
+                state["summary_ready"] = True
+                state["force_summary_active"] = False
+            elif tool_name != "submit":
+                state["summary_ready"] = False
             state["pending_tool_call"] = None
             return state
 
         return node
 
+    def _inject_summary_prompt(state: GraphState) -> None:
+        if state.get("summary_prompted"):
+            return
+        state["messages"].append(
+            HumanMessage(
+                content=(
+                    "Before you submit you must call summarize_findings(summary={...}) with a JSON object that locks in your plan. "
+                    "Include: (1) `top arguments`: 3–5 clear statements; (2) `top articles`: each with title, paperId or url, authors, "
+                    "and a `reason_chosen` describing how it supports your argument; (3) `top people`: experts you intend to highlight. "
+                    "After calling summarize_findings with that JSON, immediately call submit(memo=...)."
+                )
+            )
+        )
+        state["summary_prompted"] = True
+
     def should_continue(state: GraphState) -> str:
+        if not state.get("summary_ready"):
+            threshold = state["max_steps"] - 2 if state["max_steps"] else 2
+            if state["steps_executed"] >= max(threshold, 2):
+                _inject_summary_prompt(state)
         if state["submitted"]:
             return "end"
 
+        summary_ready = state.get("summary_ready", False)
         if state.get("force_submit_mode") and not state["submitted"]:
+            summary_threshold = max(state["max_steps"] - 2, 0)
+            if (
+                state["steps_executed"] >= summary_threshold
+                and not summary_ready
+                and not state.get("force_summary_active")
+            ):
+                state["phase"] = "force_summary_phase"
+                state["note_pending"] = False
+                state["pending_tool_call"] = None
+                state["force_summary_active"] = True
+                if not state.get("force_summary_prompted"):
+                    _inject_summary_prompt(state)
+                    state["force_summary_prompted"] = True
+            if state.get("force_summary_active") and not summary_ready:
+                return "continue"
+
             final_threshold = max(state["max_steps"] - 1, 0)
             if state["steps_executed"] >= final_threshold and not state.get("force_submit_active"):
                 state["phase"] = "force_submit_phase"
