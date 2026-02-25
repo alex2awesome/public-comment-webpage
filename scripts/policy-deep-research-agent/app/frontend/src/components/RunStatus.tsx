@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useMemo, useRef } from "react";
 import { RunState } from "../App";
 import { FindingsSummary, RolloutResult, RolloutStreamEvent } from "../types";
 import SummaryPanel from "./SummaryPanel";
+import MemoWithCitations from "./MemoWithCitations";
 
 export type MemoUpdateStatus = "idle" | "saving" | "success" | "error";
 
@@ -292,13 +293,27 @@ const RunStatus = ({
             </div>
           ) : null}
         </div>
-        {memoHistory.length > 0 ? (
-          <div className="memo-body">{renderMemoWithCitations(memoHistory[Math.min(revisionIndex, memoHistory.length - 1)], result.bib)}</div>
-        ) : result.finalMemo ? (
-          <div className="memo-body">{renderMemoWithCitations(result.finalMemo, result.bib)}</div>
-        ) : (
-          <p>No memo submitted.</p>
-        )}
+        {(() => {
+          const isViewingLatest = memoHistory.length === 0 || revisionIndex === memoHistory.length - 1;
+          const hasStructuredMemo = Boolean(result.finalMemoBlocks && result.finalMemoBlocks.length > 0 && isViewingLatest);
+          if (hasStructuredMemo) {
+            return (
+              <MemoWithCitations
+                blocks={result.finalMemoBlocks}
+                documents={result.sourceDocuments ?? []}
+                fallbackMemo={result.finalMemo}
+              />
+            );
+          }
+          if (memoHistory.length > 0) {
+            const memoText = memoHistory[Math.min(revisionIndex, memoHistory.length - 1)];
+            return <div className="memo-body">{renderMemoWithCitations(memoText, result.bib)}</div>;
+          }
+          if (result.finalMemo) {
+            return <div className="memo-body">{renderMemoWithCitations(result.finalMemo, result.bib)}</div>;
+          }
+          return <p>No memo submitted.</p>;
+        })()}
       </article>
       <section>
         <h3>Bibliography</h3>

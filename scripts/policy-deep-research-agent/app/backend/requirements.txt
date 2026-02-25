@@ -11,3 +11,4 @@ langchain-openai
 langsmith
 sse-starlette
 filelock
+anthropic

@@ -31,41 +31,52 @@ TOOL_NODE_LABELS = {
     "search_semantic_scholar": "semantic_search",
     "fetch_paper": "semantic_fetch",
     "write_note": "write_note",
-    "review_bibliography": "review_bibliography",
     "fetch_bibliography_paper": "inspect_saved_paper",
     "wait": "wait",
     "summarize_findings": "summarize_findings",
     "submit": "submit_memo",
+    "submit_claude_citations": "submit_memo_claude",
 }
 
+SUBMIT_TOOLS = {"submit", "submit_claude_citations"}
+
 PHASE_TRANSITIONS: Dict[str, Sequence[str]] = {
-    "start_phase": ("review_bibliography", "search_semantic_scholar", "wait", "write_note", "summarize_findings"),
-    "review_bibliography": (
-        "review_bibliography",
-        "fetch_bibliography_paper",
+    "start_phase": (
         "search_semantic_scholar",
+        "wait",
+        "write_note",
+        "summarize_findings",
+    ),
+    "fetch_bibliography_paper": (
+        "write_note",
+        "summarize_findings",
+        "submit",
+        "submit_claude_citations",
+        "wait",
+    ),
+    "search_semantic_scholar": (
+        "fetch_paper",
         "write_note",
         "wait",
         "summarize_findings",
     ),
-    "fetch_bibliography_paper": ("write_note", "review_bibliography", "summarize_findings", "submit", "wait"),
-    "search_semantic_scholar": ("fetch_paper", "write_note", "review_bibliography", "wait", "summarize_findings"),
-    "fetch_paper": ("write_note", "review_bibliography", "wait", "summarize_findings"),
+    "fetch_paper": ("write_note", "wait", "summarize_findings"),
     "write_note": (
         "write_note",
-        "review_bibliography",
         "search_semantic_scholar",
         "fetch_paper",
         "fetch_bibliography_paper",
         "summarize_findings",
         "submit",
+        "submit_claude_citations",
         "wait",
     ),
-    "wait": ("review_bibliography", "search_semantic_scholar", "write_note", "summarize_findings"),
+    "wait": ("search_semantic_scholar", "write_note", "summarize_findings"),
     "force_summary_phase": ("summarize_findings",),
-    "force_submit_phase": ("submit",),
-    "summarize_findings": ("submit", "write_note", "review_bibliography", "search_semantic_scholar"),
+    "force_submit_phase": ("submit", "submit_claude_citations"),
+    "summarize_findings": ("submit", "submit_claude_citations", "write_note", "search_semantic_scholar"),
     "submit": (),
+    "submit_claude_citations": (),
 }
 INITIAL_PHASE = "start_phase"
 
@@ -156,7 +167,7 @@ def build_graph(llm, tools, max_steps: int):
             state["pending_tool_call"] = None
             return state
 
-        if name == "submit" and not state.get("summary_ready"):
+        if name in SUBMIT_TOOLS and not state.get("summary_ready"):
             state["messages"].append(
                 ToolMessage(
                     content="Tool call rejected: summarize_findings must run immediately before submit.",
@@ -166,8 +177,8 @@ def build_graph(llm, tools, max_steps: int):
             state["messages"].append(
                 HumanMessage(
                     content=(
-                        "Call summarize_findings with JSON outlining top arguments, sources, and people. "
-                        "Then call submit(memo=...)."
+                        "Call summarize_findings with JSON outlining top arguments, recommendations, sources, and people. "
+                        "Then call submit (submit_claude_citations when citations mode is enabled)."
                     )
                 )
             )
@@ -206,12 +217,12 @@ def build_graph(llm, tools, max_steps: int):
                 state["phase"] = previous_phase
             else:
                 state["phase"] = tool_name
-            if tool_name == "submit":
+            if tool_name in SUBMIT_TOOLS:
                 state["submitted"] = True
             if tool_name == "summarize_findings":
                 state["summary_ready"] = True
                 state["force_summary_active"] = False
-            elif tool_name != "submit":
+            elif tool_name not in SUBMIT_TOOLS:
                 state["summary_ready"] = False
             state["pending_tool_call"] = None
             return state
@@ -225,9 +236,10 @@ def build_graph(llm, tools, max_steps: int):
             HumanMessage(
                 content=(
                     "Before you submit you must call summarize_findings(summary={...}) with a JSON object that locks in your plan. "
-                    "Include: (1) `top arguments`: 3–5 clear statements; (2) `top articles`: each with title, paperId or url, authors, "
-                    "and a `reason_chosen` describing how it supports your argument; (3) `top people`: experts you intend to highlight. "
-                    "After calling summarize_findings with that JSON, immediately call submit(memo=...)."
+                    "Include: (1) `top arguments`: 3–5 clear statements; (2) `top recommendations`: 1–3 actionable policy moves; "
+                    "(3) `top articles`: each with title, paperId or url, authors, and a `reason_chosen` describing how it supports your argument; "
+                    "(4) `top people`: experts you intend to highlight. "
+                    "After calling summarize_findings with that JSON, immediately call submit (or submit_claude_citations)."
                 )
             )
         )
@@ -268,7 +280,10 @@ def build_graph(llm, tools, max_steps: int):
                 if not state.get("force_submit_prompted"):
                     state["messages"].append(
                         HumanMessage(
-                            content="You are out of tool calls. Summarize your findings and call the `submit` tool now."
+                            content=(
+                                "You are out of tool calls. Summarize your findings and call the `submit` "
+                                "(or `submit_claude_citations`) tool now."
+                            )
                         )
                     )
                     state["force_submit_prompted"] = True

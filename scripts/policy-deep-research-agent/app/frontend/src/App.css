@@ -299,6 +299,120 @@ button.primary:not(:disabled):hover {
   color: #b68a4d;
 }
 
+.memo-citation-span {
+  display: inline;
+  white-space: inherit;
+}
+
+.memo-citation-text {
+  transition: background 0.15s ease;
+  background: rgba(198, 160, 96, 0.12);
+  border-radius: 0.25rem;
+  padding: 0 0.05rem;
+}
+
+.memo-citation-span:hover .memo-citation-text {
+  background: rgba(198, 160, 96, 0.25);
+}
+
+.citation-inline {
+  margin-left: 0.1rem;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: baseline;
+}
+
+.memo-body--structured {
+  display: block;
+  white-space: pre-wrap;
+  line-height: 1.65;
+}
+
+.memo-paragraph {
+  display: inline;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+}
+
+.memo-paragraph.has-citation {
+  background: transparent;
+}
+
+.citation-badge-list {
+  display: inline-flex;
+  gap: 0.35rem;
+  margin-left: 0.4rem;
+}
+
+.citation-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background: rgba(31, 41, 51, 0.08);
+  font-size: 0.65rem;
+  cursor: pointer;
+}
+
+.citation-badge__marker {
+  font-weight: 600;
+  font-size: 0.65rem;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.citation-tooltip {
+  position: absolute;
+  bottom: calc(100% + 0.35rem);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--paper);
+  border: 1px solid rgba(31, 41, 51, 0.12);
+  box-shadow: 0 10px 30px rgba(31, 41, 51, 0.15);
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.75rem;
+  min-width: 640px;
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.citation-tooltip.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.citation-badge:hover .citation-tooltip {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.citation-tooltip__title {
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.citation-tooltip__meta {
+  margin: 0 0 0.35rem;
+  font-size: 0.9rem;
+  color: var(--stone);
+}
+
+.citation-tooltip__quote {
+  margin: 0.4rem 0 0;
+  font-style: italic;
+  color: var(--stone);
+}
+
 .bib-list {
   list-style: none;
   margin: 0;
@@ -557,6 +671,14 @@ button.primary:not(:disabled):hover {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.summary-card.argument-card {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--argument-color, var(--soft-gold)) 20%, transparent),
+    rgba(255, 255, 255, 0.95)
+  );
 }
 
 .summary-card__row {

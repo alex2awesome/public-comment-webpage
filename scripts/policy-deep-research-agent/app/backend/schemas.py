@@ -20,6 +20,7 @@ class BibliographyEntry(BaseModel):
     year: Optional[int] = None
     url: Optional[str] = None
     reason: Optional[str] = None
+    abstract: Optional[str] = None
 
 
 class SummaryArticle(BaseModel):
@@ -35,6 +36,7 @@ class SummaryArticle(BaseModel):
 
 class FindingsSummary(BaseModel):
     top_arguments: List[str] = Field(default_factory=list, alias="top_arguments")
+    top_recommendations: List[str] = Field(default_factory=list, alias="top_recommendations")
     top_articles: List[SummaryArticle] = Field(default_factory=list, alias="top_articles")
     top_people: List[str] = Field(default_factory=list, alias="top_people")
 
@@ -46,6 +48,43 @@ class ToolCall(BaseModel):
     step: int
     tool: str
     args: Dict[str, object]
+
+
+class MemoCitation(BaseModel):
+    type: Optional[str] = None
+    document_index: Optional[int] = None
+    document_id: Optional[str] = None
+    document_title: Optional[str] = None
+    document_url: Optional[str] = None
+    paper_id: Optional[str] = None
+    cited_text: Optional[str] = None
+    start_char_index: Optional[int] = None
+    end_char_index: Optional[int] = None
+    start_page_number: Optional[int] = None
+    end_page_number: Optional[int] = None
+    start_block_index: Optional[int] = None
+    end_block_index: Optional[int] = None
+
+
+class MemoBlock(BaseModel):
+    text: str
+    citations: List[MemoCitation] = Field(default_factory=list)
+
+
+class SourceDocument(BaseModel):
+    document_index: int
+    document_id: Optional[str] = None
+    paper_id: Optional[str] = None
+    title: Optional[str] = None
+    url: Optional[str] = None
+    year: Optional[int] = None
+    reason: Optional[str] = None
+    authors: Optional[str] = None
+    text_preview: Optional[str] = None
+    kind: Optional[str] = None
+    argument_index: Optional[int] = None
+    person_index: Optional[int] = None
+    recommendation_index: Optional[int] = None
 
 
 class RolloutResponse(BaseModel):
@@ -61,6 +100,8 @@ class RolloutResponse(BaseModel):
     tool_calls: List[ToolCall]
     langsmith_run_id: Optional[str] = None
     summary: Optional[FindingsSummary] = None
+    final_memo_blocks: Optional[List[MemoBlock]] = Field(default=None, alias="final_memo_blocks")
+    source_documents: List[SourceDocument] = Field(default_factory=list, alias="source_documents")
 
 
 class FeedbackRequest(BaseModel):
@@ -84,3 +125,5 @@ class ResubmitRequest(BaseModel):
 
 class ResubmitResponse(BaseModel):
     memo: str
+    memo_blocks: Optional[List[MemoBlock]] = None
+    source_documents: List[SourceDocument] = Field(default_factory=list)

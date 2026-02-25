@@ -56,6 +56,7 @@ def test_summarize_findings_normalizes_payload(tmp_path) -> None:
             "ignore-me",
         ],
         "top people": ["Dr. Jane Doe", None],
+        "top recommendations": ["  Fund resilience hubs  ", ""],
     }
 
     result = summarize_tool.invoke({"summary": payload})
@@ -66,6 +67,7 @@ def test_summarize_findings_normalizes_payload(tmp_path) -> None:
     assert article["title"] == "Community Resilience Finance"
     assert article["authors"] == ["Dr. Jane Doe", "Dr. Alex Kim"]
     assert session.summary["top_people"] == ["Dr. Jane Doe"]
+    assert session.summary["top_recommendations"] == ["Fund resilience hubs"]
     # Tool response should mirror normalized payload.
     assert result["summary"] == session.summary
 
@@ -88,6 +90,7 @@ def test_submit_requires_summary_first(tmp_path) -> None:
                             "top arguments": ["Argument A"],
                             "top articles": [{"paperId": "abc123", "title": "Paper A"}],
                             "top people": ["Author A"],
+                            "top recommendations": ["Add matching funds"],
                         }
                     },
                     id="call_2",

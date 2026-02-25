@@ -20,7 +20,7 @@ type FeedbackState = "idle" | "sending" | "sent" | "error";
 function App() {
   const [question, setQuestion] = useState("");
   const [maxSteps, setMaxSteps] = useState(4);
-  const enableBibliography = false;
+  const enableBibliography = true;
   const [runState, setRunState] = useState<RunState>("idle");
   const [result, setResult] = useState<RolloutResult | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);

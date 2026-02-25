@@ -20,3 +20,4 @@ agentlightning
 filelock
 langsmith
 sse-starlette
+anthropic

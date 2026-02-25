@@ -30,6 +30,8 @@ async function parseError(response: Response): Promise<string> {
 
 export const normalizeEpisode = (payload: any): RolloutResult => {
   const summary = normalizeSummary(payload.summary ?? payload.findings_summary ?? null);
+  const finalMemoBlocks = payload.final_memo_blocks ?? payload.finalMemoBlocks ?? null;
+  const sourceDocuments = payload.source_documents ?? payload.sourceDocuments ?? [];
   return {
     runId: payload.run_id ?? payload.runId ?? "",
     taskId: payload.task_id ?? payload.taskId ?? "",
@@ -43,6 +45,8 @@ export const normalizeEpisode = (payload: any): RolloutResult => {
     toolCalls: payload.tool_calls ?? payload.toolCalls ?? [],
     langsmithRunId: payload.langsmith_run_id ?? payload.langsmithRunId,
     summary,
+    finalMemoBlocks,
+    sourceDocuments,
   };
 };
 
@@ -97,10 +101,13 @@ export const normalizeSummary = (payload: any): FindingsSummary | null => {
     };
   };
   const topArgsSource = payload["top arguments"] ?? payload.top_arguments ?? payload.topArguments ?? [];
+  const topRecommendationsSource =
+    payload["top recommendations"] ?? payload.top_recommendations ?? payload.topRecommendations ?? [];
   const topArticlesSource = payload["top articles"] ?? payload.top_articles ?? payload.topArticles ?? [];
   const topPeopleSource = payload["top people"] ?? payload.top_people ?? payload.topPeople ?? [];
   return {
     topArguments: coerceList(topArgsSource).map((arg) => String(arg)),
+    topRecommendations: coerceList(topRecommendationsSource).map((rec) => String(rec)),
     topArticles: coerceList(topArticlesSource)
       .map(normalizeArticle)
       .filter((article): article is FindingsSummaryArticle => Boolean(article)),
@@ -122,6 +129,7 @@ export async function regenerateMemo(request: RegenerateMemoRequest): Promise<st
         reason_chosen: article.reason_chosen,
       })),
       top_people: request.summary.topPeople,
+      top_recommendations: request.summary.topRecommendations,
     },
     notes: request.notes,
     directives: request.directives,

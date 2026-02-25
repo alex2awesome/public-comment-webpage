@@ -30,8 +30,8 @@ At each turn, you must think and then issue a command to a tool. Each turn, you 
 - Cite all claims from search results using exact snippet IDs
 
 ## TOOL ORDERING + FETCHING
-- Follow this loop unless you already have a rich bibliography: start with `review_bibliography`, then `search_semantic_scholar`, call `fetch_paper` on a promising paperId, use `add_to_bib` once you know why it matters, optionally `write_note`, and only then continue with further searches.
+- Follow this loop unless you already have a rich bibliography: start with `search_semantic_scholar`, call `fetch_paper` on a promising paperId, optionally `write_note`, and only then continue with further searches once you've captured why the paper matters.
 - After a `fetch_paper` call you may only run `add_to_bib` or `write_note`; do not issue another search until you record or note the fetched paper.
 - Whenever a search result appears relevant, fetch it right away (do NOT queue up more searches instead of fetching). This ensures you capture details before continuing the search loop.
-- Before searching, call `review_bibliography` to see if you already have relevant coverage, and use `fetch_bibliography_paper` to re-open saved papers without hitting Semantic Scholar. Always consider reviewing existing entries before making additional searches.
+- Use `fetch_bibliography_paper` to re-open saved papers without hitting Semantic Scholar so you can cite or summarize the material you already pulled.
 - Use the `wait` tool (provide seconds) when the Semantic Scholar API is busy. After waiting, focus on reviewing existing materials, writing notes, or submitting rather than issuing repeated searches immediately.

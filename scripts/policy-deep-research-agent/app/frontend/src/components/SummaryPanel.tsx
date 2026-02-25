@@ -1,9 +1,10 @@
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { CSSProperties, FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { FindingsSummary } from "../types";
 import { API_BASE_URL } from "../lib/api";
 import type { MemoUpdateStatus } from "./RunStatus";
 
 type EditableArgument = { id: string; text: string; enabled: boolean };
+type EditableRecommendation = { id: string; text: string; enabled: boolean };
 type EditableArticle = {
   id: string;
   paperId?: string;
@@ -17,11 +18,12 @@ type EditablePerson = { id: string; name: string; enabled: boolean; url?: string
 
 interface EditableSummary {
   arguments: EditableArgument[];
+  recommendations: EditableRecommendation[];
   articles: EditableArticle[];
   people: EditablePerson[];
 }
 
-type SectionKey = "arguments" | "articles" | "people" | "directives";
+type SectionKey = "arguments" | "recommendations" | "articles" | "people" | "directives";
 
 interface AuthorResult {
   authorId: string;
@@ -46,9 +48,16 @@ interface SummaryPanelProps {
 const randomId = () =>
   typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `id-${Date.now()}-${Math.random()}`;
 
+const ARGUMENT_COLORS = ["#f94144", "#f3722c", "#f8961e", "#f9c74f", "#90be6d", "#577590", "#9d4edd", "#ff8fab"];
+
 const toEditable = (summary: FindingsSummary): EditableSummary => ({
   arguments: summary.topArguments.map((text, idx) => ({
     id: `${idx}-${text.slice(0, 8)}`,
+    text,
+    enabled: true,
+  })),
+  recommendations: (summary.topRecommendations ?? []).map((text, idx) => ({
+    id: `${idx}-rec-${text.slice(0, 8)}`,
     text,
     enabled: true,
   })),
@@ -70,6 +79,10 @@ const toEditable = (summary: FindingsSummary): EditableSummary => ({
 
 const fromEditable = (editable: EditableSummary): FindingsSummary => ({
   topArguments: editable.arguments.filter((arg) => arg.enabled && arg.text.trim()).map((arg) => arg.text.trim()),
+  topRecommendations: editable.recommendations
+    .filter((rec) => rec.enabled && rec.text.trim())
+    .map((rec) => rec.text.trim())
+    .slice(0, 3),
   topArticles: editable.articles
     .filter((article) => article.enabled)
     .map((article) => ({
@@ -105,6 +118,7 @@ const SummaryPanel = ({ summary, disabled, status, error, onSubmit, revisionInde
   const [editable, setEditable] = useState<EditableSummary | null>(null);
   const [directives, setDirectives] = useState("");
   const [newArgument, setNewArgument] = useState("");
+  const [newRecommendation, setNewRecommendation] = useState("");
   const [newPerson, setNewPerson] = useState("");
   const [paperInput, setPaperInput] = useState("");
   const [paperReason, setPaperReason] = useState("");
@@ -112,6 +126,7 @@ const SummaryPanel = ({ summary, disabled, status, error, onSubmit, revisionInde
   const [articleError, setArticleError] = useState<string | null>(null);
   const [sectionOpen, setSectionOpen] = useState<Record<SectionKey, boolean>>({
     arguments: false,
+    recommendations: false,
     articles: false,
     people: false,
     directives: false,
@@ -133,7 +148,10 @@ const SummaryPanel = ({ summary, disabled, status, error, onSubmit, revisionInde
       setEditable(null);
     }
     setDirectives("");
-    setSectionOpen({ arguments: false, articles: false, people: false, directives: false });
+    setNewArgument("");
+    setNewRecommendation("");
+    setNewPerson("");
+    setSectionOpen({ arguments: false, recommendations: false, articles: false, people: false, directives: false });
     setAuthorResults([]);
     setAuthorQuery("");
     setAuthorStatus("idle");
@@ -150,7 +168,10 @@ const SummaryPanel = ({ summary, disabled, status, error, onSubmit, revisionInde
 
   const canSubmit =
     !!selectedSummary &&
-    (selectedSummary.topArguments.length > 0 || selectedSummary.topArticles.length > 0 || selectedSummary.topPeople.length > 0);
+    (selectedSummary.topArguments.length > 0 ||
+      selectedSummary.topRecommendations.length > 0 ||
+      selectedSummary.topArticles.length > 0 ||
+      selectedSummary.topPeople.length > 0);
 
   const applyUpdates = async (event: FormEvent) => {
     event.preventDefault();
@@ -176,6 +197,24 @@ const SummaryPanel = ({ summary, disabled, status, error, onSubmit, revisionInde
       ],
     });
     setNewArgument("");
+  };
+
+  const addRecommendation = () => {
+    if (!newRecommendation.trim() || !editable || editingLocked) {
+      return;
+    }
+    setEditable({
+      ...editable,
+      recommendations: [
+        ...editable.recommendations,
+        {
+          id: randomId(),
+          text: newRecommendation.trim(),
+          enabled: true,
+        },
+      ],
+    });
+    setNewRecommendation("");
   };
 
   const addPerson = () => {
@@ -421,8 +460,11 @@ const SummaryPanel = ({ summary, disabled, status, error, onSubmit, revisionInde
             {sectionOpen.arguments && (
               <div className="summary-section__body">
                 <ul className="summary-card-list">
-                  {editable.arguments.map((argument) => (
-                    <li key={argument.id} className="summary-card">
+                  {editable.arguments.map((argument, idx) => {
+                    const color = ARGUMENT_COLORS[idx % ARGUMENT_COLORS.length];
+                    const styles: CSSProperties = { ["--argument-color" as const]: color };
+                    return (
+                      <li key={argument.id} className="summary-card argument-card" style={styles}>
                       <label className="summary-card__row">
                         <input
                           type="checkbox"
@@ -446,8 +488,9 @@ const SummaryPanel = ({ summary, disabled, status, error, onSubmit, revisionInde
                           }}
                         />
                       </label>
-                    </li>
-                  ))}
+                      </li>
+                    );
+                  })}
                 </ul>
                 <div className="summary-panel__add-row">
                   <input
@@ -459,6 +502,65 @@ const SummaryPanel = ({ summary, disabled, status, error, onSubmit, revisionInde
                   />
                   <button type="button" className="secondary" disabled={editingLocked || !newArgument.trim()} onClick={addArgument}>
                     Add argument
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="summary-section">
+            <button type="button" className="summary-section__toggle" onClick={() => toggleSection("recommendations")}>
+              <div>
+                <h4>Top recommendations</h4>
+                <p className="section-copy">List 1–3 concrete actions the memo will advocate.</p>
+              </div>
+              <span className="summary-section__chevron">{sectionOpen.recommendations ? "−" : "+"}</span>
+            </button>
+            {sectionOpen.recommendations && (
+              <div className="summary-section__body">
+                <ul className="summary-card-list">
+                  {editable.recommendations.map((recommendation) => (
+                    <li key={recommendation.id} className="summary-card">
+                      <label className="summary-card__row">
+                        <input
+                          type="checkbox"
+                          checked={recommendation.enabled}
+                          disabled={editingLocked}
+                          onChange={(event) => {
+                            const next = editable.recommendations.map((item) =>
+                              item.id === recommendation.id ? { ...item, enabled: event.target.checked } : item
+                            );
+                            setEditable({ ...editable, recommendations: next });
+                          }}
+                        />
+                        <textarea
+                          disabled={editingLocked}
+                          value={recommendation.text}
+                          onChange={(event) => {
+                            const next = editable.recommendations.map((item) =>
+                              item.id === recommendation.id ? { ...item, text: event.target.value } : item
+                            );
+                            setEditable({ ...editable, recommendations: next });
+                          }}
+                        />
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+                <div className="summary-panel__add-row">
+                  <input
+                    type="text"
+                    placeholder="Add a recommendation"
+                    value={newRecommendation}
+                    disabled={editingLocked}
+                    onChange={(event) => setNewRecommendation(event.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="secondary"
+                    disabled={editingLocked || !newRecommendation.trim()}
+                    onClick={addRecommendation}
+                  >
+                    Add recommendation
                   </button>
                 </div>
               </div>

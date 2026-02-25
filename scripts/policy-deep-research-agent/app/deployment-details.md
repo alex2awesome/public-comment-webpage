@@ -16,9 +16,12 @@
 - **Plan**: Free tier (Oregon region). SSE is supported out of the box.
 - **Key environment variables** (managed in Render dashboard unless a default is set in `render.yaml`):
   - `OPENAI_API_KEY`, `LANGSMITH_API_KEY`, `LANGCHAIN_API_KEY` – *secret tokens; never stored in git*.
+  - `ANTHROPIC_API_KEY` – Claude Citations key (falls back to `~/.anthropic-usc-key.txt` locally).
   - `LANGSMITH_PROJECT="Policy LangGraph Rollout"`, `LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"`, `LANGCHAIN_TRACING_V2="true"`.
   - `POLICY_AGENT_USE_CACHED="false"`, `POLICY_AGENT_CACHE_PATH="/tmp/policy-cache.sqlite"` (per-run cache).
   - `VITE_AGENT_API_URL="https://public-comment-webpage.onrender.com"` to keep Netlify builds pointed at prod.
+  - Optional override: `CLAUDE_CITATIONS_MODEL="claude-sonnet-4-6"` if you need a different Claude release.
+  - `USE_CLAUDE_SUBMIT_TOOL=true` ensures the LangGraph agent calls `submit_claude_citations` instead of the legacy `submit` tool.
 - **Health endpoints**: `/` (friendly message) and `/healthz` (plain `{"status": "ok"}`) respond on the Render URL for uptime checks.
 
 ### Render logs & API access

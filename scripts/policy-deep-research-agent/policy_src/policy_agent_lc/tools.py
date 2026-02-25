@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import time
 from typing import Any, Callable, Dict, List, Optional
 
@@ -13,13 +14,19 @@ from policy_src.policy_research_core.semanticscholar_api import (
     SemanticScholarRateLimitError,
 )
 
+from .claude_citations import CitationGenerationError, render_memo_with_claude
 from .session import ResearchSession
+
+logger = logging.getLogger(__name__)
 
 
 def build_tools(
     session: ResearchSession,
     enable_bibliography: bool = True,
     event_callback: Optional[Callable[[Dict[str, Any]], None]] = None,
+    use_claude_submit_tool: bool = False,
+    claude_api_key: Optional[str] = None,
+    claude_model_name: Optional[str] = None,
 ) -> List[Any]:
     """Return LangChain tool objects bound to the provided session."""
     db = CacheDB(session.cache_path)
@@ -162,22 +169,43 @@ def build_tools(
         """Submit the final memo and terminate the run."""
         _bump_step("submit", {"memo": memo[:2000]})
         session.final_memo = memo
+        session.memo_blocks = []
+        session.source_documents = []
         session.last_tool_result = {"submitted": True}
         _emit_event("tool_result", {"step": session.step_count, "tool": "submit", "result": session.last_tool_result})
         return session.last_tool_result
 
     @tool
-    def review_bibliography() -> Dict[str, Any]:
-        """Inspect the current bibliography entries without hitting Semantic Scholar."""
-        _bump_step("review_bibliography", {})
+    def submit_claude_citations(directives: str = "") -> Dict[str, Any]:
+        """Submit via Claude Citations using retrieved documents for inline references."""
+        _bump_step("submit_claude_citations", {"directives": directives[:2000] if directives else ""})
+        if not claude_api_key:
+            raise ValueError(
+                "Claude citations submit tool is enabled but no ANTHROPIC_API_KEY was configured."
+            )
+        try:
+            result = render_memo_with_claude(
+                question=session.question,
+                summary=session.summary,
+                notes=session.notes,
+                bibliography=session.bib,
+                api_key=claude_api_key,
+                model_name=claude_model_name or "claude-sonnet-4-6",
+                directives=directives,
+            )
+        except CitationGenerationError as exc:
+            raise ValueError(f"Claude citations failed: {exc}") from exc
+        session.final_memo = result["text"]
+        session.memo_blocks = result.get("blocks", [])
+        session.source_documents = result.get("documents", [])
         session.last_tool_result = {
-            "type": "bibliography",
-            "entries": list(session.bib),
-            "count": len(session.bib),
+            "submitted": True,
+            "memo_renderer": "claude_citations",
+            "document_count": len(session.source_documents),
         }
         _emit_event(
             "tool_result",
-            {"step": session.step_count, "tool": "review_bibliography", "result": session.last_tool_result},
+            {"step": session.step_count, "tool": "submit_claude_citations", "result": session.last_tool_result},
         )
         return session.last_tool_result
 
@@ -226,7 +254,7 @@ def build_tools(
             except json.JSONDecodeError as exc:
                 raise ValueError(
                     "summarize_findings(summary=...) must receive a JSON object. "
-                    "Provide {...} with `top arguments`, `top articles`, and `top people`."
+                    "Provide {...} with `top arguments`, `top recommendations`, `top articles`, and `top people`."
                 ) from exc
         elif isinstance(summary, dict):
             parsed_summary = summary
@@ -234,7 +262,7 @@ def build_tools(
         if not parsed_summary:
             raise ValueError(
                 "You must provide a JSON object in the `summary` argument with keys "
-                "`top arguments`, `top articles`, and `top people`."
+                "`top arguments`, `top recommendations`, `top articles`, and `top people`."
             )
 
         def _coerce_list(value: Any) -> List[Any]:
@@ -252,6 +280,7 @@ def build_tools(
 
         normalized: Dict[str, Any] = {
             "top_arguments": [],
+            "top_recommendations": [],
             "top_articles": [],
             "top_people": [],
         }
@@ -264,6 +293,21 @@ def build_tools(
             if text:
                 cleaned_args.append(text)
         normalized["top_arguments"] = cleaned_args
+
+        raw_recommendations = (
+            parsed_summary.get("top recommendations")
+            or parsed_summary.get("top_recommendations")
+            or parsed_summary.get("recommendations")
+            or []
+        )
+        cleaned_recommendations: List[str] = []
+        for rec in _coerce_list(raw_recommendations):
+            if rec is None:
+                continue
+            text = str(rec).strip()
+            if text:
+                cleaned_recommendations.append(text)
+        normalized["top_recommendations"] = cleaned_recommendations[:3]
 
         raw_articles = parsed_summary.get("top articles") or parsed_summary.get("top_articles") or []
         articles: List[Dict[str, Any]] = []
@@ -308,10 +352,12 @@ def build_tools(
         write_note,
         wait,
         summarize_findings,
-        submit,
     ]
     if enable_bibliography:
         tools.insert(1, fetch_paper)
-        tools.insert(3, review_bibliography)
-        tools.insert(4, fetch_bibliography_paper)
+        tools.insert(3, fetch_bibliography_paper)
+    if use_claude_submit_tool:
+        tools.append(submit_claude_citations)
+    else:
+        tools.append(submit)
     return tools

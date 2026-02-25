@@ -44,6 +44,7 @@ def test_resubmit_requires_summary_content(client: TestClient) -> None:
                 "top_arguments": [],
                 "top_articles": [],
                 "top_people": [],
+                "top_recommendations": [],
             },
             "notes": [],
             "directives": "",
@@ -77,6 +78,7 @@ def test_resubmit_returns_memo(monkeypatch, client: TestClient) -> None:
                     {"paper_id": "paper-1", "title": "Paper One", "authors": ["Doe"], "reason_chosen": "Great stats"}
                 ],
                 "top_people": ["Jane Doe"],
+                "top_recommendations": ["Set up public-private resilience labs"],
             },
             "notes": ["Remember to highlight coastal impacts."],
             "directives": "Keep it short.",
@@ -86,4 +88,8 @@ def test_resubmit_returns_memo(monkeypatch, client: TestClient) -> None:
         },
     )
     assert response.status_code == 200
-    assert response.json() == {"memo": "Draft memo body"}
+    assert response.json() == {
+        "memo": "Draft memo body",
+        "memo_blocks": None,
+        "source_documents": [],
+    }

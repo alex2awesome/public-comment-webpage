@@ -201,6 +201,7 @@ def _render_memo_from_summary(
         "Requirements:\n"
         "- Treat this as a polished RFI response with salutation/introduction, numbered recommendations, and clear calls to action.\n"
         "- Weave the listed top arguments into the memo structure and cite articles inline using <cite id=\"PAPER_ID\">Title</cite>.\n"
+        "- Align the memo’s numbered recommendations with the `top recommendations` provided in the summary whenever possible.\n"
         "- Cite each referenced article using <cite id=\"PAPER_ID\">Title</cite> with the provided paperId when available.\n"
         "- Mention recommended contributors (top people) in a final section if the list is not empty.\n"
         "- Reference previous memo learnings if helpful, but the new memo should supersede it.\n"
@@ -256,6 +257,9 @@ async def create_rollout(
         payload.enable_bibliography,
         question,
         api_key,
+        settings.claude_api_key,
+        settings.claude_model_name,
+        settings.use_claude_submit_tool,
     )
     attach_langsmith_run_id(episode, settings.langsmith_project)
     logger.info("Rollout complete | run_id=%s | task_id=%s | reward=%s", episode["run_id"], episode["task_id"], episode.get("reward"))
@@ -273,6 +277,8 @@ async def create_rollout(
         tool_calls=episode.get("tool_calls", []),
         langsmith_run_id=episode.get("langsmith_run_id"),
         summary=episode.get("summary"),
+        final_memo_blocks=episode.get("final_memo_blocks"),
+        source_documents=episode.get("source_documents", []),
     )
 
 
@@ -316,6 +322,9 @@ async def stream_rollout(
                 enable_bibliography,
                 question_text,
                 api_key,
+                settings.claude_api_key,
+                settings.claude_model_name,
+                settings.use_claude_submit_tool,
                 emit_event,
             )
             attach_langsmith_run_id(episode, settings.langsmith_project)
@@ -368,10 +377,14 @@ async def regenerate_memo_from_summary(
     api_key = resolve_api_key(authorization, settings)
     if not api_key:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Missing OpenAI API key.")
-    if not payload.summary.top_arguments and not payload.summary.top_articles:
+    if (
+        not payload.summary.top_arguments
+        and not payload.summary.top_articles
+        and not payload.summary.top_recommendations
+    ):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Provide at least one top argument or article before regenerating the memo.",
+            detail="Provide at least one top argument, recommendation, or article before regenerating the memo.",
         )
     configure_langsmith_env(settings)
     try:
@@ -393,7 +406,7 @@ async def regenerate_memo_from_summary(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to regenerate memo from summary. Please try again.",
         ) from exc
-    return ResubmitResponse(memo=memo)
+    return ResubmitResponse(memo=memo, memo_blocks=None, source_documents=[])
 
 
 @app.get("/semantic-scholar/paper/{paper_id}")

@@ -13,6 +13,7 @@ from langchain_openai import ChatOpenAI
 from policy_src.policy_research_core.reward import compute_reward
 from policy_src.policy_research_core.tasks import load_tasks
 
+from .claude_citations import CitationGenerationError, render_memo_with_claude
 from .graph import build_graph
 from .prompts import load_system_prompt
 from .session import ResearchSession
@@ -53,6 +54,9 @@ def run_one_rollout(
     enable_bibliography: bool = True,
     question_override: Optional[str] = None,
     openai_api_key: Optional[str] = None,
+    claude_api_key: Optional[str] = None,
+    claude_model_name: Optional[str] = None,
+    use_claude_submit_tool: bool = False,
     event_callback: Optional[Callable[[Dict[str, Any]], None]] = None,
 ) -> Dict[str, Any]:
     """Execute one LangGraph rollout and return an episode dict."""
@@ -65,6 +69,8 @@ def run_one_rollout(
         }
     run_id = str(uuid.uuid4())
 
+    submit_tool_name = "submit_claude_citations" if use_claude_submit_tool else "submit"
+
     instructions = (
         "Use the tools to search Semantic Scholar, fetch papers, build a bibliography with reasons, "
         "take notes, summarize findings, then submit a final memo. Treat the final memo as a professional response to an RFI—"
@@ -76,7 +82,7 @@ def run_one_rollout(
     if max_steps:
         instructions += (
             f" You may issue at most {max_steps} tool calls; reserve the penultimate step for "
-            "`summarize_findings(summary={...})` so you articulate the final arguments + sources, and the final step for `submit`."
+            f"`summarize_findings(summary={{...}})` so you articulate the final arguments + sources, and the final step for `{submit_tool_name}`."
         )
     if not enable_bibliography:
         instructions += " Bibliography tools are disabled for this run; rely on search results, notes, and your final memo."
@@ -117,7 +123,14 @@ def run_one_rollout(
         except Exception:
             pass
 
-    tools = build_tools(session, enable_bibliography=enable_bibliography, event_callback=event_callback)
+    tools = build_tools(
+        session,
+        enable_bibliography=enable_bibliography,
+        event_callback=event_callback,
+        use_claude_submit_tool=use_claude_submit_tool,
+        claude_api_key=claude_api_key,
+        claude_model_name=claude_model_name,
+    )
     graph = build_graph(llm, tools, max_steps=max_steps)
 
     state = {
@@ -143,6 +156,24 @@ def run_one_rollout(
     invoke_config = {"metadata": {"episode_run_id": run_id}}
     final_state = graph.invoke(state, config=invoke_config)
     session.messages = messages_to_dict(final_state["messages"])
+
+    if claude_api_key and not use_claude_submit_tool:
+        try:
+            claude_result = render_memo_with_claude(
+                question=session.question,
+                summary=session.summary,
+                notes=session.notes,
+                bibliography=session.bib,
+                api_key=claude_api_key,
+                model_name=claude_model_name or "claude-sonnet-4-6",
+            )
+            session.final_memo = claude_result["text"]
+            session.memo_blocks = claude_result.get("blocks", [])
+            session.source_documents = claude_result.get("documents", [])
+        except CitationGenerationError as exc:
+            logger.warning("Claude citations skipped: %s", exc)
+        except Exception:
+            logger.exception("Claude citations memo failed", exc_info=True)
 
     if session.final_memo is None:
         session.final_reward = -1.0
@@ -170,6 +201,8 @@ def run_one_rollout(
         "tool_calls": session.tool_calls,
         "messages": session.messages,
         "summary": session.summary,
+        "final_memo_blocks": session.memo_blocks,
+        "source_documents": session.source_documents,
     }
     if event_callback:
         try:
