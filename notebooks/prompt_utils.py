@@ -6,7 +6,7 @@ import ast
 import asyncio
 import json
 from typing import Callable, Iterable, List, Optional
-import os 
+import os
 
 from openai import AsyncOpenAI, OpenAI, PermissionDeniedError, InternalServerError
 from tqdm.auto import tqdm
@@ -14,6 +14,7 @@ from tqdm.auto import tqdm
 __all__ = [
     "async_client",
     "sync_client",
+    "call_vllm",
     "process_batch",
     "process_one",
     "CLEANER_PROMPT",
@@ -22,9 +23,61 @@ __all__ = [
     "ARGUMENTATION_PROMPT",
 ]
 
-os.environ['OPENAI_API_KEY'] = open('/Users/spangher/.openai-reglab-project-key.txt').read().strip()
+if not os.environ.get("OPENAI_API_KEY", None):
+    os.environ["OPENAI_API_KEY"] = open("/Users/spangher/.openai-reglab-project-key.txt").read().strip()
+
 async_client = AsyncOpenAI()
 sync_client = OpenAI()
+
+_DEFAULT_VLLM_BASE_URL = os.getenv("VLLM_BASE_URL", "http://127.0.0.1:8000/v1")
+_DEFAULT_VLLM_API_KEY = os.getenv("VLLM_API_KEY", "EMPTY")
+try:
+    _DEFAULT_VLLM_MAX_TOKENS = int(os.getenv("VLLM_MAX_TOKENS", "1024"))
+except ValueError:
+    _DEFAULT_VLLM_MAX_TOKENS = 1024
+_vllm_client: AsyncOpenAI | None = None
+
+
+def _ensure_vllm_client() -> AsyncOpenAI:
+    """Create (if needed) and return the AsyncOpenAI client for talking to vLLM."""
+    global _vllm_client
+    if _vllm_client is None:
+        _vllm_client = AsyncOpenAI(
+            base_url=_DEFAULT_VLLM_BASE_URL,
+            api_key=_DEFAULT_VLLM_API_KEY,
+        )
+    return _vllm_client
+
+
+async def call_vllm(
+    prompt: str,
+    *,
+    model: str,
+    max_tokens: Optional[int] = None,
+    temperature: float = 0.0,
+    stop: Optional[List[str]] = None,
+) -> str:
+    """Send a single prompt to the locally hosted vLLM OpenAI-compatible server."""
+    client = _ensure_vllm_client()
+    response = await client.chat.completions.create(
+        model=model,
+        messages=[{"role": "user", "content": prompt}],
+        temperature=temperature,
+        max_tokens=max_tokens or _DEFAULT_VLLM_MAX_TOKENS,
+        stop=stop,
+    )
+    choice = response.choices[0]
+    return getattr(choice.message, "content", "") or ""
+
+
+async def _call_openai(prompt: str, *, model: str) -> str:
+    """Issue a prompt to OpenAI's Responses API and return the raw text."""
+    resp = await async_client.responses.create(
+        model=model,
+        input=prompt,
+        service_tier="flex",
+    )
+    return resp.output_text
 
 
 def _is_json_like(candidate: str) -> bool:
@@ -82,6 +135,7 @@ async def process_batch(
     max_attempts: int = 3,
     backoff_base: float = 0.5,
     model: str = "gpt-5-mini",
+    backend: str = "openai",
 ) -> List[str]:
     """Submit a batch of prompts concurrently to the Responses API.
 
@@ -120,6 +174,9 @@ async def process_batch(
         delay (capped only by the caller’s patience).
     model:
         OpenAI Responses model identifier (defaults to `gpt-5-mini`).
+    backend:
+        Choose `"openai"` (default) to send requests to OpenAI or `"vllm"` to
+        dispatch them to the locally hosted vLLM OpenAI-compatible server.
 
     Returns
     -------
@@ -140,17 +197,19 @@ async def process_batch(
 
     sem = asyncio.Semaphore(concurrency)
     results: List[Optional[str]] = [None] * len(prompt_list)
+    backend_choice = backend.lower()
+    if backend_choice not in {"openai", "vllm"}:
+        raise ValueError(f"Unsupported backend '{backend}'. Use 'openai' or 'vllm'.")
 
     async def call_api(idx: int, prompt_str: str) -> None:
         async with sem:
             for attempt in range(1, max_attempts + 1):
                 delay = backoff_base * (2 ** (attempt - 1))
                 try:
-                    resp = await async_client.responses.create(
-                        model=model,
-                        input=prompt_str,
-                        service_tier="flex",
-                    )
+                    if backend_choice == "openai":
+                        cleaned = await _call_openai(prompt_str, model=model)
+                    else:
+                        cleaned = await call_vllm(prompt_str, model=model)
                 except InternalServerError as err:
                     if attempt == max_attempts:
                         payload = {
@@ -187,7 +246,6 @@ async def process_batch(
                     await asyncio.sleep(delay)
                     continue
 
-                cleaned = resp.output_text
                 passes_json = (not check_json) or _is_json_like(cleaned)
                 passes_extra = True
                 if check_additional:

@@ -19,6 +19,8 @@ from autometrics.generator.utils import (
     generate_axes_of_variation,
     smart_limit_examples_for_context,
     get_max_context_tokens,
+    truncate_examples_to_token_limit,
+    DEFAULT_PROMPT_MAX_TOKENS,
 )
 
 
@@ -303,6 +305,13 @@ class OptimizedJudgeProposer(Generator):
                 model_name = self.judge_model.model
             elif self.generator_llm and hasattr(self.generator_llm, 'model'):
                 model_name = self.generator_llm.model
+
+            # Apply per-example token truncation to align with train_reward_model max_length
+            example_texts = truncate_examples_to_token_limit(
+                example_texts,
+                model_name=model_name,
+                max_tokens=DEFAULT_PROMPT_MAX_TOKENS,
+            )
             
             # Smart limit examples
             limited_examples = smart_limit_examples_for_context(
@@ -336,13 +345,6 @@ class OptimizedJudgeProposer(Generator):
         # Create the base program
         base_program = dspy.ChainOfThought(SignatureClass)
         
-        # Set up MIPROv2 optimizer
-        teleprompter = MIPROv2(
-            metric=get_wrapped_metric(self.eval_function),
-            auto=self.auto_mode,
-            num_threads=self.num_threads,
-        )
-        
         # Optimize the program with proper DSPy context
         print(f"📈 Running MIPROv2 optimization...")
         # Use the judge model for optimization since it will be doing the actual scoring
@@ -356,13 +358,27 @@ class OptimizedJudgeProposer(Generator):
             if hasattr(optimization_model, 'kwargs'):
                 temp_kwargs = optimization_model.kwargs.copy()
                 temp_kwargs['temperature'] = temperature
-                optimization_model_with_temp = type(optimization_model)(
-                    model=optimization_model.model, **temp_kwargs
-                )
+                try:
+                    optimization_model_with_temp = type(optimization_model)(
+                        model=optimization_model.model, **temp_kwargs
+                    )
+                except ValueError as e:
+                    # Some reasoning models require fixed temperature/max_tokens. Fall back gracefully.
+                    print(f"⚠️  Could not set temperature on optimization model: {e}")
+                    optimization_model_with_temp = optimization_model
             else:
                 optimization_model_with_temp = optimization_model
         else:
             optimization_model_with_temp = optimization_model
+
+        # Set up MIPROv2 optimizer (explicit models to avoid relying on dspy.configure)
+        teleprompter = MIPROv2(
+            metric=get_wrapped_metric(self.eval_function),
+            auto=self.auto_mode,
+            num_threads=self.num_threads,
+            prompt_model=optimization_model_with_temp,
+            task_model=optimization_model_with_temp,
+        )
 
         if self.max_train_set_size is not None and len(train_set) > self.max_train_set_size:
             print(f"Warning: Train set size ({len(train_set)}) exceeds max_train_set_size ({self.max_train_set_size}). Truncating train set to reduce training time.")

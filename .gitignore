@@ -95,5 +95,11 @@ notebooks/full_matched_comment_df__*.csv
 # Demo recordings (large GIF/MOV exports)
 demos/
 
-# Notebook caches
+# Notebook caches & large artifacts
 .ipynb_checkpoints/
+notebooks/*.pkl
+notebooks/models/
+notebooks/sbert-model-training*/
+notebooks/wandb/
+notebooks/pdf_cache/
+notebooks/boundary_cache_*.csv

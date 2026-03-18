@@ -32,3 +32,9 @@
 ## Security & Configuration Tips
 - Treat API keys (OpenAI, Playwright, etc.) as secrets—use env vars or `.env` files ignored by Git; never hard-code them in config.
 - Large crawls can overwhelm external sites; respect built-in rate limiters and avoid raising worker counts without confirming with ops.
+
+## Notebook & Analysis Preferences
+- Keep notebook code inline and concise—favor small, sequential cells over large helper functions so it is easy to re-run individual steps.
+- Use pandas directly inside cells (e.g., chained operations, `.assign`, `.loc[lambda df: ...]`) instead of creating intermediate helper variables solely to pass between cells.
+- When filtering or transforming DataFrames, prefer `.loc[lambda df: ...]` patterns to keep expressions self-contained.
+- Never revert or overwrite manual edits the user has made in notebooks or analysis scripts; always treat existing content as the source of truth and build on top of it.

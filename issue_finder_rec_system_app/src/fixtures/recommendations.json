@@ -1,0 +1,134 @@
+[
+  {
+    "user_id": "alex-spangher",
+    "recommendations": [
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2024-04100",
+        "score": 0.92,
+        "priority": "High",
+        "match_topics": [
+          "AI Transparency",
+          "Newsroom Workflow"
+        ],
+        "reasons": [
+          "Focuses on provenance tagging for AI-generated journalism.",
+          "Requests evidence from computational journalism researchers."
+        ]
+      },
+      {
+        "user_id": "alex-spangher",
+        "rule_id": "2024-12345",
+        "score": 0.67,
+        "priority": "Medium",
+        "match_topics": [
+          "Energy Policy",
+          "Public Interest Tech"
+        ],
+        "reasons": [
+          "Touches on public communication about clean energy incentives.",
+          "Needs research on subsidy transparency and community reporting."
+        ]
+      }
+    ]
+  },
+  {
+    "user_id": "diyi-yang",
+    "recommendations": [
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2024-05010",
+        "score": 0.94,
+        "priority": "High",
+        "match_topics": [
+          "Human-Centered LLMs",
+          "Socially Aware NLP"
+        ],
+        "reasons": [
+          "Solicits participatory design practices for conversational AI.",
+          "Seeks multilingual benchmarking strategies."
+        ]
+      },
+      {
+        "user_id": "diyi-yang",
+        "rule_id": "2024-04100",
+        "score": 0.83,
+        "priority": "Medium",
+        "match_topics": [
+          "Generative Interfaces",
+          "Human-AI Collaboration"
+        ],
+        "reasons": [
+          "Asks for feedback on AI-assisted newsroom tooling and collaboration.",
+          "Intersects with human-centered evaluation of language technologies."
+        ]
+      }
+    ]
+  },
+  {
+    "user_id": "dan-ho",
+    "recommendations": [
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2024-06090",
+        "score": 0.95,
+        "priority": "High",
+        "match_topics": [
+          "Administrative Law",
+          "Evaluation Standards"
+        ],
+        "reasons": [
+          "OMB guidance on administrative data disclosures for rulemaking.",
+          "Directly references ACUS-aligned evaluation practices."
+        ]
+      },
+      {
+        "user_id": "dan-ho",
+        "rule_id": "2024-22210",
+        "score": 0.74,
+        "priority": "Medium",
+        "match_topics": [
+          "Safety Frameworks",
+          "Technology Policy"
+        ],
+        "reasons": [
+          "Autonomous vehicle oversight with strong governance implications.",
+          "Seeks policy guidance on transparency and data retention."
+        ]
+      }
+    ]
+  },
+  {
+    "user_id": "sanmi-koyejo",
+    "recommendations": [
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2024-07150",
+        "score": 0.97,
+        "priority": "High",
+        "match_topics": [
+          "Trustworthy AI",
+          "Healthcare Evaluation"
+        ],
+        "reasons": [
+          "Request for validation and surveillance protocols in clinical AI.",
+          "Aligns with measurement-theoretic approaches to reliability."
+        ]
+      },
+      {
+        "user_id": "sanmi-koyejo",
+        "rule_id": "2024-05010",
+        "score": 0.82,
+        "priority": "Medium",
+        "match_topics": [
+          "AI Accountability",
+          "Human-AI Collaboration"
+        ],
+        "reasons": [
+          "Emphasizes evaluation science for LLM interfaces.",
+          "Discusses responsible deployment across applied domains."
+        ]
+      }
+    ]
+  }
+]

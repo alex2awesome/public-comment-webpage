@@ -2,10 +2,38 @@
 
 from __future__ import annotations
 
+import ast
+import json
+import warnings
 from difflib import SequenceMatcher
 from html import escape
 
 from IPython.display import HTML, display
+import pandas as pd
+
+
+def robust_json_load(value):
+    """Best-effort parse for JSON-ish strings."""
+    if isinstance(value, (list, dict)):
+        return value
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return []
+    text = str(value).strip()
+    if not text:
+        return []
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        try:
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", SyntaxWarning)
+                return ast.literal_eval(text)
+        except (ValueError, SyntaxWarning, SyntaxError):
+            try:
+                escaped = text.replace("\\", "\\\\")
+                return json.loads(escaped)
+            except Exception:
+                return []
 
 
 def show_text_diff(text_a: str, text_b: str) -> None:

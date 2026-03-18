@@ -1,11 +1,11 @@
 # Frontend (React + Vite)
 
-This `app/` workspace hosts the Regulatory Intelligence UI. It is scaffolded with React + Vite and reads real CSV snapshots from the repository `data/` folder through a mock API layer so you can iterate on the experience before wiring a live Flask backend.
+This `issue_finder_rec_system_app/` workspace hosts the Regulatory Intelligence UI. It is scaffolded with React + Vite and now keeps its sample CSV snapshots under `issue_finder_rec_system_app/data/` through a mock API layer so you can iterate on the experience before wiring a live Flask backend.
 
 ## Getting Started
 
 ```bash
-cd app
+cd issue_finder_rec_system_app
 npm install
 npm run dev
 ```
@@ -27,7 +27,7 @@ The dev server runs at <http://localhost:5173>. Search, dashboard, and rule deta
 - `src/features/search/*` implements search UI, filters, and results backed by `useSearchRules` and CSV-derived metadata (`useSearchMetadata`).
 - `src/features/recommendations/*` renders the personalized dashboard with scoring based on user interests and the CSV dataset.
 - `src/features/rule-detail/*` shows detailed regulation context plus related items.
-- `src/services/mockApi.ts` simulates backend endpoints, loading data from `../data/*.csv` via `src/services/csvData.ts`.
+- `src/services/mockApi.ts` simulates backend endpoints, loading data from `data/*.csv` (within this app directory) via `src/services/csvData.ts`.
 - `src/lib/` holds shared utilities (query client, date formatting, type definitions).
 - `src/tests/` configures Vitest and includes a starter hook test.
 

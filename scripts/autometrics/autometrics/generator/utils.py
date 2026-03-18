@@ -3,6 +3,9 @@ import re
 import dspy
 import litellm
 import math
+
+# Match train_reward_model.py default max_length
+DEFAULT_PROMPT_MAX_TOKENS = 1024
 import logging
 
 logger = logging.getLogger(__name__)
@@ -41,6 +44,48 @@ def truncate_examples_if_needed(examples: List[str], max_length_per_example: int
         else:
             truncated.append(example)
     return truncated
+
+
+def truncate_text_to_token_limit(text: str, max_tokens: int, model_name: str) -> str:
+    """Truncate a single text to a token limit using litellm token_counter."""
+    if text is None:
+        return ""
+    text = str(text)
+    try:
+        token_count = count_tokens_with_litellm(text, model_name)
+    except Exception:
+        token_count = int(len(text.split()) * 1.3)
+    if token_count <= max_tokens:
+        return text
+
+    words = text.split()
+    approx_len = max(1, int(max_tokens / 1.3))
+    if len(words) > approx_len:
+        words = words[:approx_len]
+    truncated = " ".join(words)
+
+    # Refine if still too long
+    for _ in range(10):
+        try:
+            token_count = count_tokens_with_litellm(truncated, model_name)
+        except Exception:
+            token_count = int(len(truncated.split()) * 1.3)
+        if token_count <= max_tokens:
+            return truncated + "..."
+        if len(words) <= 10:
+            return truncated + "..."
+        words = words[: int(len(words) * 0.9)]
+        truncated = " ".join(words)
+    return truncated + "..."
+
+
+def truncate_examples_to_token_limit(
+    examples: List[str],
+    model_name: str,
+    max_tokens: int = DEFAULT_PROMPT_MAX_TOKENS,
+) -> List[str]:
+    """Apply token-based truncation to each example."""
+    return [truncate_text_to_token_limit(ex, max_tokens, model_name) for ex in examples]
 
 
 def is_context_length_error(error_str: str) -> bool:
@@ -172,6 +217,9 @@ def smart_limit_examples_for_context(
     4. If still too long, return minimal set
     """
     print(f"Smart limiting examples for {model_name}: target={target_examples}, total={len(examples)}")
+
+    # First apply per-example token truncation to avoid extreme contexts
+    examples = truncate_examples_to_token_limit(examples, model_name, DEFAULT_PROMPT_MAX_TOKENS)
     
     # Estimate tokens for target number of examples
     target_examples_list = examples[:target_examples]

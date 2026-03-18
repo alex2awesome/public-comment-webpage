@@ -9,12 +9,12 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      '@data': fileURLToPath(new URL('../data', import.meta.url)),
+      '@data': fileURLToPath(new URL('./data', import.meta.url)),
     },
   },
   server: {
     fs: {
-      allow: ['..'],
+      allow: ['.'],
     },
   },
   test: {
@@ -24,7 +24,7 @@ export default defineConfig({
     css: true,
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      '@data': fileURLToPath(new URL('../data', import.meta.url)),
+      '@data': fileURLToPath(new URL('./data', import.meta.url)),
     },
   },
 })

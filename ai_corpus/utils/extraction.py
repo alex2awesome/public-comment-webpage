@@ -165,16 +165,18 @@ def extract_pages_auto(pdf_path: str) -> Tuple[List[str], Dict[str, int]]:
     return pages, stats
 
 
-def extract_pages(pdf_path: str, parser: str = "auto") -> Tuple[List[str], Dict[str, int]]:
+def extract_pages(
+    pdf_path: str, parser: str = "auto", *, max_pages: Optional[int] = None
+) -> Tuple[List[str], Dict[str, int]]:
     if parser == "auto":
-        return extract_pages_auto(pdf_path)
+        return extract_pages_auto(pdf_path, max_pages=max_pages)
     try:
         extractor = PARSER_BACKENDS[parser]
     except KeyError as exc:
         valid = ", ".join(sorted((*AVAILABLE_PARSERS,)))
         raise ValueError(f"Unsupported parser '{parser}'. Choose from: {valid} or 'auto'.") from exc
 
-    pages = extractor(pdf_path)
+    pages = extractor(pdf_path, max_pages=max_pages)
     blank_count = sum(1 for page in pages if is_blank(page))
     stats = {
         "total_pages": len(pages),
