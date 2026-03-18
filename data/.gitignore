@@ -1,0 +1,14 @@
+# Ignore everything except code files
+*
+!*/
+!**/*.py
+!**/*.sh
+!**/*.md
+!**/*.yaml
+!**/*.yml
+!**/*.ipynb
+!.gitignore
+
+# Re-ignore directories that shouldn't be tracked
+.ipynb_checkpoints/
+**/wandb/

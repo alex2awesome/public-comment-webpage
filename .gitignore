@@ -36,8 +36,7 @@ coverage/
 *.sqlite*
 *.db
 
-# Data artifacts
-data/
+# Data artifacts (see data/.gitignore for per-extension rules)
 downloads/
 ai_corpus/downloads/
 notebooks/processed_dataset.csv
@@ -46,7 +45,6 @@ federal_rulemaking_*.csv
 scratch/*.meta.jsonl
 
 # Large datasets & generated corpora
-**/data/**/*
 **/datasets/**/*
 **/cache/**/*
 **/outputs/**/*
