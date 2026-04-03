@@ -361,6 +361,7 @@ def render_memo_with_claude(
     )
     requirements = (
         "Memo requirements:\n"
+        "- Format the entire memo in Markdown (use headings, bold, numbered lists, and bullet points for structure).\n"
         "- Start with a salutation and short executive summary paragraph.\n"
         "- Provide 3 numbered recommendations or findings with supporting detail.\n"
         "- Reference experts or stakeholders (top people) when relevant.\n"

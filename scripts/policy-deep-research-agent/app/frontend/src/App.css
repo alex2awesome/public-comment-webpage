@@ -328,6 +328,72 @@ button.primary:not(:disabled):hover {
   line-height: 1.65;
 }
 
+.memo-body--markdown {
+  line-height: 1.7;
+}
+
+.memo-body--markdown h1,
+.memo-body--markdown h2,
+.memo-body--markdown h3,
+.memo-body--markdown h4 {
+  margin: 1.25rem 0 0.5rem;
+}
+
+.memo-body--markdown h1 { font-size: 1.5rem; }
+.memo-body--markdown h2 { font-size: 1.3rem; }
+.memo-body--markdown h3 { font-size: 1.15rem; }
+
+.memo-body--markdown p {
+  margin: 0.6rem 0;
+}
+
+.memo-body--markdown ul,
+.memo-body--markdown ol {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.memo-body--markdown li {
+  margin: 0.3rem 0;
+}
+
+.memo-body--markdown blockquote {
+  border-left: 3px solid var(--soft-gold);
+  margin: 0.75rem 0;
+  padding: 0.5rem 1rem;
+  color: var(--stone);
+  background: rgba(214, 180, 108, 0.06);
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.memo-body--markdown strong {
+  color: var(--ink);
+}
+
+.memo-body--markdown table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0.75rem 0;
+}
+
+.memo-body--markdown th,
+.memo-body--markdown td {
+  border: 1px solid rgba(31, 41, 51, 0.12);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.memo-body--markdown th {
+  background: #f4efe4;
+  font-weight: 600;
+}
+
+.memo-body--markdown hr {
+  border: none;
+  border-top: 1px solid rgba(31, 41, 51, 0.1);
+  margin: 1.25rem 0;
+}
+
 .memo-paragraph {
   display: inline;
   position: relative;

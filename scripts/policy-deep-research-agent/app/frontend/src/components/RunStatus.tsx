@@ -3,6 +3,7 @@ import { RunState } from "../App";
 import { FindingsSummary, RolloutResult, RolloutStreamEvent } from "../types";
 import SummaryPanel from "./SummaryPanel";
 import MemoWithCitations from "./MemoWithCitations";
+import MarkdownMemo from "./MarkdownMemo";
 
 export type MemoUpdateStatus = "idle" | "saving" | "success" | "error";
 
@@ -307,10 +308,10 @@ const RunStatus = ({
           }
           if (memoHistory.length > 0) {
             const memoText = memoHistory[Math.min(revisionIndex, memoHistory.length - 1)];
-            return <div className="memo-body">{renderMemoWithCitations(memoText, result.bib)}</div>;
+            return <MarkdownMemo memo={memoText} bib={result.bib} />;
           }
           if (result.finalMemo) {
-            return <div className="memo-body">{renderMemoWithCitations(result.finalMemo, result.bib)}</div>;
+            return <MarkdownMemo memo={result.finalMemo} bib={result.bib} />;
           }
           return <p>No memo submitted.</p>;
         })()}

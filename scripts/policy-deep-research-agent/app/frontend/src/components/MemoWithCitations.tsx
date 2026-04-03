@@ -1,4 +1,6 @@
 import { ReactNode, useMemo, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { normalizeMemoBlockCitations } from "../lib/citations";
 import { MemoBlock, MemoCitation, SourceDocument } from "../types";
 
@@ -132,8 +134,8 @@ const MemoWithCitations = ({ blocks, documents, fallbackMemo }: MemoWithCitation
 
   if (!workingBlocks || workingBlocks.length === 0) {
     return (
-      <div className="memo-body memo-body--structured">
-        <div className="memo-paragraph">{fallbackMemo}</div>
+      <div className="memo-body memo-body--markdown">
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>{fallbackMemo}</ReactMarkdown>
       </div>
     );
   }

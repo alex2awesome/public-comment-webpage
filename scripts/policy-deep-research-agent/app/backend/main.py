@@ -199,6 +199,7 @@ def _render_memo_from_summary(
         f"{prior_memo_section}"
         f"Additional directives from the user:\n{directives_text}\n\n"
         "Requirements:\n"
+        "- Format the entire memo in Markdown (use headings, bold, numbered lists, and bullet points for structure).\n"
         "- Treat this as a polished RFI response with salutation/introduction, numbered recommendations, and clear calls to action.\n"
         "- Weave the listed top arguments into the memo structure and cite articles inline using <cite id=\"PAPER_ID\">Title</cite>.\n"
         "- Align the memo’s numbered recommendations with the `top recommendations` provided in the summary whenever possible.\n"
