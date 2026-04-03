@@ -462,7 +462,7 @@ const SummaryPanel = ({ summary, disabled, status, error, onSubmit, revisionInde
                 <ul className="summary-card-list">
                   {editable.arguments.map((argument, idx) => {
                     const color = ARGUMENT_COLORS[idx % ARGUMENT_COLORS.length];
-                    const styles: CSSProperties = { ["--argument-color" as const]: color };
+                    const styles = { "--argument-color": color } as CSSProperties;
                     return (
                       <li key={argument.id} className="summary-card argument-card" style={styles}>
                       <label className="summary-card__row">
