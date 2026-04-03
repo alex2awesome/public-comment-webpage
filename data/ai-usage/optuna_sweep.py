@@ -462,10 +462,19 @@ def postprocess_dist(
 # Evaluate
 # ---------------------------------------------------------------------------
 
-def evaluate(df: pd.DataFrame, doc_types: List[str]) -> float:
-    """Compute objective score from infer results."""
+def evaluate(df: pd.DataFrame, doc_types: List[str], agency: Optional[str] = None) -> float:
+    """Compute objective score from infer results.
+
+    If agency is specified, only evaluate that agency's strata.
+    """
     if df.empty:
         return -1.0
+
+    # Filter to target agency if specified
+    if agency and "agency_id" in df.columns:
+        df = df[df["agency_id"] == agency]
+        if df.empty:
+            return -1.0
 
     # Parse time column
     if "quarter" in df.columns:
@@ -535,6 +544,7 @@ def create_objective(
     doc_types: List[str],
     hierarchical_only: bool = False,
     subsample_frac: Optional[float] = None,
+    agency: Optional[str] = None,
 ):
     def objective(trial: optuna.Trial) -> float:
         # --- Sample hyperparameters ---
@@ -632,7 +642,7 @@ def create_objective(
             return -1.0
 
         results_df = pd.concat(all_infer_results, ignore_index=True)
-        score = evaluate(results_df, doc_types)
+        score = evaluate(results_df, doc_types, agency=agency)
 
         logging.info(
             "Trial %d: score=%.6f | model=%s minw=%d maxt=%d matched=%s "
@@ -713,6 +723,11 @@ def main():
         "--subsample-frac", type=float, default=None,
         help="Subsample fraction for infer (e.g. 0.05). Default: 0.05 for public_submission, None for others.",
     )
+    parser.add_argument(
+        "--agency", type=str, default=None,
+        help="Optimize for a single agency (e.g. --agency EPA). "
+             "Estimate uses all agencies; evaluation scores only this agency's trendline.",
+    )
     args = parser.parse_args()
 
     doc_types = [args.doc_type] if args.doc_type else DOC_TYPES
@@ -769,6 +784,7 @@ def main():
         data_cache, estimate_cache, available_models, doc_types,
         hierarchical_only=args.hierarchical_only,
         subsample_frac=subsample_frac,
+        agency=args.agency,
     )
     study.optimize(objective, n_trials=args.n_trials, show_progress_bar=True)
     analyze_study(study)
