@@ -46,7 +46,7 @@ When n_a >> κ, the agency's own data dominates; when n_a << κ, the estimate sh
 
 **Level 3 (Stratum):** α_{a,t} estimated via MLE using agency-specific P_a and Q_a.
 
-![Plate diagram](plate_diagram.png)
+<img src="plate_diagram.png" width="500">
 
 *Figure 1: Plate diagram for the hierarchical model. Double-circled nodes (P_pool, Q_pool) are estimated from pooled corpora. Agency-specific P_a(w) and Q_a(w) are drawn from Beta priors centered on the pooled estimates. Each sentence is generated from either P_a or Q_a according to indicator z_i, with mixing fraction α_{a,t} per stratum.*
 
