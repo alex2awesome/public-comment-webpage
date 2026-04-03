@@ -67,6 +67,77 @@ DB_PATH = SWEEP_DIR / "optuna_study.db"
 
 DOC_TYPES = ["rule", "proposed_rule", "notice", "public_submission"]
 
+# ---------------------------------------------------------------------------
+# Word filters
+# ---------------------------------------------------------------------------
+
+WORD_FILTER_CHOICES = ["none", "english", "verbs", "adjectives", "adjectives-and-verbs"]
+
+_word_filter_cache: Dict[str, Set[str]] = {}
+
+
+def _build_word_filter_sets(vocab_words: List[str]) -> None:
+    """Pre-compute word filter sets. Call once at startup."""
+    global _word_filter_cache
+    if _word_filter_cache:
+        return  # already built
+
+    logging.info("Building word filter sets...")
+
+    # English dictionary
+    import nltk
+    nltk.download("words", quiet=True)
+    english_set = set(w.lower() for w in nltk.corpus.words.words())
+    _word_filter_cache["english"] = english_set
+    logging.info("  english: %d words", len(english_set))
+
+    # POS-based filters using spacy
+    try:
+        import spacy
+        nlp = spacy.load("en_core_web_lg", disable=["ner", "parser"])
+    except OSError:
+        logging.warning("spacy en_core_web_lg not found. Falling back to en_core_web_sm.")
+        try:
+            import spacy
+            nlp = spacy.load("en_core_web_sm", disable=["ner", "parser"])
+        except OSError:
+            logging.error("No spacy model found. POS filters will be empty.")
+            _word_filter_cache["verbs"] = set()
+            _word_filter_cache["adjectives"] = set()
+            _word_filter_cache["adjectives-and-verbs"] = set()
+            return
+
+    # Tag all vocab words in batches
+    verbs = set()
+    adjectives = set()
+    batch_size = 5000
+    all_words = list(set(vocab_words))
+    for i in tqdm(range(0, len(all_words), batch_size), desc="POS tagging vocab"):
+        batch = all_words[i:i + batch_size]
+        # Process each word individually for POS
+        docs = list(nlp.pipe(batch))
+        for doc in docs:
+            for token in doc:
+                w = token.text.lower()
+                if token.pos_ == "VERB":
+                    verbs.add(w)
+                elif token.pos_ == "ADJ":
+                    adjectives.add(w)
+
+    _word_filter_cache["verbs"] = verbs
+    _word_filter_cache["adjectives"] = adjectives
+    _word_filter_cache["adjectives-and-verbs"] = verbs | adjectives
+    logging.info("  verbs: %d, adjectives: %d, both: %d",
+                 len(verbs), len(adjectives), len(verbs | adjectives))
+
+
+def get_word_filter(filter_name: str) -> Optional[Set[str]]:
+    """Return the set of allowed words for a filter, or None for 'none'."""
+    if filter_name == "none":
+        return None
+    return _word_filter_cache.get(filter_name)
+
+
 MODEL_SOURCES = {
     "llama-3.3-70b": ["llama-v4-generations"],
     "llama-3.1-8b": ["llama-v4-8b-generations"],
@@ -441,8 +512,9 @@ def postprocess_dist(
     max_vocab: Optional[int],
     min_word_len: int,
     min_lor: float,
+    word_filter: str = "none",
 ) -> pd.DataFrame:
-    """Filter distribution DataFrame by vocab thresholds."""
+    """Filter distribution DataFrame by vocab thresholds and word filter."""
     df = dist_df.copy()
     if min_human_count > 1:
         df = df[df["human_count"] >= min_human_count]
@@ -452,6 +524,10 @@ def postprocess_dist(
         df = df[df["word"].str.len() >= min_word_len]
     if min_lor > 0:
         df = df[df["log_odds_ratio"].abs() >= min_lor]
+    # Word filter: keep only words in the allowed set
+    allowed = get_word_filter(word_filter)
+    if allowed is not None:
+        df = df[df["word"].str.lower().isin(allowed)]
     if max_vocab and len(df) > max_vocab:
         df = df.nlargest(max_vocab, "ai_count")
         df = df.sort_values("log_odds_ratio").reset_index(drop=True)
@@ -545,7 +621,10 @@ def create_objective(
     hierarchical_only: bool = False,
     subsample_frac: Optional[float] = None,
     agency: Optional[str] = None,
+    word_filter_choices: List[str] = None,
 ):
+    word_filter_choices = word_filter_choices or ["none"]
+
     def objective(trial: optuna.Trial) -> float:
         # --- Sample hyperparameters ---
         model = trial.suggest_categorical("model", available_models)
@@ -568,6 +647,7 @@ def create_objective(
 
         min_word_len = trial.suggest_categorical("min_word_len", [0, 3, 4, 5])
         min_lor = trial.suggest_categorical("min_lor", [0.0, 0.1, 0.3, 0.5])
+        word_filter = trial.suggest_categorical("word_filter", word_filter_choices)
 
         if hierarchical_only:
             hierarchical = True
@@ -610,6 +690,7 @@ def create_objective(
             # --- Step 2: Post-process distribution ---
             filtered_dist = postprocess_dist(
                 dist_df, min_human_count, min_ai_count, max_vocab, min_word_len, min_lor,
+                word_filter=word_filter,
             )
             if filtered_dist.empty or len(filtered_dist) < 50:
                 continue
@@ -646,10 +727,10 @@ def create_objective(
 
         logging.info(
             "Trial %d: score=%.6f | model=%s minw=%d maxt=%d matched=%s "
-            "h=%d a=%d mv=%s wl=%d lor=%.1f hier=%s k=%s strat=%s minsent=%d",
+            "h=%d a=%d mv=%s wl=%d lor=%.1f wf=%s hier=%s k=%s strat=%s minsent=%d",
             trial.number, score, model, min_doc_words, max_doc_tokens, matched,
             min_human_count, min_ai_count, max_vocab_choice,
-            min_word_len, min_lor, hierarchical, kappa, stratify_by,
+            min_word_len, min_lor, word_filter, hierarchical, kappa, stratify_by,
             min_sentences,
         )
 
@@ -728,6 +809,11 @@ def main():
         help="Optimize for a single agency (e.g. --agency EPA). "
              "Estimate uses all agencies; evaluation scores only this agency's trendline.",
     )
+    parser.add_argument(
+        "--word-filter", nargs="+", default=["none"],
+        choices=WORD_FILTER_CHOICES,
+        help="Word filter choices to explore. E.g. --word-filter english verbs adjectives",
+    )
     args = parser.parse_args()
 
     doc_types = [args.doc_type] if args.doc_type else DOC_TYPES
@@ -775,6 +861,19 @@ def main():
 
     estimate_cache = EstimateCache()
 
+    # Build word filter sets if needed
+    wf_choices = args.word_filter
+    if any(wf != "none" for wf in wf_choices):
+        # Collect all vocab words from loaded AI corpora for POS tagging
+        all_vocab = set()
+        for subdir_data in data_cache.ai_corpora.values():
+            for dt_df in subdir_data.values():
+                for text in dt_df["ai_text"].dropna().head(5000):
+                    all_vocab.update(str(text).lower().split())
+                for text in dt_df["original_text"].dropna().head(5000):
+                    all_vocab.update(str(text).lower().split())
+        _build_word_filter_sets(list(all_vocab))
+
     # Determine subsample
     subsample_frac = args.subsample_frac
     if subsample_frac is None and "public_submission" in doc_types and len(doc_types) == 1:
@@ -785,6 +884,7 @@ def main():
         hierarchical_only=args.hierarchical_only,
         subsample_frac=subsample_frac,
         agency=args.agency,
+        word_filter_choices=wf_choices,
     )
     study.optimize(objective, n_trials=args.n_trials, show_progress_bar=True)
     analyze_study(study)
