@@ -124,15 +124,41 @@ def main():
     print("Identifying your account...")
     my_id = get_my_user_id(session, headers)
 
-    # Get all our active requests
+    # Get all our active requests.
+    #
+    # Two MuckRock API bugs require fetching from both v1 and v2:
+    #   1. The v2 API does not return embargoed requests at all (returns 404
+    #      on detail, omits them from list results).
+    #   2. The v1 list endpoint's `user` filter also misses embargoed requests.
+    #
+    # Workaround: fetch embargoed requests from v1 via embargo_status filter
+    # (which only returns requests visible to the authenticated user), then
+    # fetch public requests from v2 with the user filter, and merge.
     print(f"\nFetching your active requests...")
-    r = session.get(f"{API_V2}/requests/",
-        params={"user": my_id, "page_size": 100, "ordering": "-datetime_submitted", "format": "json"})
-    if r.status_code != 200:
-        print(f"ERROR: Could not fetch requests (HTTP {r.status_code})")
-        sys.exit(1)
+    seen_ids = set()
+    all_requests = []
 
-    all_requests = r.json().get("results", [])
+    # 1) Embargoed requests via v1 — the embargo_status filter only returns
+    #    requests the authenticated user can see (i.e. their own).
+    r = session.get(f"{API_V1}/foia/",
+        headers=headers,
+        params={"embargo_status": "permanent", "page_size": 100, "format": "json"})
+    if r.status_code == 200:
+        for req in r.json().get("results", []):
+            if req["id"] not in seen_ids:
+                seen_ids.add(req["id"])
+                all_requests.append(req)
+
+    # 2) Public (non-embargoed) requests via v2, which has a working user filter.
+    r = session.get(f"{API_V2}/requests/",
+        headers=headers,
+        params={"user": my_id, "page_size": 100, "ordering": "-datetime_submitted", "format": "json"})
+    if r.status_code == 200:
+        for req in r.json().get("results", []):
+            if req["id"] not in seen_ids:
+                seen_ids.add(req["id"])
+                all_requests.append(req)
+
     active = [req for req in all_requests if req.get("status") != "abandoned"]
 
     print(f"  Found {len(active)} active requests")
@@ -161,7 +187,18 @@ def main():
     for i, req in enumerate(active, 1):
         rid = req["id"]
         title = req.get("title", "?")[:55]
-        current_edit = req.get("edit_collaborators", [])
+
+        # The v1 list endpoint does not include edit_collaborators, and v2
+        # doesn't return embargoed requests, so we always fetch the full
+        # detail from v1 to get the current collaborator list.
+        dr = session.get(f"{API_V1}/foia/{rid}/",
+            headers=headers,
+            params={"format": "json"})
+        if dr.status_code != 200:
+            print(f"[{i}/{len(active)}] {title} — ERROR fetching detail {dr.status_code}")
+            errors += 1
+            continue
+        current_edit = dr.json().get("edit_collaborators", [])
 
         # Check if everyone is already tagged
         missing = [uid for uid in other_ids if uid not in current_edit]
